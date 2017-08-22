@@ -18,8 +18,8 @@ git clone git@github.com:muhammadansariqbal/FittingForATGCSignal.git
 # Clone the Higgs combined limit tool repo; Look at the repo for further details
 git clone git@github.com:muhammadansariqbal/HiggsAnalysis.git
 
-# Clone the CombinedEWKAnalysis repo
-git clone git@github.com:lgray/CombinedEWKAnalysis.git
+# Clone the CombinedEWKAnalysis repo; Look at the repo for further details
+git clone git@github.com:muhammadansariqbal/CombinedEWKAnalysis.git
 
 # Build
 scram b -j 20
