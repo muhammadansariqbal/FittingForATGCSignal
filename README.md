@@ -19,13 +19,13 @@ git clone git@github.com:muhammadansariqbal/FittingForATGCSignal.git
 git clone git@github.com:muhammadansariqbal/HiggsAnalysis.git
 
 # Clone the CombinedEWKAnalysis repo
-git clone git@github.com:Igray/CombinedEWKAnalysis.git
+git clone git@github.com:lgray/CombinedEWKAnalysis.git
 
 # Build
 scram b -j 20
 
 # Make a folder Input in and FittingForSignal and copy the required files e.g.
-cd FittingForSignal; mkdir Input;
+cd FittingForATGCSignal; mkdir Input;
 cp /afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/WW-aTGC_mu.root ./Input
 cp ../../../../Background/CMSSW_5_3_32/src/FittingForATGCBackground/cards_mu_HPV_900_3500/wwlvj_mu_HPV_workspace.root ./Input
 # etc.
