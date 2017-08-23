@@ -81,7 +81,7 @@ class Prepare_workspace_4limit:
             else:
                 raise RuntimeError('no such channel %s'%self.ch)
             
-            print '##########making histograms for aTGC working points##########'
+            print '######### Making histograms for aTGC working points #########'
             hists4scale        = {}
             
             for WV in ['WW','WZ']:
@@ -101,9 +101,9 @@ class Prepare_workspace_4limit:
 
                 print 'reading %s-aTGC_%s.root'%(WV,self.ch)
                 fileInATGC        = TFile.Open('Input/%s-aTGC_%s.root'%(WV,self.ch))
-                treeInATGC        = fileInATGC.Get('treeDumper/BasicTree')
+                treeInATGC        = fileInATGC.Get('BasicTree')
 
-                lumi_tmp         = 2300.
+                lumi_tmp         = 35922.
 
                 for i in range(treeInATGC.GetEntries()):
                     if i%10000==0:
@@ -112,26 +112,26 @@ class Prepare_workspace_4limit:
                     MWW                = treeInATGC.MWW
                     #apply cuts
                     #using whole mj-range (sideband and signal region)
-                    if treeInATGC.jet_pt>200. and treeInATGC.jet_tau2tau1<0.6 and treeInATGC.W_pt>200. and treeInATGC.deltaR_LeptonWJet>math.pi/2. and treeInATGC.Mjpruned>40 and treeInATGC.Mjpruned<150 and abs(treeInATGC.deltaPhi_WJetMet)>2. and abs(treeInATGC.deltaPhi_WJetWlep)>2. and treeInATGC.nbtag==0 and treeInATGC.pfMET>METCUT and MWW>self.binlo:
-                        weight_part = 1/20. * lumi_tmp * treeInATGC.totWeight
+                    if treeInATGC.jet_pt>200. and treeInATGC.jet_tau21_PUPPI<0.55 and treeInATGC.W_pt>200. and treeInATGC.deltaR_LeptonWJet>math.pi/2. and treeInATGC.jet_mass_softdrop_PUPPI>40 and treeInATGC.jet_mass_softdrop_PUPPI<150 and abs(treeInATGC.deltaPhi_WJetMet)>2. and abs(treeInATGC.deltaPhi_WJetWlep)>2. and treeInATGC.nbtag==0 and treeInATGC.pfMET>METCUT and MWW>self.binlo:
+                        weight_part = treeInATGC.totEventWeight
                         aTGC        = treeInATGC.aTGCWeights                #contains weights for different workingpoints
                         #all3
-                        hists4scale['c_%s_histall3'%WV].Fill(MWW,aTGC[6] * weight_part)
+                        hists4scale['c_%s_histall3'%WV].Fill(MWW,aTGC[123] * weight_part)
                         #SM
-                        hists4scale['c_SM_%s_hist'%WV].Fill(MWW,aTGC[7] * weight_part)
+                        hists4scale['c_SM_%s_hist'%WV].Fill(MWW,aTGC[61] * weight_part)
                         #cwww
-                        hists4scale['c_pos_%s_hist_cwww'%WV].Fill(MWW,aTGC[0] * weight_part)
-                        hists4scale['c_neg_%s_hist_cwww'%WV].Fill(MWW,aTGC[1] * weight_part)
+                        hists4scale['c_pos_%s_hist_cwww'%WV].Fill(MWW,aTGC[11] * weight_part)
+                        hists4scale['c_neg_%s_hist_cwww'%WV].Fill(MWW,aTGC[111] * weight_part)
                         #ccw
-                        hists4scale['c_pos_%s_hist_ccw'%WV].Fill(MWW,aTGC[2] * weight_part)
-                        hists4scale['c_neg_%s_hist_ccw'%WV].Fill(MWW,aTGC[3] * weight_part)
+                        hists4scale['c_pos_%s_hist_ccw'%WV].Fill(MWW,aTGC[51] * weight_part)
+                        hists4scale['c_neg_%s_hist_ccw'%WV].Fill(MWW,aTGC[71] * weight_part)
                         #cb
-                        hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[4] * weight_part)
-                        hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[5] * weight_part)
+                        hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[59] * weight_part)
+                        hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[63] * weight_part)
                         #ccw-SM interference
-                        hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,aTGC[2]-aTGC[3])
+                        hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,aTGC[51]-aTGC[71])
                         #cb-SM interference
-                        hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,aTGC[4]-aTGC[5])
+                        hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,aTGC[59]-aTGC[63])
 						
             #write histograms to file
             fileOut        = TFile.Open('Output/hists4scale_%s_WV_aTGC-%s_%s.root'%(self.ch,self.binlo,self.binhi),'recreate')
