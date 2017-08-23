@@ -39,7 +39,7 @@ class Prepare_workspace_4limit:
             
             self.POI                    = ['cwww','ccw','cb']
             self.PAR_TITLES             = {'cwww' : '#frac{c_{WWW}}{#Lambda^{2}}', 'ccw' : '#frac{c_{W}}{#Lambda^{2}}', 'cb' : '#frac{c_{B}}{#Lambda^{2}}'}#latex titles 
-            self.PAR_MAX                = {'cwww' : 12, 'ccw' : 20, 'cb' : 60}#atgc points
+            self.PAR_MAX                = {'cwww' : 3.6, 'ccw' : 4.5, 'cb' : 20}#atgc points
             self.ch                     = ch
 
             self.binlo                  = mlvj_lo                #lower bound on invariant mass
@@ -302,9 +302,9 @@ class Prepare_workspace_4limit:
             
             channel        = self.ch+'_'+sample                #needed for variables that differ for WW and WZ
             
-            cwww    = RooRealVar('cwww','cwww',0,-120,120);
-            ccw     = RooRealVar('ccw','ccw',0,-200,200);
-            cb      = RooRealVar('cb','cb',0,-600,600);
+            cwww    = RooRealVar('cwww','cwww',0,-36,36);
+            ccw     = RooRealVar('ccw','ccw',0,-45,45);
+            cb      = RooRealVar('cb','cb',0,-200,200);
             cwww.setConstant(kTRUE);
             ccw.setConstant(kTRUE);
             cb.setConstant(kTRUE);
@@ -798,21 +798,21 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                     self.fitresults[i].Print()
 
             if options.printatgc:
-                self.wtmp.var('cwww').setVal(12)
-                self.wtmp.var('ccw').setVal(20)
+                self.wtmp.var('cwww').setVal(3.6)
+                self.wtmp.var('ccw').setVal(4.5)
                 self.wtmp.var('cb').setVal(0)
                 print 'cwww and ccw positive:'
                 for i in range(8):
                     print N_list.at(i).GetName() + ' : ' + str(N_list.at(i).getVal())
-                self.wtmp.var('cwww').setVal(12)
+                self.wtmp.var('cwww').setVal(3.6)
                 self.wtmp.var('ccw').setVal(0)
-                self.wtmp.var('cb').setVal(60)
+                self.wtmp.var('cb').setVal(20)
                 print 'cwww and cb positive:'
                 for i in range(8):
                     print N_list.at(i).GetName() + ' : ' + str(N_list.at(i).getVal())
                 self.wtmp.var('cwww').setVal(0)
-                self.wtmp.var('ccw').setVal(20)
-                self.wtmp.var('cb').setVal(60)
+                self.wtmp.var('ccw').setVal(4.5)
+                self.wtmp.var('cb').setVal(20)
                 print 'ccw and cb positive:'
                 for i in range(8):
                     print N_list.at(i).GetName() + ' : ' + str(N_list.at(i).getVal())
