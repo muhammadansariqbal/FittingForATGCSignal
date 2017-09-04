@@ -193,7 +193,7 @@ class Prepare_workspace_4limit:
         
                 pullhist = plots[i].pullHist('atgcdata','atgcmodel')
                 
-                plotmax        = 100
+                plotmax        = 1000
                 if self.ch == 'el':
                     plotmin = 1e-4
                     if cat == 'WZ':
@@ -202,7 +202,7 @@ class Prepare_workspace_4limit:
                     plotmin = 1e-2
                     if cat == 'WZ':
                         plotmin = 1e-3
-                        plotmax = 50
+                        plotmax = 500
                 if cat == 'WV':
                     plotmin = 1e-2
                     plotmax = 1.5e2
@@ -274,6 +274,8 @@ class Prepare_workspace_4limit:
                 pads[i][2].SetLogy()
                 pads[i][2].cd()
                 plots2[i].Draw()
+		leg.Draw()
+		leg.Print()
                 pullhist2 = plots2[i].pullHist('h_pos_datahist_%s_%s'%(cat,self.POI[i]),'aTGC_model_%s_Norm[rrv_mass_lvj]'%channel)
                 pads[i][3].cd()
                 ratio_style.Draw("")
