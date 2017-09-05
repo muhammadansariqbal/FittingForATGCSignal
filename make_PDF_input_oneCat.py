@@ -99,6 +99,18 @@ class Prepare_workspace_4limit:
                 hists4scale['c_SM_%s_hist'%WV].Sumw2(kTRUE)
                 hists4scale['c_%s_histall3'%WV].Sumw2(kTRUE)
 
+		# Add histograms for two aTGC parameters positive
+		hists4scale['c_cwww_ccw_%s_hist'%WV]=TH1F('ccwww_ccw_%s_hist'%WV,'c_cwww_ccw_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+                hists4scale['c_ccw_cb_%s_hist'%WV]=TH1F('c_ccw_cb_%s_hist'%WV,'cccw_cb_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+                hists4scale['c_cwww_ccw_%s_hist'%WV].Sumw2(kTRUE)
+                hists4scale['c_ccw_cb_%s_hist'%WV].Sumw2(kTRUE)
+
+		# Add histograms for aTGC-aTGC interference terms
+		hists4scale['c_int_cwww_ccw_%s_hist'%WV]=TH1F('c_int_cwww_ccw_%s_hist'%WV,'c_int_cwww_ccw_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+		hists4scale['c_int_ccw_cb_%s_hist'%WV]=TH1F('c_int_ccw_cb_%s_hist'%WV,'c_int_ccw_cb_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+		hists4scale['c_int_cwww_ccw_%s_hist'%WV].Sumw2(kTRUE)
+		hists4scale['c_int_ccw_cb_%s_hist'%WV].Sumw2(kTRUE)
+
                 print 'reading %s-aTGC_%s.root'%(WV,self.ch)
                 fileInATGC        = TFile.Open('Input/%s-aTGC_%s.root'%(WV,self.ch))
                 treeInATGC        = fileInATGC.Get('BasicTree')
@@ -129,10 +141,44 @@ class Prepare_workspace_4limit:
                         hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[59] * weight_part)
                         hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[63] * weight_part)
                         #ccw-SM interference
-                        hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,aTGC[51]-aTGC[71])
+                        hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,(aTGC[51]-aTGC[71]) * weight_part)
                         #cb-SM interference
-                        hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,aTGC[59]-aTGC[63])
-						
+                        hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,(aTGC[59]-aTGC[63]) * weight_part)
+			#cwww+ccw
+			hists4scale['c_cwww_ccw_%s_hist'%WV].Fill(MWW,aTGC[1] * weight_part)
+			#ccw+cb
+                        hists4scale['c_ccw_cb_%s_hist'%WV].Fill(MWW,aTGC[49] * weight_part)
+			#cwww-ccw interference
+			hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fill(MWW, ((aTGC[1]-aTGC[101])-(aTGC[11]-aTGC[111])) * weight_part )
+			#ccw-cb interference
+                        hists4scale['c_int_ccw_cb_%s_hist'%WV].Fill(MWW, ((aTGC[49]-aTGC[53])-(aTGC[59]-aTGC[63])) * weight_part )
+
+		# Fit exponential to the aTGC-aTGC interference histograms (This is to avoid doing this via gen-level files)
+		hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fit("expo")
+		a5_val=hists4scale['c_int_cwww_ccw_%s_hist'%WV].GetFunction("expo").GetParameter(1)
+		hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fit("expo")
+		a7_val=hists4scale['c_int_cwww_ccw_%s_hist'%WV].GetFunction("expo").GetParameter(1)
+		
+		# Write the slopes to workspace
+		a5=RooRealVar('a5_%s'%WV,'a5_%s'%WV,-0.0001,-0.01,0.01)
+		a7=RooRealVar('a7_%s'%WV,'a7_%s'%WV,-0.001,-0.01,0.01)
+		a5.setVal(a5_val)
+		a7.setVal(a7_val)
+		a5.setConstant(true)
+		a7.setConstant(true)
+		self.Import_to_ws(self.wtmp, [a5,a7])
+		
+		# Write normalizations to workspace
+		N3645=RooRealVar('N_cwww_ccw_36_45_%s'%WV,'N_cwww_ccw_36_45_%s'%WV,hists4scale['c_cwww_ccw_%s_hist'%WV].Integral())
+		N4520=RooRealVar('N_ccw_cb_45_20_%s'%WV,'N_ccw_cb_45_20_%s'%WV,hists4scale['c_ccw_cb_%s_hist'%WV].Integral())
+		N36=RooRealVar('N_cwww_36_%s'%WV,'N_cwww_36_%s'%WV,hists4scale['c_pos_%s_hist_cwww'%WV].Integral())
+		N36_=RooRealVar('N_cwww__36_%s'%WV,'N_cwww__36_%s'%WV,hists4scale['c_neg_%s_hist_cwww'%WV].Integral())
+		N45=RooRealVar('N_ccw_45_%s'%WV,'N_ccw_45_%s'%WV,hists4scale['c_pos_%s_hist_ccw'%WV].Integral())
+                N45_=RooRealVar('N_ccw__45_%s'%WV,'N_ccw__45_%s'%WV,hists4scale['c_neg_%s_hist_ccw'%WV].Integral())
+		N20=RooRealVar('N_cb_20_%s'%WV,'N_cb_20_%s'%WV,hists4scale['c_pos_%s_hist_cb'%WV].Integral())
+                N20_=RooRealVar('N_cb__20_%s'%WV,'N_cb__20_%s'%WV,hists4scale['c_neg_%s_hist_cb'%WV].Integral())
+		self.Import_to_ws(self.wtmp, [N3645,N4520,N36,N36_,N45,N45_,N20,N20_])
+
             #write histograms to file
             fileOut        = TFile.Open('Output/hists4scale_%s_WV_aTGC-%s_%s.root'%(self.ch,self.binlo,self.binhi),'recreate')
             for key in hists4scale:
@@ -419,14 +465,10 @@ class Prepare_workspace_4limit:
             #list of all coefficients
             paralist    = RooArgList(N_SM)
 
-            #include aTGC-interference
-            #read results of generator level study
-            fileInter   = TFile.Open('Input/genlevel_%s_%s.root'%(sample,self.ch))
-            w2          = fileInter.Get('w2')
-
-            #get parameter values of aTGC-interference from generator level studies        
-            a5_tmp      = RooRealVar('a_cwww_ccw_%s'%channel,'a_cwww_ccw_%s'%channel, w2.var('a5').getVal())
-            a7_tmp      = RooRealVar('a_ccw_cb_%s'%channel,'a_ccw_cb_%s'%channel, w2.var('a7').getVal())
+            # Include aTGC-interference
+            # Get parameter values of aTGC-interference from tmp workspace where they are saved in the start 
+            a5_tmp      = RooRealVar('a_cwww_ccw_%s'%channel,'a_cwww_ccw_%s'%channel, self.wtmp.var('a5_%s'%sample).getVal())
+            a7_tmp      = RooRealVar('a_ccw_cb_%s'%channel,'a_ccw_cb_%s'%channel, self.wtmp.var('a7_%s'%sample).getVal())
             a5_tmp.setConstant(kTRUE)
             a7_tmp.setConstant(kTRUE)
             #apply uncertainty parameter, bigger uncertainty for c_B in WZ
@@ -439,36 +481,28 @@ class Prepare_workspace_4limit:
             Pdf_cwww_ccw    = RooExponential('Pdf_cwww_ccw_%s'%channel,'Pdf_cwww_ccw_%s'%channel,rrv_x,a5)
             Pdf_ccw_cb      = RooExponential('Pdf_ccw_cb_%s'%channel,'Pdf_ccw_cb_%s'%channel,rrv_x,a7)
 
-            #get factor to scale number of events to simulation level (ratio of N_events for all atgc-parameters negative)        
-            fileInHist      = TFile.Open('Output/hists4scale_%s_WV_aTGC-%s_%s.root'%(self.ch,self.binlo,self.binhi))
-            hist_all3       = fileInHist.Get('c_%s_histall3'%sample)
-            hist_all3.Sumw2(kTRUE)
-            datahist_all3   = RooDataHist('datahist_all3','datahist_all3',RooArgList(rrv_x),hist_all3)
-            getattr(self.wtmp,'import')(datahist_all3)
-            fileInHist.Close()
-            N_4norm         = w2.var('N_4norm').getVal()
             if options.noatgcint:
                 cf = 0
             else:
-                #scaling factor for generator level -> reconstruction level
-                cf = datahist_all3.sumEntries() / N_4norm
+                # cf was used originally for scaling MC to gen level interference terms, not needed anymore for that, hence set to 1
+                cf = 1
 
-            #get other coefficients
-            NSM_gen     = w2.var('N_SM').getVal()
-            N1220       = w2.var('N_cwww_ccw_12_20').getVal()
-            N2060       = w2.var('N_ccw_cb_20_60').getVal()
-            N12         = w2.var('N_cwww_12').getVal()
-            N12_        = w2.var('N_cwww__12').getVal()
-            N20         = w2.var('N_ccw_20').getVal()
-            N20_        = w2.var('N_ccw__20').getVal()
-            N60         = w2.var('N_cb_60').getVal()
-            N60_        = w2.var('N_cb__60').getVal()
+            # Get other coefficients
+            N_SM_val    = N_SM.getVal()
+            N3645       = self.wtmp.var('N_cwww_ccw_36_45_%s'%sample).getVal()
+            N4520       = self.wtmp.var('N_ccw_cb_45_20_%s'%sample).getVal()
+            N36         = self.wtmp.var('N_cwww_36_%s'%sample).getVal()
+            N36_        = self.wtmp.var('N_cwww__36_%s'%sample).getVal()
+            N45         = self.wtmp.var('N_ccw_45_%s'%sample).getVal()
+            N45_        = self.wtmp.var('N_ccw__45_%s'%sample).getVal()
+            N20         = self.wtmp.var('N_cb_20_%s'%sample).getVal()
+            N20_        = self.wtmp.var('N_cb__20_%s'%sample).getVal()
 
             ##define final coefficients, scaled by cf
             N_cwww_ccw      = RooRealVar('N_cwww_ccw_%s'%channel,'N_cwww_ccw_%s'%channel,\
-                                            cf*((N1220+NSM_gen)-(N12+N20)))
+                                            cf*((N3645+N_SM_val)-(N36+N45)))
             N_ccw_cb        = RooRealVar('N_ccw_cb_%s'%channel,'N_ccw_cb_%s'%channel,\
-                                            cf*((N2060+NSM_gen)-(N20+N60)))
+                                            cf*((N4520+N_SM_val)-(N45+N20)))
 
             paralist.add(RooArgList(self.wtmp.function('N_quad_%s_%s'%(self.POI[0],channel)),self.wtmp.var('cwww'),\
                                     self.wtmp.function('N_quad_%s_%s'%(self.POI[1],channel)),self.wtmp.function('N_lin_%s_%s'%(self.POI[1],channel)),self.wtmp.var('ccw'),\
@@ -476,11 +510,11 @@ class Prepare_workspace_4limit:
             paralist.add(RooArgList(N_cwww_ccw,N_ccw_cb))
             
             #parts of final signal model formula
-            cwww_s      = '+@1*(@2/12)**2'
-            ccw_s       = '+@3*(@5/20)**2+@4*(@5/20)'
-            cb_s        = '+@6*(@8/60)**2+@7*(@8/60)'
-            cwww_ccw_s  = '+@9*(@2/12)*(@5/20)'
-            ccw_cb_s    = '+@10*(@5/20)*(@8/60)'
+            cwww_s      = '+@1*(@2/3.6)**2'
+            ccw_s       = '+@3*(@5/4.5)**2+@4*(@5/4.5)'
+            cb_s        = '+@6*(@8/20)**2+@7*(@8/20)'
+            cwww_ccw_s  = '+@9*(@2/3.6)*(@5/4.5)'
+            ccw_cb_s    = '+@10*(@5/4.5)*(@8/20)'
             Pdf_norm    = RooFormulaVar( 'Pdf_norm_%s'%channel, 'Pdf_norm_%s'%channel, '@0'+cwww_s+ccw_s+cb_s+cwww_ccw_s+ccw_cb_s, paralist)
             paralistN   = RooArgList()
             for i in range(11):
@@ -488,15 +522,15 @@ class Prepare_workspace_4limit:
             paralistN.add(RooArgList(Pdf_norm))
 
             N1                = RooFormulaVar( 'N1_%s'%channel, 'N1_%s'%channel, '@0/@11', paralistN )
-            N2                = RooFormulaVar( 'N2_%s'%channel, 'N2_%s'%channel, '(@1*(@2/12)**2)/@11', paralistN )
+            N2                = RooFormulaVar( 'N2_%s'%channel, 'N2_%s'%channel, '(@1*(@2/3.6)**2)/@11', paralistN )
             #N3 ->no SM-interference for c_WWW
-            N4                = RooFormulaVar( 'N4_%s'%channel, 'N4_%s'%channel, '(@3*(@5/20)**2)/@11', paralistN )
-            N5                = RooFormulaVar( 'N5_%s'%channel, 'N5_%s'%channel, '(@4*(@5/20))/@11', paralistN )
-            N6                = RooFormulaVar( 'N6_%s'%channel, 'N6_%s'%channel, '(@6*(@8/60)**2)/@11', paralistN )
-            N7                = RooFormulaVar( 'N7_%s'%channel, 'N7_%s'%channel, '(@7*(@8/60))/@11', paralistN )
-            N8                = RooFormulaVar( 'N8_%s'%channel, 'N8_%s'%channel, '(@9*(@2/12)*(@5/20))/@11', paralistN )
+            N4                = RooFormulaVar( 'N4_%s'%channel, 'N4_%s'%channel, '(@3*(@5/4.5)**2)/@11', paralistN )
+            N5                = RooFormulaVar( 'N5_%s'%channel, 'N5_%s'%channel, '(@4*(@5/4.5))/@11', paralistN )
+            N6                = RooFormulaVar( 'N6_%s'%channel, 'N6_%s'%channel, '(@6*(@8/20)**2)/@11', paralistN )
+            N7                = RooFormulaVar( 'N7_%s'%channel, 'N7_%s'%channel, '(@7*(@8/20))/@11', paralistN )
+            N8                = RooFormulaVar( 'N8_%s'%channel, 'N8_%s'%channel, '(@9*(@2/3.6)*(@5/4.5))/@11', paralistN )
             #N9 ->no aTGC-interference for c_WWW/c_B #FIXME should be added for WZ
-            N10                = RooFormulaVar( 'N10_%s'%channel,'N10_%s'%channel,'(@10*(@5/20)*(@8/60))/@11', paralistN )
+            N10                = RooFormulaVar( 'N10_%s'%channel,'N10_%s'%channel,'(@10*(@5/4.5)*(@8/20))/@11', paralistN )
 
             N_list        = RooArgList(N1,N2,N4,N5,N6,N7)
             N_list.add(RooArgList(N8,N10))

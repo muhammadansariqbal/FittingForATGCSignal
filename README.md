@@ -67,7 +67,7 @@ combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --ex
 -n: is added to the output name
 
 # Results are saved in higgsCombineTestExample.MultiDimFit.mH120.root. To get 68% and 95% C.L. limits run e.g.
-python buil1DInterval.py -10 10 higgsCombineExample.MultiDimFit.mH120.root cwww
+python build1DInterval.py -10 10 higgsCombineExample.MultiDimFit.mH120.root cwww
 
 # To get 2-Dimensional limits run e.g.
 combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww,ccw -P cwww -P ccw --freezeNuisances cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-10,10:ccw=-20,20 --minimizerStrategy=2 -n Example
