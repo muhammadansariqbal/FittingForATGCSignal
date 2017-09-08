@@ -89,7 +89,7 @@ class Prepare_workspace_4limit:
                 for para in self.POI:
                     hists4scale['c_pos_%s_hist_%s'%(WV,para)] = TH1F('c_pos_%s_hist_%s'%(WV,para),'c_pos_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
                     hists4scale['c_neg_%s_hist_%s'%(WV,para)] = TH1F('c_neg_%s_hist_%s'%(WV,para),'c_neg_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
-                    hists4scale['c_dif_%s_hist_%s'%(WV,para)] = TH1F('c_dif_%s_hist_%s'%(WV,para),'dif_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
+                    hists4scale['c_dif_%s_hist_%s'%(WV,para)] = TH1F('c_dif_%s_hist_%s'%(WV,para),'c_dif_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
                     hists4scale['c_pos_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
                     hists4scale['c_neg_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
                     hists4scale['c_dif_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
@@ -100,10 +100,10 @@ class Prepare_workspace_4limit:
                 hists4scale['c_%s_histall3'%WV].Sumw2(kTRUE)
 
 		# Add histograms for two aTGC parameters positive
-		hists4scale['c_cwww_ccw_%s_hist'%WV]=TH1F('ccwww_ccw_%s_hist'%WV,'c_cwww_ccw_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
-                hists4scale['c_ccw_cb_%s_hist'%WV]=TH1F('c_ccw_cb_%s_hist'%WV,'cccw_cb_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
-                hists4scale['c_cwww_ccw_%s_hist'%WV].Sumw2(kTRUE)
-                hists4scale['c_ccw_cb_%s_hist'%WV].Sumw2(kTRUE)
+		hists4scale['c_cwww_ccw_%s_hist'%WV]=TH1F('c_cwww_ccw_%s_hist'%WV,'c_cwww_ccw_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+		hists4scale['c_ccw_cb_%s_hist'%WV]=TH1F('c_ccw_cb_%s_hist'%WV,'c_ccw_cb_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
+		hists4scale['c_cwww_ccw_%s_hist'%WV].Sumw2(kTRUE)
+		hists4scale['c_ccw_cb_%s_hist'%WV].Sumw2(kTRUE)
 
 		# Add histograms for aTGC-aTGC interference terms
 		hists4scale['c_int_cwww_ccw_%s_hist'%WV]=TH1F('c_int_cwww_ccw_%s_hist'%WV,'c_int_cwww_ccw_%s_hist'%WV,self.nbins,self.binlo,self.binhi);
@@ -125,39 +125,39 @@ class Prepare_workspace_4limit:
                     #apply cuts
                     #using whole mj-range (sideband and signal region)
                     if treeInATGC.jet_pt>200. and treeInATGC.jet_tau21_PUPPI<0.55 and treeInATGC.W_pt>200. and treeInATGC.deltaR_LeptonWJet>math.pi/2. and treeInATGC.jet_mass_softdrop_PUPPI>40 and treeInATGC.jet_mass_softdrop_PUPPI<150 and abs(treeInATGC.deltaPhi_WJetMet)>2. and abs(treeInATGC.deltaPhi_WJetWlep)>2. and treeInATGC.nbtag==0 and treeInATGC.pfMET>METCUT and MWW>self.binlo:
-                        weight_part = treeInATGC.totEventWeight
-                        aTGC        = treeInATGC.aTGCWeights                #contains weights for different workingpoints
-                        #all3
-                        hists4scale['c_%s_histall3'%WV].Fill(MWW,aTGC[123] * weight_part)
-                        #SM
-                        hists4scale['c_SM_%s_hist'%WV].Fill(MWW,aTGC[61] * weight_part)
-                        #cwww
-                        hists4scale['c_pos_%s_hist_cwww'%WV].Fill(MWW,aTGC[11] * weight_part)
-                        hists4scale['c_neg_%s_hist_cwww'%WV].Fill(MWW,aTGC[111] * weight_part)
-                        #ccw
-                        hists4scale['c_pos_%s_hist_ccw'%WV].Fill(MWW,aTGC[51] * weight_part)
-                        hists4scale['c_neg_%s_hist_ccw'%WV].Fill(MWW,aTGC[71] * weight_part)
-                        #cb
-                        hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[59] * weight_part)
-                        hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[63] * weight_part)
-                        #ccw-SM interference
-                        hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,(aTGC[51]-aTGC[71]) * weight_part)
-                        #cb-SM interference
-                        hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,(aTGC[59]-aTGC[63]) * weight_part)
+			weight_part = treeInATGC.totEventWeight
+			aTGC        = treeInATGC.aTGCWeights                #contains weights for different workingpoints
+			#all3hists4scale['c_%s_histall3'%WV].Fill(MWW,aTGC[123] * weight_part)
+			hists4scale['c_%s_histall3'%WV].Fill(MWW,aTGC[123] * weight_part)
+			#SM
+			hists4scale['c_SM_%s_hist'%WV].Fill(MWW,aTGC[61] * weight_part)
+			#cwww
+			hists4scale['c_pos_%s_hist_cwww'%WV].Fill(MWW,aTGC[11] * weight_part)
+			hists4scale['c_neg_%s_hist_cwww'%WV].Fill(MWW,aTGC[111] * weight_part)
+			#ccw
+			hists4scale['c_pos_%s_hist_ccw'%WV].Fill(MWW,aTGC[51] * weight_part)
+			hists4scale['c_neg_%s_hist_ccw'%WV].Fill(MWW,aTGC[71] * weight_part)
+			#cb
+			hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[59] * weight_part)
+			hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[63] * weight_part)
+			#ccw-SM interference
+			hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,(aTGC[51]-aTGC[71]) * weight_part)
+			#cb-SM interference
+			hists4scale['c_dif_%s_hist_cb'%WV].Fill(MWW,(aTGC[59]-aTGC[63]) * weight_part)
 			#cwww+ccw
 			hists4scale['c_cwww_ccw_%s_hist'%WV].Fill(MWW,aTGC[1] * weight_part)
 			#ccw+cb
-                        hists4scale['c_ccw_cb_%s_hist'%WV].Fill(MWW,aTGC[49] * weight_part)
+			hists4scale['c_ccw_cb_%s_hist'%WV].Fill(MWW,aTGC[49] * weight_part)
 			#cwww-ccw interference
-			hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fill(MWW, ((aTGC[1]-aTGC[101])-(aTGC[11]-aTGC[111])) * weight_part )
+			hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fill(MWW, ((aTGC[1]-aTGC[101])-(aTGC[11]-aTGC[111])) * weight_part)
 			#ccw-cb interference
-                        hists4scale['c_int_ccw_cb_%s_hist'%WV].Fill(MWW, ((aTGC[49]-aTGC[53])-(aTGC[59]-aTGC[63])) * weight_part )
+			hists4scale['c_int_ccw_cb_%s_hist'%WV].Fill(MWW, ((aTGC[49]-aTGC[69])-(aTGC[51]-aTGC[71])) * weight_part)
 
 		# Fit exponential to the aTGC-aTGC interference histograms (This is to avoid doing this via gen-level files)
 		hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fit("expo")
 		a5_val=hists4scale['c_int_cwww_ccw_%s_hist'%WV].GetFunction("expo").GetParameter(1)
-		hists4scale['c_int_cwww_ccw_%s_hist'%WV].Fit("expo")
-		a7_val=hists4scale['c_int_cwww_ccw_%s_hist'%WV].GetFunction("expo").GetParameter(1)
+		hists4scale['c_int_ccw_cb_%s_hist'%WV].Fit("expo")
+		a7_val=hists4scale['c_int_ccw_cb_%s_hist'%WV].GetFunction("expo").GetParameter(1)
 		
 		# Write the slopes to workspace
 		a5=RooRealVar('a5_%s'%WV,'a5_%s'%WV,-0.0001,-0.01,0.01)
@@ -169,6 +169,7 @@ class Prepare_workspace_4limit:
 		self.Import_to_ws(self.wtmp, [a5,a7])
 		
 		# Write normalizations to workspace
+		# Not used now (histograms are retrieved later, RooDataHists are created and sumEntries is used on them); although can be done via this too, the results are identical
 		N3645=RooRealVar('N_cwww_ccw_36_45_%s'%WV,'N_cwww_ccw_36_45_%s'%WV,hists4scale['c_cwww_ccw_%s_hist'%WV].Integral())
 		N4520=RooRealVar('N_ccw_cb_45_20_%s'%WV,'N_ccw_cb_45_20_%s'%WV,hists4scale['c_ccw_cb_%s_hist'%WV].Integral())
 		N36=RooRealVar('N_cwww_36_%s'%WV,'N_cwww_36_%s'%WV,hists4scale['c_pos_%s_hist_cwww'%WV].Integral())
@@ -357,10 +358,18 @@ class Prepare_workspace_4limit:
             ccw.setConstant(kTRUE);
             cb.setConstant(kTRUE);
    
-            #get SM histogram and make RooDataHist
+            #get SM and other histograms and make RooDataHists
             fileInHist      = TFile.Open('Output/hists4scale_%s_WV_aTGC-%s_%s.root'%(self.ch,self.binlo,self.binhi))
             rrv_x.setRange(self.binlo,self.binhi)
             SMdatahist      = RooDataHist('SMdatahist_%s'%sample,'SMdatahist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_SM_%s_hist'%sample))
+	    cwwwPosDataHist = RooDataHist('cwwwPosDataHist_%s'%sample,'cwwwPosDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_pos_%s_hist_cwww'%sample))
+	    cwwwNegDataHist = RooDataHist('cwwwNegDataHist_%s'%sample,'cwwwNegDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_neg_%s_hist_cwww'%sample))
+	    ccwPosDataHist  = RooDataHist('ccwPosDataHist_%s'%sample,'ccwPosDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_pos_%s_hist_ccw'%sample))
+	    ccwNegDataHist  = RooDataHist('ccwNegDataHist_%s'%sample,'ccwNegDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_neg_%s_hist_ccw'%sample))
+	    cbPosDataHist   = RooDataHist('cbPosDataHist_%s'%sample,'cbPosDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_pos_%s_hist_cb'%sample))
+	    cbNegDataHist   = RooDataHist('cbNegDataHist_%s'%sample,'cbNegDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_neg_%s_hist_cb'%sample))
+	    cwwwccwDataHist = RooDataHist('cwwwccwDataHist_%s'%sample,'cwwwccwDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_cwww_ccw_%s_hist'%sample))
+	    ccwcbDataHist   = RooDataHist('ccwcbDataHist_%s'%sample,'ccwcbDataHist_%s'%sample,RooArgList(rrv_x),fileInHist.Get('c_ccw_cb_%s_hist'%sample))
             fileInHist.Close()
 
             #make SM pdf, simple exponential
@@ -371,8 +380,16 @@ class Prepare_workspace_4limit:
             fitresSM        = SMPdf.fitTo(SMdatahist, RooFit.SumW2Error(kTRUE), RooFit.Save(kTRUE))
             self.fitresults.append(fitresSM)
             a1_4fit.setConstant(kTRUE)
-            #coefficient for SM term in final signal function
+            #coefficient for SM term and other terms in final signal function
             N_SM            = RooRealVar('N_SM_%s'%channel,'N_SM_%s'%channel,SMdatahist.sumEntries())
+	    N_3645          = RooRealVar('N_3645_%s'%channel,'N_3645_%s'%channel,cwwwccwDataHist.sumEntries())
+	    N_4520          = RooRealVar('N_4520_%s'%channel,'N_4520_%s'%channel,ccwcbDataHist.sumEntries())
+            N_36            = RooRealVar('N_36_%s'%channel,'N_36_%s'%channel,cwwwPosDataHist.sumEntries())
+            N__36           = RooRealVar('N__36_%s'%channel,'N__36_%s'%channel,cwwwNegDataHist.sumEntries())
+            N_45            = RooRealVar('N_45_%s'%channel,'N_45%s'%channel,ccwPosDataHist.sumEntries())
+            N__45           = RooRealVar('N__45%s'%channel,'N__45%s'%channel,ccwNegDataHist.sumEntries())
+            N_20            = RooRealVar('N_20%s'%channel,'N_20%s'%channel,cbPosDataHist.sumEntries())
+            N__20           = RooRealVar('N__20%s'%channel,'N__20%s'%channel,cbNegDataHist.sumEntries())
 
             self.Import_to_ws(self.wtmp,[cwww,ccw,cb,self.eps4cbWZ,SMdatahist,SMdatahist,N_SM])
             
@@ -488,21 +505,21 @@ class Prepare_workspace_4limit:
                 cf = 1
 
             # Get other coefficients
-            N_SM_val    = N_SM.getVal()
-            N3645       = self.wtmp.var('N_cwww_ccw_36_45_%s'%sample).getVal()
-            N4520       = self.wtmp.var('N_ccw_cb_45_20_%s'%sample).getVal()
-            N36         = self.wtmp.var('N_cwww_36_%s'%sample).getVal()
-            N36_        = self.wtmp.var('N_cwww__36_%s'%sample).getVal()
-            N45         = self.wtmp.var('N_ccw_45_%s'%sample).getVal()
-            N45_        = self.wtmp.var('N_ccw__45_%s'%sample).getVal()
-            N20         = self.wtmp.var('N_cb_20_%s'%sample).getVal()
-            N20_        = self.wtmp.var('N_cb__20_%s'%sample).getVal()
+            NSM         = N_SM.getVal()
+            N3645       = N_3645.getVal()
+            N4520       = N_4520.getVal()
+            N36         = N_36.getVal()
+            N36_        = N__36.getVal()
+            N45         = N_45.getVal()
+            N45_        = N__45.getVal()
+            N20         = N_20.getVal()
+            N20_        = N__20.getVal()
 
             ##define final coefficients, scaled by cf
             N_cwww_ccw      = RooRealVar('N_cwww_ccw_%s'%channel,'N_cwww_ccw_%s'%channel,\
-                                            cf*((N3645+N_SM_val)-(N36+N45)))
+                                            cf*((N3645+NSM)-(N36+N45)))
             N_ccw_cb        = RooRealVar('N_ccw_cb_%s'%channel,'N_ccw_cb_%s'%channel,\
-                                            cf*((N4520+N_SM_val)-(N45+N20)))
+                                            cf*((N4520+NSM)-(N45+N20)))
 
             paralist.add(RooArgList(self.wtmp.function('N_quad_%s_%s'%(self.POI[0],channel)),self.wtmp.var('cwww'),\
                                     self.wtmp.function('N_quad_%s_%s'%(self.POI[1],channel)),self.wtmp.function('N_lin_%s_%s'%(self.POI[1],channel)),self.wtmp.var('ccw'),\
