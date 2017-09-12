@@ -433,9 +433,13 @@ class Prepare_workspace_4limit:
                 #FIXME scaling to the sum of WW and WZ leads to over-estimating WW and under-estimating WZ
                 #FIXME scaling to WW and WZ separately leads to a really high scaling factor for WZ
                 hist4scale = TH1F('hist4scale_%s'%self.POI[i],'hist4scale_%s'%self.POI[i],3,-1.5*self.PAR_MAX[self.POI[i]],1.5*self.PAR_MAX[self.POI[i]])
-                hist4scale.SetBinContent(1,(negWW.sumEntries()+negWZ.sumEntries())/(SMWW.sumEntries()+SMWZ.sumEntries()))
                 hist4scale.SetBinContent(2,1)
-                hist4scale.SetBinContent(3,(posWW.sumEntries()+posWZ.sumEntries())/(SMWW.sumEntries()+SMWZ.sumEntries()))
+		if sample=='WW':
+		    hist4scale.SetBinContent(1,(negWW.sumEntries())/(SMWW.sumEntries()))
+                    hist4scale.SetBinContent(3,(posWW.sumEntries())/(SMWW.sumEntries()))
+		else:
+		    hist4scale.SetBinContent(1,(negWZ.sumEntries())/(SMWZ.sumEntries()))
+                    hist4scale.SetBinContent(3,(posWZ.sumEntries())/(SMWZ.sumEntries()))
                 #fit parabel
                 hist4scale.Fit('pol2','0')
                 fitfunc     = hist4scale.GetFunction('pol2')
@@ -447,6 +451,7 @@ class Prepare_workspace_4limit:
                 N_pos_tmp   = pos_datahist.sumEntries()
                 N_neg_tmp   = neg_datahist.sumEntries()
                 N_quad      = RooRealVar('N_quad_%s'%s_name,'N_quad_%s'%s_name, ((N_pos_tmp+N_neg_tmp)/2)-N_SM.getVal() )
+		#N_quad      = RooRealVar('N_quad_%s'%s_name,'N_quad_%s'%s_name, 0 )
                 
                 #scaleshape is the relative change to SM
                 scaleshape  = RooFormulaVar('scaleshape_%s'%s_name,'scaleshape_%s'%s_name, '(@0*@2+@1*@2**2)', RooArgList(par1,par2,self.wtmp.var(self.POI[i])))
@@ -459,6 +464,7 @@ class Prepare_workspace_4limit:
                     a3          = RooFormulaVar('a_lin_nuis_%s'%s_name,'a_lin_nuis_%s'%s_name,'@0*@1',RooArgList(a3_4fit,self.eps4cbWZ))
                     cPdf_quad   = RooExponential('Pdf_quad_%s'%s_name,'Pdf_quad_%s'%s_name,rrv_x,a2)
                 else:
+		    #N_lin       = RooRealVar('N_lin_%s'%s_name,'N_lin_%s'%s_name, 0 )
                     N_lin       = RooRealVar('N_lin_%s'%s_name,'N_lin_%s'%s_name, (N_pos_tmp-N_neg_tmp)/2 )
                     a2_4fit     = RooRealVar('a_quad_4fit_%s'%s_name,'a_quad_4fit_%s'%s_name,-0.001,-0.01,0.)
                     a2          = RooFormulaVar('a_quad_nuis_%s'%s_name,'a_quad_nuis_%s'%s_name,'@0*@1',RooArgList(a2_4fit,self.eps))
