@@ -100,6 +100,75 @@ private:
   ClassDef(RooPow3Pdf,1) // Your description goes here...
 };
 
+/////// Degree 3 polynomial for W+Jets
+
+class RooPoly3Pdf : public RooAbsPdf {
+ public:
+  RooPoly3Pdf() {} ;  // default constructor
+  RooPoly3Pdf(const char *name, const char *title,
+	      RooAbsReal& _x,
+	      RooAbsReal& _p3,
+	      RooAbsReal& _p2,
+	      RooAbsReal& _p1,
+	      RooAbsReal& _p0);
+
+  RooPoly3Pdf(const RooPoly3Pdf& other, const char* name=0) ; // ctor
+
+  virtual TObject* clone(const char* newname) const { return new RooPoly3Pdf(*this,newname); } // clone 
+
+  inline virtual ~RooPoly3Pdf() { } // dtor
+
+  Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ; // analytic integral
+  Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
+
+protected:
+
+  RooRealProxy x ;
+  RooRealProxy p3 ;
+  RooRealProxy p2 ;
+  RooRealProxy p1 ;
+  RooRealProxy p0 ;
+  
+  Double_t evaluate() const ; // evaluate method 
+
+private:
+
+  ClassDef(RooPoly3Pdf,1) // Your description goes here...
+};
+
+/////// Chi-Square Degree 4 for W+Jets
+
+class RooChiSqPdf : public RooAbsPdf {
+ public:
+  RooChiSqPdf() {} ;  // default constructor
+  RooChiSqPdf(const char *name, const char *title,
+              RooAbsReal& _x,
+              RooAbsReal& _A,
+              RooAbsReal& _shift,
+              RooAbsReal& _c);
+
+  RooChiSqPdf(const RooChiSqPdf& other, const char* name=0) ; // ctor
+
+  virtual TObject* clone(const char* newname) const { return new RooChiSqPdf(*this,newname); } // clone 
+
+  inline virtual ~RooChiSqPdf() { } // dtor
+
+  Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ; // analytic integral
+  Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
+
+protected:
+
+  RooRealProxy x ;
+  RooRealProxy A ;
+  RooRealProxy shift ;
+  RooRealProxy c ;
+
+  Double_t evaluate() const ; // evaluate method 
+
+private:
+
+  ClassDef(RooChiSqPdf,1) // Your description goes here...
+};
 
 /////// Error Function * Exponential for W+Jets
 

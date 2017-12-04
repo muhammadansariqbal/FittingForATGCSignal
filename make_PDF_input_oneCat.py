@@ -906,7 +906,7 @@ if __name__ == '__main__':
         makeWS.Make_input()
     #combine the created datacards
     output_card_name = 'aC_WWWZ_simfit'
-#   cmd = 'combineCards.py aC_WWWZ_sig_el.txt aC_WWWZ_sig_mu.txt aC_WWWZ_sb_lo_el.txt aC_WWWZ_sb_lo_mu.txt aC_WWWZ_sb_hi_el.txt aC_WWWZ_sb_hi_mu.txt > %s.txt'%output_card_name
+    cmd = 'combineCards.py aC_WWWZ_sig_el.txt aC_WWWZ_sig_mu.txt aC_WWWZ_sb_lo_el.txt aC_WWWZ_sb_lo_mu.txt aC_WWWZ_sb_hi_el.txt aC_WWWZ_sb_hi_mu.txt > %s.txt'%output_card_name
     cmd = 'combineCards.py aC_WWWZ_sig_mu.txt aC_WWWZ_sb_lo_mu.txt aC_WWWZ_sb_hi_mu.txt > %s.txt'%output_card_name
     print cmd
     os.system(cmd)
