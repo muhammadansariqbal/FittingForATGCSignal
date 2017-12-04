@@ -326,8 +326,8 @@ class Prepare_workspace_4limit:
                 leg2.SetBorderSize(0)
                 leg2.AddEntry(plots[i].findObject('SMdata'),'MC '+parlatex[i]+'=0 TeV^{-2}','le')
                 leg2.AddEntry(plots[i].findObject('SMmodel'),'signal model '+parlatex[i]+'=0 TeV^{-2}','l')
-                leg2.AddEntry(plots[i].findObject('atgcdata'),'MC '+parlatex[i]+'='+str(+self.PAR_MAX[self.POI[i]])+' TeV^{-2}','le')
-                leg2.AddEntry(plots[i].findObject('atgcmodel'),'signal model '+parlatex[i]+'='+str(+self.PAR_MAX[self.POI[i]])+' TeV^{-2}','l')
+                leg2.AddEntry(plots[i].findObject('atgcdata'),'MC '+parlatex[i]+'=+'+str(self.PAR_MAX[self.POI[i]])+' TeV^{-2}','le')
+                leg2.AddEntry(plots[i].findObject('atgcmodel'),'signal model '+parlatex[i]+'=+'+str(self.PAR_MAX[self.POI[i]])+' TeV^{-2}','l')
 		leg2.Draw()
 		leg2.Print()
                 pullhist2 = plots2[i].pullHist('h_pos_datahist_%s_%s'%(cat,self.POI[i]),'aTGC_model_%s_Norm[rrv_mass_lvj]'%channel)
@@ -643,19 +643,19 @@ class Prepare_workspace_4limit:
             ##define uncertainties
             #                                              |------------el----------------------||------------mu----------------------|
             #                                                WW   WZ     WJets   TTbar   STop      WW     WZ     WJets   TTbar   STop
-            uncert_map['lumi_13TeV']                    = [1.027,1.027  ,'-'    ,1.027  ,1.027  ,1.027  ,1.027  ,'-'    ,1.027  ,1.027]
-            uncert_map['CMS_eff_vtag_tau21_sf_13TeV']   = [1.120,1.120  ,'-'    ,1.120  ,1.120  ,1.120  ,1.120  ,'-'    ,1.120  ,1.120]
-            uncert_map['CMS_eff_b']                     = ['-'  ,1.001  ,'-'    ,1.008  ,'-'    ,'-'     ,'-'   ,'-'    ,1.008  ,'-'  ]
-            uncert_map['CMS_scale_e']                   = [1.006,'-'    ,'-'    ,'-'    ,1.005  ,'-'     ,'-'   ,'-'    ,'-'    ,'-'  ]
-            uncert_map['CMS_scale_m']                   = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.017  ,1.014  ,'-'    ,1.016  ,1.019]
-            uncert_map['pdf_qqbar']                     = [1.019,1.025  ,'-'    ,1.025  ,1.003  ,1.018  ,1.023  ,'-'    ,1.026  ,1.004]
-            uncert_map['QCD_scale_VV']                  = [1.060,1.060  ,'-'    ,'-'    ,'-'    ,1.060  ,1.060  ,'-'    ,'-'    ,'-'  ]
-            uncert_map['QCD_scale_TTbar']               = ['-'  ,'-'    ,'-'    ,1.190  ,1.020  ,'-'    ,'-'    ,'-'    ,1.190  ,1.019]
+            uncert_map['lumi_13TeV']                    = [1.025,1.025  ,'-'    ,1.025  ,1.025  ,1.025  ,1.025  ,'-'    ,1.025  ,1.025]
+            uncert_map['CMS_eff_vtag_tau21_sf_13TeV']   = [1.140,1.140  ,'-'    ,1.140  ,1.140  ,1.140  ,1.140  ,'-'    ,1.140  ,1.140]
+            uncert_map['CMS_eff_b']                     = ['-'  ,1.001  ,'-'    ,1.010  ,1.008  ,'-'     ,1.001 ,'-'    ,1.010  ,1.008]
+            uncert_map['CMS_scale_e']                   = [1.007,'-'    ,'-'    ,'-'    ,1.003  ,'-'     ,'-'   ,'-'    ,'-'    ,'-'  ]
+            uncert_map['CMS_scale_m']                   = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.040  ,1.035  ,'-'    ,1.043  ,1.041]
+            uncert_map['pdf_qqbar']                     = [1.019,1.024  ,'-'    ,1.024  ,1.002  ,1.018  ,1.026  ,'-'    ,1.024  ,1.003]
+            uncert_map['QCD_scale_VV']                  = [1.058,1.035  ,'-'    ,'-'    ,'-'    ,1.060  ,1.036  ,'-'    ,'-'    ,'-'  ]
+            uncert_map['QCD_scale_TTbar']               = ['-'  ,'-'    ,'-'    ,1.182  ,1.009  ,'-'    ,'-'    ,'-'    ,1.178  ,1.011]
             uncert_map['CMS_scale_met']                 = [1.006,1.005  ,'-'    ,1.005  ,1.012  ,1.002  ,1.003  ,'-'    ,1.001  ,1.005]
-            uncert_map['CMS_eff_e']                     = [1.001,1.001  ,'-'    ,1.001  ,1.001  ,'-'    ,'-'    ,'-'    ,'-'    ,'-'  ]
-            uncert_map['CMS_eff_m']                     = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.039  ,1.038  ,'-'    ,1.032  ,1.036]
+            uncert_map['CMS_eff_e']                     = [1.024,1.023  ,'-'    ,1.022  ,1.022  ,'-'    ,'-'    ,'-'    ,'-'    ,'-'  ]
+            uncert_map['CMS_eff_m']                     = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.026  ,1.025  ,'-'    ,1.018  ,1.021]
             ##FIXME jet energy scale? effects of up/down in different regions ignored atm
-            uncert_map['CMS_scale_j']                   = [1.024,1.017  ,'-'    ,1.028  ,1.016  ,1.023  ,1.016  ,'-'    ,1.026  ,1.006]
+            uncert_map['CMS_scale_j']                   = [1.031,1.012  ,'-'    ,1.036  ,1.027  ,1.033  ,1.024  ,'-'    ,1.035  ,1.031]
             bkgs                                        = ['WW','WZ','TTbar','STop']
             NlnN    = len(uncert_map)
 
