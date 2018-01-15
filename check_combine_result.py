@@ -11,7 +11,7 @@ gSystem.Load("PDFs/Util_cxx.so")
 gSystem.Load("PDFs/hyperg_2F1_c.so")
 gSystem.Load("PDFs/HWWLVJRooPdfs_cxx.so")
 from ROOT import draw_error_band
-from ROOT import RooErfExpPdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, draw_error_band_extendPdf
+from ROOT import RooPoly3Pdf, RooChiSqPdf, RooErfExpPdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, draw_error_band_extendPdf
 
 
 ch_nums = {"sig_el":"ch1","sb_lo_el":"ch3","sb_hi_el":"ch5","sig_mu":"ch2","sb_lo_mu":"ch4","sb_hi_mu":"ch6"}
@@ -176,7 +176,7 @@ def plot_all(w,ch="el",name='test.png'):
     pads = []
 
     make_pull(canvas,0+offset,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads)
-    make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads)
+    #make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads)
     make_pull(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads)
 
     canvas.cd()
@@ -212,17 +212,18 @@ def plot_all(w,ch="el",name='test.png'):
         pad1.SetLogy()
         pad1.SetTicky()
         pad1.SetBottomMargin(0)
-        p.Draw()
+        if regs[i]!='sig':
+         p.Draw()
 
-        pad_pull.cd()   
-        pad_pull.SetTopMargin(0)
-        pullhist = p.pullHist('data','WJets')
-        ratio_style.Draw("")
-        pullhist.SetLineColor(kBlack)
-        pullhist.SetMarkerStyle(20)
-        pullhist.SetMarkerSize(1)
-        pullhist.SetMarkerColor(kBlack)
-        pullhist.Draw("SAME PE")
+         pad_pull.cd()   
+         pad_pull.SetTopMargin(0)
+         pullhist = p.pullHist('data','WJets')
+         ratio_style.Draw("")
+         pullhist.SetLineColor(kBlack)
+         pullhist.SetMarkerStyle(20)
+         pullhist.SetMarkerSize(1)
+         pullhist.SetMarkerColor(kBlack)
+         pullhist.Draw("SAME PE")
 
         canvas.Update()
     canvas.SaveAs(name)

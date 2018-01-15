@@ -7,7 +7,7 @@ import random
 import os
 
 gSystem.Load('%s/lib/slc6_amd64_gcc481/libHiggsAnalysisCombinedLimit.so'%os.environ['CMSSW_BASE'])
-from ROOT import RooErfExpPdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf
+from ROOT import RooPoly3Pdf, RooChiSqPdf, RooErfExpPdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf
 
 
 parser        = OptionParser()
@@ -689,7 +689,8 @@ class Prepare_workspace_4limit:
             
             card += '''
 normvar_WJets_{ch}  flatParam
-rrv_c_ErfExp_WJets0_{ch}  flatParam
+rrv_c_ChiSq_WJets0_{ch}  flatParam
+rrv_shift_ChiSq_WJets0_{ch}  flatParam
 rrv_n_ExpN_WJets0_sb_{ch}  flatParam
 rrv_c_ExpN_WJets0_sb_{ch}  flatParam
 Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 1.4
@@ -798,7 +799,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                 set_mj        = RooArgSet(self.WS2.var('rrv_mass_j'))
                 for bkg in self.bkgs:
                     #define global norm for whole mj spectrum
-                    norm_var    = RooRealVar('normvar_%s_%s'%(bkg,self.ch),'normvar_%s_%s'%(bkg,self.ch),self.WS2.var("norm_%s_%s"%(bkg,self.ch)).getVal(),0,1e4)
+                    norm_var    = RooRealVar('normvar_%s_%s'%(bkg,self.ch),'normvar_%s_%s'%(bkg,self.ch),self.WS2.var("norm_%s_%s"%(bkg,self.ch)).getVal(),0,5e4)
                     norm_var.setConstant(kTRUE)
                     #define integral over region
                     reg_Int     = w_bkg.pdf('mj_%s_%s'%(bkg,self.ch)).createIntegral(set_mj,set_mj, region)
@@ -833,6 +834,8 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
                 ##define which parameters are floating (also has to be done in the datacard)
                 self.WS2.var("rrv_c_ErfExp_WJets0_%s"%self.ch).setConstant(kFALSE)
+                self.WS2.var("rrv_shift_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
+                self.WS2.var("rrv_c_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("normvar_WJets_%s"%self.ch).setConstant(kFALSE)
                 if 'sb' in region:
                     self.WS2.var("rrv_c_ExpN_WJets0_sb_%s"%self.ch).setConstant(kFALSE)
