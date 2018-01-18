@@ -185,7 +185,7 @@ def plot_all(w,ch="el",name='test.png'):
 
     regs    = ['sb_lo','sig','sb_hi']
 
-    ratio_style     = TH1D('ratio_style','ratio_style',26,900,3500)
+    ratio_style     = TH1D('ratio_style','ratio_style',36,900,4500)
     ratio_style.SetMaximum(2.9)
     ratio_style.SetMinimum(-3)
     ratio_style.GetYaxis().SetNdivisions(7)

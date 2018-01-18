@@ -789,7 +789,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             self.WS.var('rrv_mass_j').setRange('sb_lo',40,65)
             self.WS.var('rrv_mass_j').setRange('sig',65,105)
             self.WS.var('rrv_mass_j').setRange('sb_hi',105,150)
-            self.WS.var('rrv_mass_lvj').setRange(900,3500)
+            self.WS.var('rrv_mass_lvj').setRange(900,4500)
 
             #bkg-pdfs have the format '[bkg-name]_mlvj_[region]_[ch]' or '[bkg-name]_mj_[region]_[ch]'
 
@@ -900,12 +900,12 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
 if __name__ == '__main__':
     if options.chan=='elmu':
-        makeWS_el        = Prepare_workspace_4limit('el',900,3500)
+        makeWS_el        = Prepare_workspace_4limit('el',900,4500)
         makeWS_el.Make_input()
-        makeWS_mu        = Prepare_workspace_4limit('mu',900,3500)
+        makeWS_mu        = Prepare_workspace_4limit('mu',900,4500)
         makeWS_mu.Make_input()
     else:
-        makeWS        = Prepare_workspace_4limit(options.chan,900,3500)
+        makeWS        = Prepare_workspace_4limit(options.chan,900,4500)
         makeWS.Make_input()
     #combine the created datacards
     output_card_name = 'aC_WWWZ_simfit'
