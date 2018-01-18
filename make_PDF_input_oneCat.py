@@ -833,7 +833,6 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                     self.Import_to_ws(self.WS2,[pdf_atgc_VV_2d,signal_norm_VV],1)
 
                 ##define which parameters are floating (also has to be done in the datacard)
-                self.WS2.var("rrv_c_ErfExp_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("rrv_shift_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("rrv_c_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("normvar_WJets_%s"%self.ch).setConstant(kFALSE)
