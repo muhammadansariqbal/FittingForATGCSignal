@@ -46,7 +46,7 @@ class Prepare_workspace_4limit:
             self.binhi                  = mlvj_hi                #upper bound
 
             self.channel                = "WV_"+self.ch
-            self.nbins                  = (self.binhi-self.binlo)/100
+            self.nbins                  = (self.binhi-self.binlo)/240
             
             self.WS                     = RooWorkspace("w")        #final workspace
             self.wtmp                   = RooWorkspace('wtmp')
@@ -246,9 +246,9 @@ class Prepare_workspace_4limit:
                     if cat == 'WZ':
                         plotmin = 3e-4
                 elif self.ch == 'mu':
-                    plotmin = 1e-2
+                    plotmin = 1e-4
                     if cat == 'WZ':
-                        plotmin = 1e-3
+                        plotmin = 1e-4
                         plotmax = 500
                 if cat == 'WV':
                     plotmin = 1e-2
@@ -258,10 +258,10 @@ class Prepare_workspace_4limit:
                 pads[i][0].SetLogy()
                 plots[i].SetTitle('')
                 plots[i].GetYaxis().SetTitle('arbitrary units')
-                #plots[i].GetXaxis().SetRangeUser(900,3500)
+                #plots[i].GetXaxis().SetRangeUser(900,4500)
 
                 plots[i].Draw()
-                ndof        = (self.binhi-self.binlo)/100 - 4
+                ndof        = (self.binhi-self.binlo)/240 - 4
                 plots[i].Print()
                 
                 parlatex        = ['#frac{c_{WWW}}{#Lambda^{2}}','#frac{c_{W}}{#Lambda^{2}}','#frac{c_{B}}{#Lambda^{2}}']
@@ -276,7 +276,7 @@ class Prepare_workspace_4limit:
                 leg.Print()
                 
                 pads[i][1].cd()
-                ratio_style = TH1D('ratio_style','ratio_style',(self.binhi-self.binlo)/100,self.binlo,self.binhi)
+                ratio_style = TH1D('ratio_style','ratio_style',(self.binhi-self.binlo)/240,self.binlo,self.binhi)
                 ratio_style.SetMarkerStyle(21)
                 ratio_style.SetMaximum(3)
                 ratio_style.SetMinimum(-3)
