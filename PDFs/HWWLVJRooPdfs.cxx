@@ -215,32 +215,34 @@ Double_t  AtanPow3(Double_t x,Double_t c0,Double_t c1, Double_t c2, Double_t off
 
 //================================================================================================================================================================================
 //// Poly3 pdf
+//// Standardised Bernstein polynomial of degree 3 for W+Jets
 //
 ClassImp(RooPoly3Pdf)
 RooPoly3Pdf::RooPoly3Pdf(const char *name, const char *title, 
 					RooAbsReal& _x,
-					RooAbsReal& _p3,
-					RooAbsReal& _p2,
-					RooAbsReal& _p1,
-					RooAbsReal& _p0):
+					RooAbsReal& _b0,
+					RooAbsReal& _b1,
+					RooAbsReal& _b2,
+					RooAbsReal& _b3):
     			                RooAbsPdf(name,title), 
  			                x("x","x",this,_x),
-			                p3("p3","p3",this,_p3),
-			                p2("p2","p2",this,_p2),
-					p1("p1","p1",this,_p1),
-					p0("p0","p0",this,_p0){}
+			                b0("b0","b0",this,_b0),
+			                b1("b1","b1",this,_b1),
+					b2("b2","b2",this,_b2),
+					b3("b3","b3",this,_b3){}
 
 RooPoly3Pdf::RooPoly3Pdf(const RooPoly3Pdf& other, const char* name):
 					RooAbsPdf(other,name),
 					x("x",this,other.x),
-                                        p3("p3",this,other.p3),
-                                        p2("p2",this,other.p2),
-                                        p1("p1",this,other.p1),
-                                        p0("p0",this,other.p0){}
+                                        b0("b0",this,other.b0),
+                                        b1("b1",this,other.b1),
+                                        b2("b2",this,other.b2),
+                                        b3("b3",this,other.b3){}
 
 Double_t RooPoly3Pdf::evaluate() const { 
 
-	return (p3*TMath::Power(x,3))+(p2*TMath::Power(x,2))+(p1*x)+p0;
+	Double_t y=(x-40.)/110.;
+	return (b0*TMath::Power(1-y,3)) + (b1*y*TMath::Power(1-y,2)) + (b2*TMath::Power(y,2)*(1-y)) + (b3*TMath::Power(y,3));
 }
 
 Int_t RooPoly3Pdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const { 
@@ -253,9 +255,11 @@ Double_t RooPoly3Pdf::analyticalIntegral(Int_t code, const char* rangeName) cons
 	if (code==1) {
 		Double_t minTerm=0;
 		Double_t maxTerm=0;
+		Double_t yMin=(x.min(rangeName)-40.)/110.;
+		Double_t yMax=(x.max(rangeName)-40.)/110.;
 
-		minTerm=(p3*TMath::Power(x.min(rangeName),4)/4.) + (p2*TMath::Power(x.min(rangeName),3)/3.) + (p1*TMath::Power(x.min(rangeName),2)/2.) + (p0*x.min(rangeName));
-		maxTerm=(p3*TMath::Power(x.max(rangeName),4)/4.) + (p2*TMath::Power(x.max(rangeName),3)/3.) + (p1*TMath::Power(x.max(rangeName),2)/2.) + (p0*x.max(rangeName));
+		minTerm=110.0 * ( (b1+b3-b0-b2)*TMath::Power(yMin,4)/4 + (b0-(2*b1/3)+(b2/3))*TMath::Power(yMin,3) + ((b1/2)-(3*b0/2))*TMath::Power(yMin,2) + (b0)*(yMin) );
+		maxTerm=110.0 * ( (b1+b3-b0-b2)*TMath::Power(yMax,4)/4 + (b0-(2*b1/3)+(b2/3))*TMath::Power(yMax,3) + ((b1/2)-(3*b0/2))*TMath::Power(yMax,2) + (b0)*(yMax) );
 		return (maxTerm-minTerm);
 	}
 	return 0;
@@ -266,25 +270,22 @@ Double_t RooPoly3Pdf::analyticalIntegral(Int_t code, const char* rangeName) cons
 ClassImp(RooChiSqPdf)
 RooChiSqPdf::RooChiSqPdf(const char *name, const char *title,
                                         RooAbsReal& _x,
-                                        RooAbsReal& _A,
                                         RooAbsReal& _shift,
                                         RooAbsReal& _c):
                                         RooAbsPdf(name,title),
                                         x("x","x",this,_x),
-                                        A("A","A",this,_A),
                                         shift("shift","shift",this,_shift),
                                         c("c","c",this,_c){}
 
 RooChiSqPdf::RooChiSqPdf(const RooChiSqPdf& other, const char* name):
                                         RooAbsPdf(other,name),
                                         x("x",this,other.x),
-                                        A("A",this,other.A),
                                         shift("shift",this,other.shift),
                                         c("c",this,other.c){}
 
 Double_t RooChiSqPdf::evaluate() const {
 
-        return A*(x-shift)*TMath::Exp(c*(x-shift));
+        return (x-shift)*TMath::Exp(c*(x-shift));
 }
 
 Int_t RooChiSqPdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const {
@@ -298,8 +299,8 @@ Double_t RooChiSqPdf::analyticalIntegral(Int_t code, const char* rangeName) cons
                 Double_t minTerm=0;
                 Double_t maxTerm=0;
 
-                minTerm= A * TMath::Exp(c*(x.min(rangeName)-shift)) * ((c*x.min(rangeName))-(shift*c)-1) / (c*c);
-		maxTerm= A * TMath::Exp(c*(x.max(rangeName)-shift)) * ((c*x.max(rangeName))-(shift*c)-1) / (c*c);
+                minTerm= TMath::Exp(c*(x.min(rangeName)-shift)) * ((c*x.min(rangeName))-(shift*c)-1) / (c*c);
+		maxTerm= TMath::Exp(c*(x.max(rangeName)-shift)) * ((c*x.max(rangeName))-(shift*c)-1) / (c*c);
                 return (maxTerm-minTerm);
         }
         return 0;

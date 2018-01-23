@@ -100,17 +100,17 @@ private:
   ClassDef(RooPow3Pdf,1) // Your description goes here...
 };
 
-/////// Degree 3 polynomial for W+Jets
+/////// Degree 3 Bernstein Polynomial with standardised input for W+Jets
 
 class RooPoly3Pdf : public RooAbsPdf {
  public:
   RooPoly3Pdf() {} ;  // default constructor
   RooPoly3Pdf(const char *name, const char *title,
 	      RooAbsReal& _x,
-	      RooAbsReal& _p3,
-	      RooAbsReal& _p2,
-	      RooAbsReal& _p1,
-	      RooAbsReal& _p0);
+	      RooAbsReal& _b0,
+	      RooAbsReal& _b1,
+	      RooAbsReal& _b2,
+	      RooAbsReal& _b3);
 
   RooPoly3Pdf(const RooPoly3Pdf& other, const char* name=0) ; // ctor
 
@@ -124,10 +124,10 @@ class RooPoly3Pdf : public RooAbsPdf {
 protected:
 
   RooRealProxy x ;
-  RooRealProxy p3 ;
-  RooRealProxy p2 ;
-  RooRealProxy p1 ;
-  RooRealProxy p0 ;
+  RooRealProxy b0 ;
+  RooRealProxy b1 ;
+  RooRealProxy b2 ;
+  RooRealProxy b3 ;
   
   Double_t evaluate() const ; // evaluate method 
 
@@ -136,14 +136,13 @@ private:
   ClassDef(RooPoly3Pdf,1) // Your description goes here...
 };
 
-/////// Chi-Square Degree 4 for W+Jets
+/////// Chi-Square of Some Degree for W+Jets
 
 class RooChiSqPdf : public RooAbsPdf {
  public:
   RooChiSqPdf() {} ;  // default constructor
   RooChiSqPdf(const char *name, const char *title,
               RooAbsReal& _x,
-              RooAbsReal& _A,
               RooAbsReal& _shift,
               RooAbsReal& _c);
 
@@ -159,7 +158,6 @@ class RooChiSqPdf : public RooAbsPdf {
 protected:
 
   RooRealProxy x ;
-  RooRealProxy A ;
   RooRealProxy shift ;
   RooRealProxy c ;
 

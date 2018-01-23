@@ -77,7 +77,7 @@ combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisa
 # The output is saved in mlfitExample.root containing a RooFitResult fit_s with all final parameter values as well as a RooArgSet norm_fit_s with the final normalizations.
 
 # To plot the results we can use
-python check_combine_results.py -n Example -c mu -P cwww:10
+python check_combine_result.py -n Example -c mu -P cwww:10
 # which plots the mj and mlvj spectrum in all three regions while setting cwww to 10.
 
 # If we want to get the background-only fit we have to freeze all aTGC-parameters and set a different POI, e.g.

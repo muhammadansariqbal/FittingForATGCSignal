@@ -686,7 +686,16 @@ class Prepare_workspace_4limit:
                         i += 5
                     card += """{value}\t\t\t""".format(value=uncert_map[uncert][i])
                 card += """\n"""
-            
+
+# Copy these in data card below as needed
+# rrv_c_ChiSq_WJets0_{ch}  flatParam
+# rrv_shift_ChiSq_WJets0_{ch}  flatParam
+# rrv_b0_Poly3_WJets0_{ch}  flatParam
+# rrv_b1_Poly3_WJets0_{ch}  flatParam
+# rrv_b2_Poly3_WJets0_{ch}  flatParam
+# rrv_b3_Poly3_WJets0_{ch}  flatParam
+
+# Write in the data card            
             card += '''
 normvar_WJets_{ch}  flatParam
 rrv_c_ChiSq_WJets0_{ch}  flatParam
@@ -835,6 +844,10 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                 ##define which parameters are floating (also has to be done in the datacard)
                 self.WS2.var("rrv_shift_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("rrv_c_ChiSq_WJets0_%s"%self.ch).setConstant(kFALSE)
+		#self.WS2.var("rrv_b0_Poly3_WJets0_%s"%self.ch).setConstant(kFALSE)
+		#self.WS2.var("rrv_b1_Poly3_WJets0_%s"%self.ch).setConstant(kFALSE)
+		#self.WS2.var("rrv_b2_Poly3_WJets0_%s"%self.ch).setConstant(kFALSE)
+		#self.WS2.var("rrv_b3_Poly3_WJets0_%s"%self.ch).setConstant(kFALSE)
                 self.WS2.var("normvar_WJets_%s"%self.ch).setConstant(kFALSE)
                 if 'sb' in region:
                     self.WS2.var("rrv_c_ExpN_WJets0_sb_%s"%self.ch).setConstant(kFALSE)
