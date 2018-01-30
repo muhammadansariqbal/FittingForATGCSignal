@@ -231,6 +231,15 @@ class Prepare_workspace_4limit:
                 self.wtmp.data('SMdatahist_%s'%cat).plotOn(plots[i],RooFit.MarkerColor(kBlack),RooFit.LineColor(kBlack),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('E0'),RooFit.Name('SMdata'))
                 normvalSM        = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
 
+		#print "SM data for fitting in Matlab"
+	        #histPrint=plots[i].getHist();
+	        #for i in range(histPrint.GetN()):
+		#	print histPrint.GetY()[i]
+		#print "The corresponding sumw2 errors"
+		#for i in range(histPrint.GetN()):
+		#	print histPrint.GetErrorY(i)
+		#raw_input('SM data printed.')
+
                 self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(plots[i],RooFit.LineColor(kBlack),RooFit.Normalization(normvalSM, RooAbsReal.NumEvent),RooFit.Name('SMmodel'))
 
                 self.wtmp.data('neg_datahist_%s_%s'%(cat,self.POI[i])).plotOn(plots[i],RooFit.MarkerColor(kBlue),RooFit.LineColor(kBlue),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('E0'),RooFit.Name('atgcdata'))
@@ -380,13 +389,20 @@ class Prepare_workspace_4limit:
             fileInHist.Close()
 
             #make SM pdf, simple exponential
-            a1_4fit         = RooRealVar('a_SM_4fit_%s'%channel,'a_SM_4fit_%s'%channel,-0.1,-2,0)
+            #SMdatahist.printMultiline(SMdatahist.defaultPrintStream(), 1, kTRUE);
+            #raw_input('SM data printed.');
+            a1_4fit         = RooRealVar('a_SM_4fit_%s'%channel,'a_SM_4fit_%s'%channel,-0.1,-2.,0.)
             a1              = RooFormulaVar('a_SM_%s'%channel,'a_SM_%s'%channel,'@0*@1',RooArgList(a1_4fit,self.eps))
-            SMPdf           = RooExponential('SMPdf_%s'%channel,'SMPdf_%s'%channel,rrv_x,a1)
-            ##actual fit to determine SM shape parameter a1_4fit
+            SMPdfMain       = RooExponential('SMPdfMain_%s'%channel,'SMPdfMain_%s'%channel,rrv_x,a1)
+            aCorr           = RooRealVar('a_SM_Corr_%s'%channel,'a_SM_Corr_%s'%channel,-0.1,-2.,0.)
+            SMPdfCorr       = RooExponential('SMPdfCorr_%s'%channel,'SMPdfCorr_%s'%channel,rrv_x,aCorr)
+            SMCombCoeff     = RooRealVar('SMCombCoeff_%s'%channel,'SMCombCoeff_%s',0.5)
+            SMPdf           = RooAddPdf('SMPdf_%s'%channel,'SMPdf_%s'%channel,SMPdfMain,SMPdfCorr,SMCombCoeff)
+            #actual fit to determine SM shape parameter a1_4fit
             fitresSM        = SMPdf.fitTo(SMdatahist, RooFit.SumW2Error(kTRUE), RooFit.Save(kTRUE))
             self.fitresults.append(fitresSM)
             a1_4fit.setConstant(kTRUE)
+            aCorr.setConstant(kTRUE)
             #coefficient for SM term and other terms in final signal function
             N_SM            = RooRealVar('N_SM_%s'%channel,'N_SM_%s'%channel,SMdatahist.sumEntries())
 	    N_3645          = RooRealVar('N_3645_%s'%channel,'N_3645_%s'%channel,cwwwccwDataHist.sumEntries())
