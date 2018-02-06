@@ -21,6 +21,7 @@ parser        = OptionParser()
 parser.add_option('-c', '--ch', dest='ch', default='el', help='channel, el or mu')
 parser.add_option('-P','--POI', dest='poi', default='cwww:0')
 parser.add_option('-n', dest='name', default='')
+parser.add_option('-a', '--asimov', dest='asimovDataFile', default='none')
 (options,args) = parser.parse_args()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -41,7 +42,12 @@ def plot(w,fitres,normset,spectrum,ch,region):
 
     ch_num      = ch_nums[region+'_'+ch]
     bkgs        = ['WJets','TTbar','STop']
-    data        = w.data("data_obs")
+    if options.asimovDataFile=='none':
+	data = w.data("data_obs")
+    else:
+	fileAsimov = TFile.Open(options.asimovDataFile)
+	data = fileAsimov.Get("toys/toy_asimov")
+
     colors      = {'WJets':kGreen+1, 'TTbar':kOrange, 'STop':kBlue, 'WW':kRed, 'WZ':kRed+2, 'atgc':kMagenta}
 
 
@@ -202,7 +208,7 @@ def plot_all(w,ch="el",name='test.png'):
         pads.append(pad1)
         pads.append(pad_pull)
         p=plot(w,fitres,normset,'mlvj',ch,regs[i])
-        p.GetYaxis().SetRangeUser(7e-2,3e2)
+        p.GetYaxis().SetRangeUser(7e-2,5e3)
 
         canvas.cd()
         pad1.Draw()
