@@ -59,10 +59,12 @@ def plot(w,fitres,normset,spectrum,ch,region):
         bkg_norms[bkg]      = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],bkg)))
     bkg_pdfs["WW"]    = RooExtendPdf("WW","WW",w.pdf("shapeSig_aTGC_WW_%s_%s_%s"%(region,ch,ch_num)),w.function("shapeSig_aTGC_WW_%s_%s_%s__norm"%(region,ch,ch_num)))
     #bkg_norms["WW"]   = w.function("shapeSig_aTGC_WW_%s_%s_%s__norm"%(region,ch,ch_num))
-    bkg_norms["WW"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"WW")))
+    #bkg_norms["WW"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"WW")))
+    bkg_norms["WW"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/aTGC_WW_%s_%s"%(ch_nums[region+"_"+ch],region,ch)))
     bkg_pdfs["WZ"]    = RooExtendPdf("WZ","WZ",w.pdf("shapeSig_aTGC_WZ_%s_%s_%s"%(region,ch,ch_num)),w.function("shapeSig_aTGC_WZ_%s_%s_%s__norm"%(region,ch,ch_num)))
     #bkg_norms["WZ"]   = w.function("shapeSig_aTGC_WZ_%s_%s_%s__norm"%(region,ch,ch_num))
-    bkg_norms["WZ"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"WZ")))
+    #bkg_norms["WZ"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"WZ")))
+    bkg_norms["WZ"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/aTGC_WZ_%s_%s"%(ch_nums[region+"_"+ch],region,ch)))
 
     w.var(options.poi.split(':')[0]).setVal(float(options.poi.split(':')[1]))
 
@@ -151,6 +153,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads):
     pad.cd()
     p       = plot(w,fitres,normset,'mj',ch,reg)
     p.GetXaxis().SetTitleSize(0)
+    p.GetYaxis().SetRangeUser(0,1450)
     p.Draw()
 
     pad2.cd()
@@ -223,13 +226,16 @@ def plot_all(w,ch="el",name='test.png'):
 
          pad_pull.cd()   
          pad_pull.SetTopMargin(0)
-         pullhist = p.pullHist('data','WJets')
+         pullhist = p.pullHist("data","WJets")
          ratio_style.Draw("")
          pullhist.SetLineColor(kBlack)
          pullhist.SetMarkerStyle(20)
          pullhist.SetMarkerSize(1)
          pullhist.SetMarkerColor(kBlack)
          pullhist.Draw("SAME PE")
+	 for i in range(pullhist.GetN()):
+		print pullhist.GetY()[i]
+	 raw_input("Printed pull hist")
 
         canvas.Update()
     canvas.SaveAs(name)
@@ -250,7 +256,7 @@ fileIn.Close()
 
 fitparas    = fitres.floatParsFinal()
 
-#plot_all(w,options.ch,'prefit_%s.png'%options.ch)
+plot_all(w,options.ch,'prefit_%s.png'%options.ch)
 
 string = '{:>40} : {:>30} / {:>30}\n'.format('>>name<<','>>pre-fit<<','>>post-fit<<')
 for i in range(fitparas.getSize()):
