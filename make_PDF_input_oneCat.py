@@ -121,7 +121,7 @@ class Prepare_workspace_4limit:
                     if i%10000==0:
                             print str(i) + '/' + str(treeInATGC.GetEntries())
                     treeInATGC.GetEntry(i)
-                    MWW                = treeInATGC.MWW
+                    MWW                = treeInATGC.MWW_SD
                     #apply cuts
                     #using whole mj-range (sideband and signal region)
                     if treeInATGC.jet_pt>200. and treeInATGC.jet_tau21_PUPPI<0.55 and treeInATGC.W_pt>200. and treeInATGC.deltaR_LeptonWJet>math.pi/2. and treeInATGC.jet_mass_softdrop_PUPPI>40 and treeInATGC.jet_mass_softdrop_PUPPI<150 and abs(treeInATGC.deltaPhi_WJetMet)>2. and abs(treeInATGC.deltaPhi_WJetWlep)>2. and treeInATGC.nbtag==0 and treeInATGC.pfMET>METCUT and MWW>self.binlo:
@@ -661,17 +661,19 @@ class Prepare_workspace_4limit:
             #                                                WW   WZ     WJets   TTbar   STop      WW     WZ     WJets   TTbar   STop
             uncert_map['lumi_13TeV']                    = [1.025,1.025  ,'-'    ,1.025  ,1.025  ,1.025  ,1.025  ,'-'    ,1.025  ,1.025]
             uncert_map['CMS_eff_vtag_tau21_sf_13TeV']   = [1.140,1.140  ,'-'    ,1.140  ,1.140  ,1.140  ,1.140  ,'-'    ,1.140  ,1.140]
-            uncert_map['CMS_eff_b']                     = ['-'  ,1.001  ,'-'    ,1.010  ,1.008  ,'-'     ,1.001 ,'-'    ,1.010  ,1.008]
-            uncert_map['CMS_scale_e']                   = [1.007,'-'    ,'-'    ,'-'    ,1.003  ,'-'     ,'-'   ,'-'    ,'-'    ,'-'  ]
-            uncert_map['CMS_scale_m']                   = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.040  ,1.035  ,'-'    ,1.043  ,1.041]
-            uncert_map['pdf_qqbar']                     = [1.019,1.024  ,'-'    ,1.024  ,1.002  ,1.018  ,1.026  ,'-'    ,1.024  ,1.003]
-            uncert_map['QCD_scale_VV']                  = [1.058,1.035  ,'-'    ,'-'    ,'-'    ,1.060  ,1.036  ,'-'    ,'-'    ,'-'  ]
+            uncert_map['pdf_qqbar']                     = [1.019,1.023  ,'-'    ,1.028  ,1.002  ,1.018  ,1.025  ,'-'    ,1.027  ,1.003]
+            uncert_map['QCD_scale_VV']                  = [1.058,1.045  ,'-'    ,'-'    ,'-'    ,1.060  ,1.042  ,'-'    ,'-'    ,'-'  ]
             uncert_map['QCD_scale_TTbar']               = ['-'  ,'-'    ,'-'    ,1.182  ,1.009  ,'-'    ,'-'    ,'-'    ,1.178  ,1.011]
-            uncert_map['CMS_scale_met']                 = [1.006,1.005  ,'-'    ,1.005  ,1.012  ,1.002  ,1.003  ,'-'    ,1.001  ,1.005]
-            uncert_map['CMS_eff_e']                     = [1.024,1.023  ,'-'    ,1.022  ,1.022  ,'-'    ,'-'    ,'-'    ,'-'    ,'-'  ]
-            uncert_map['CMS_eff_m']                     = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.026  ,1.025  ,'-'    ,1.018  ,1.021]
-            ##FIXME jet energy scale? effects of up/down in different regions ignored atm
-            uncert_map['CMS_scale_j']                   = [1.031,1.012  ,'-'    ,1.036  ,1.027  ,1.033  ,1.024  ,'-'    ,1.035  ,1.031]
+            uncert_map['CMS_scale_j']                   = [1.029,1.009  ,'-'    ,1.032  ,1.034  ,1.038  ,1.025  ,'-'    ,1.035  ,1.030]
+            uncert_map['CMS_res_j']                     = [1.007,1.030  ,'-'    ,1.006  ,1.016  ,1.006  ,1.029  ,'-'    ,1.008  ,1.009]
+            uncert_map['CMS_scale_met']                 = [1.010,1.004  ,'-'    ,1.015  ,1.006  ,1.002  ,1.002  ,'-'    ,1.006  ,1.010]
+            uncert_map['CMS_eff_b']                     = ['-'  ,1.001  ,'-'    ,1.010  ,1.008  ,'-'    ,1.001  ,'-'    ,1.010  ,1.008]
+            uncert_map['CMS_eff_e']                     = [1.024,1.023  ,'-'    ,1.022  ,1.023  ,'-'    ,'-'    ,'-'    ,'-'    ,'-'  ]
+            uncert_map['CMS_eff_m']                     = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.026  ,1.024  ,'-'    ,1.018  ,1.020]
+            uncert_map['CMS_scale_e']                   = [1.024,1.009  ,'-'    ,1.012  ,1.002  ,'-'     ,'-'   ,'-'    ,'-'    ,'-'  ]
+            uncert_map['CMS_scale_m']                   = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.017  ,1.012  ,'-'    ,1.007  ,1.011]
+            uncert_map['CMS_res_e']                     = [1.002,1.001  ,'-'    ,1.001  ,1.012  ,'-'     ,'-'   ,'-'    ,'-'    ,'-'  ]
+            uncert_map['CMS_res_m']                     = ['-'  ,'-'    ,'-'    ,'-'    ,'-'    ,1.001  ,1.003  ,'-'    ,'-'    ,1.003]
             bkgs                                        = ['WW','WZ','TTbar','STop']
             NlnN    = len(uncert_map)
 
