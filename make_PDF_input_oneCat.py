@@ -5,6 +5,7 @@ from ConfigParser import SafeConfigParser
 import math as math
 import random
 import os
+import CMS_lumi, tdrstyle
 
 gSystem.Load('%s/lib/slc6_amd64_gcc481/libHiggsAnalysisCombinedLimit.so'%os.environ['CMSSW_BASE'])
 from ROOT import RooPoly3Pdf, RooChiSqPdf, RooErfExpPdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf
@@ -298,6 +299,21 @@ class Prepare_workspace_4limit:
                 pullhist.SetLineColor(kBlue)
                 pullhist.Draw("SAME E1")
 
+                CMS_lumi.CMS_lumi(can[i], 4, 11)
+                pt = TPaveText(0.6,0.82,0.90,0.90, "blNDC")
+                pt.SetFillStyle(0)
+                pt.SetBorderSize(0)
+                pt.SetTextAlign(32)
+                pt.SetTextSize(0.035)
+                if (self.ch=='el'):
+                    pt.AddText("Electron channel")
+                elif (self.ch=='mu'):
+                    pt.AddText("Muon channel")
+                if (cat=='WW'):
+                    pt.AddText("WW")
+                elif (cat=='WZ'):
+                    pt.AddText("WZ")
+                pt.Draw("SAME")
 
                 can[i].Update()
                 if options.savep:
@@ -344,6 +360,9 @@ class Prepare_workspace_4limit:
                 ratio_style.Draw("")
                 pullhist2.SetLineColor(kBlue)
                 pullhist2.Draw("E1")
+
+                CMS_lumi.CMS_lumi(can2[i], 4, 11)
+                pt.Draw("SAME")
 
                 can2[i].Update()
                 if options.savep:
