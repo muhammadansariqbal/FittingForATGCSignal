@@ -3,6 +3,7 @@ from array import array
 from optparse import OptionParser
 import math as math
 import os
+import CMS_lumi, tdrstyle
 
 gSystem.Load("%s/lib/slc6_amd64_gcc481/libHiggsAnalysisCombinedLimit.so"%os.environ["CMSSW_BASE"])
 
@@ -88,16 +89,16 @@ def plot(w,fitres,normset,spectrum,ch,region):
 
         #w.var('cwww').setVal(0);w.var('ccw').setVal(0);w.var('cb').setVal(0);
         model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
-        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.LineColor(kBlack),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WJets,TTbar,STop,WW"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.LineColor(kBlack),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WJets,TTbar,STop,WW"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("WZ_line"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         model.plotOn(p,RooFit.Name("WW_line"),RooFit.Components("WJets,TTbar,STop,WW"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
 
 
-        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("WJets,STop,TTbar"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["TTbar"]),RooFit.LineColor(kBlack),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("WJets,STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("WJets"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("WJets,STop,TTbar"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["TTbar"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("WJets,STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("WJets"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
 
         model.plotOn(p,RooFit.Name("TTbar_line"),RooFit.Components("WJets,STop,TTbar"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("WJets,STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(2))
@@ -126,7 +127,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
     data_histo.Print()
     data_plot    = RooHist(data_histo,rrv_x.getBinWidth(0))
     data_plot.SetMarkerStyle(20)
-    data_plot.SetMarkerSize(1.5)
+    #data_plot.SetMarkerSize(1.5)
     alpha        = 1-0.6827
     # This is data in main plots
     for iPoint in range(data_plot.GetN()):
@@ -217,11 +218,11 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         pullhist.GetYaxis().SetTitleSize(0.2)
         pullhist.GetYaxis().SetTitleOffset(0.35)
         pullhist.SetMarkerStyle(20)
-        pullhist.SetMarkerSize(1.5)
+        #pullhist.SetMarkerSize(1.5)
         pullhist.SetLineColor(kBlack)
         pullhist.SetMarkerColor(kBlack)
         pullhist.Draw("AP")
-        medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
         pullhist.Draw("Psame")
         pt=[]
     else:
@@ -244,7 +245,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     legends.append(leg)
 
 def plot_all(w,ch="el",name='test.png'):
-    
+   
     canvas = TCanvas(ch,ch,2500,1000)
 
     offset = 0.15
@@ -275,7 +276,7 @@ def plot_all(w,ch="el",name='test.png'):
     ratio_style.GetYaxis().SetTitleSize(0.2)
     ratio_style.GetYaxis().SetTitleOffset(0.2)
     ratio_style.SetMarkerStyle(20)
-    ratio_style.SetMarkerSize(1.5)
+    #ratio_style.SetMarkerSize(1.5)
 
     for i in range(3):
         pad1        = TPad('pad%s'%i,'pad%s'%i,i*0.33,0.645,(i+1)*0.33,1.)
@@ -308,7 +309,7 @@ def plot_all(w,ch="el",name='test.png'):
             ratio_style.Draw("")
             pullhist.SetLineColor(kBlack)
             pullhist.SetMarkerStyle(20)
-            pullhist.SetMarkerSize(1.5)
+            #pullhist.SetMarkerSize(1.5)
             pullhist.SetMarkerColor(kBlack)
             pullhist.Draw("SAME PE")
    	    #for i in range(pullhist.GetN()):
@@ -323,6 +324,33 @@ def plot_all(w,ch="el",name='test.png'):
             pt.AddText("Signal region")
             pt.AddText("blinded")
             pt.Draw()
+        
+        # Lumi text and channel
+        pad1.cd()
+        if regs[i]=='sb_lo':
+            CMS_lumi.lumiTextSize=0.0
+            CMS_lumi.cmsTextSize=0.75
+            CMS_lumi.relPosY    = -0.09
+            CMS_lumi.relExtraDX = 0.2
+            CMS_lumi.relExtraDY = 0.24
+            CMS_lumi.CMS_lumi(pad1,4,11)
+        elif regs[i]=='sb_hi':
+            CMS_lumi.cmsTextSize=0.0
+            CMS_lumi.writeExtraText=False
+            CMS_lumi.lumiTextSize=0.65
+            CMS_lumi.lumiTextOffset=0.2
+            CMS_lumi.CMS_lumi(pad1,4,11)
+        else:
+            pt2 = TPaveText(0.75,0.75,0.85,0.92, "blNDC")
+            pt2.SetFillStyle(0)
+            pt2.SetBorderSize(0)
+            pt2.SetTextAlign(33)
+            pt2.SetTextSize(0.07)
+            if ch=="el":
+                pt2.AddText("Electron channel")
+            else:
+                pt2.AddText("Muon channel")
+            pt2.Draw()
 
         canvas.Update()
     canvas.SaveAs(name)
@@ -343,6 +371,9 @@ fileIn.Close()
 
 fitparas    = fitres.floatParsFinal()
 
+ROOT.gStyle.SetPaperSize(40,52)
+#ROOT.gROOT.ProcessLine("Float_t* wid=new Float_t(0); Float_t* hei=new Float_t(0); gStyle->GetPaperSize(wid, hei); std::cout<<*wid<<"   "<<*hei<<std::endl;")
+#ROOT.gROOT.SetBatch(kTRUE)
 #plot_all(w,options.ch,'prefit_%s.png'%options.ch)
 
 string = '{:>40} : {:>30} / {:>30}\n'.format('>>name<<','>>pre-fit<<','>>post-fit<<')
@@ -354,7 +385,7 @@ for i in range(fitparas.getSize()):
     w.var(fitparas.at(i).GetName()).setVal(fitparas.at(i).getVal())
 
 
-plot_all(w,options.ch,'postfit_%s.png'%options.ch)
+plot_all(w,options.ch,'postfit_%s.eps'%options.ch)
 
 
 print string
