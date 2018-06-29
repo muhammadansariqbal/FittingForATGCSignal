@@ -123,7 +123,10 @@ def plot(w,fitres,normset,spectrum,ch,region):
         model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
 
-    data_histo   = data.binnedClone("data","data").createHistogram("data",rrv_x,RooFit.Cut("CMS_channel==CMS_channel::%s"%ch_num))
+    if spectrum == "mlvj":
+        data_histo   = data.binnedClone("data","data").createHistogram("data",rrv_x,RooFit.Binning(36,900,4500),RooFit.Cut("CMS_channel==CMS_channel::%s"%ch_num))
+    else:
+        data_histo   = data.binnedClone("data","data").createHistogram("data",rrv_x,RooFit.Cut("CMS_channel==CMS_channel::%s"%ch_num))
     data_histo.Print()
     data_plot    = RooHist(data_histo,rrv_x.getBinWidth(0))
     data_plot.SetMarkerStyle(20)
@@ -142,12 +145,11 @@ def plot(w,fitres,normset,spectrum,ch,region):
         data_plot.SetPointEXlow(iPoint,0)
         data_plot.SetPointEXhigh(iPoint,0)
     data_plot.SetName('data')
-    if region!='sig':
-        p.addPlotable(data_plot,"PE")
+    p.addPlotable(data_plot,"PE")
 
     return p
 
-def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,legends):
+def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,legends):
 
 
     canvas.cd()
@@ -155,7 +157,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.,xhi,0.125)
     if reg=='sb_lo':
         pad.SetMargin(0.25,0,0.1,0.1)
-        pad2.SetMargin(0.25,0.01,0.1,0)
+        pad2.SetMargin(0.25,0,0.1,0)
     elif reg=='sb_hi':
         pad.SetMargin(0,0.1,0.1,0.1)
         pad2.SetMargin(0,0.1,0.1,0)
@@ -174,7 +176,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     p.GetYaxis().SetTitleSize(0.06)
     p.GetYaxis().SetTitleOffset(1.25)
     if reg=='sb_lo':
-        p.GetYaxis().SetRangeUser(0,1535)
+        #p.GetYaxis().SetRangeUser(0,1535)
         p.GetXaxis().SetTitle('')
     elif reg=='sb_hi':
         p.GetYaxis().SetTitle('')
@@ -193,7 +195,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         leg.SetLineWidth(0)
         leg.SetLineStyle(0)
         leg.SetTextFont(42)
-        leg.AddEntry(p.getObject(10),"CMS data","P")
+        leg.AddEntry(p.getObject(10),"Asimov data","P")
         leg.AddEntry(p.getObject(0),"WZ","F")
         leg.AddEntry(p.getObject(1),"WW","F")
         leg.AddEntry(p.getObject(4),"t#bar{t}","F")
@@ -205,43 +207,30 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
 
     pad2.cd()
 
-    if reg!='sig':
-        # MJ pull histograms
-        pullhist    = p.pullHist("data","WZSM")
-        pullhist.SetMaximum(4.9)
-        pullhist.SetMinimum(-5)
-        #pullhist.GetXaxis().SetLabelSize(0.125)
-        pullhist.GetYaxis().SetNdivisions(7)
-        if reg=='sb_lo':
-            pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
-        pullhist.GetYaxis().SetLabelSize(0.125)
-        pullhist.GetYaxis().SetTitleSize(0.2)
-        pullhist.GetYaxis().SetTitleOffset(0.32)
-        pullhist.SetMarkerStyle(20)
-        #pullhist.SetMarkerSize(1.5)
-        pullhist.SetLineColor(kBlack)
-        pullhist.SetMarkerColor(kBlack)
-        pullhist.Draw("AP")
-        medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
-        pullhist.Draw("Psame")
-        pt=[]
-    else:
-        pt = TPaveText(0,0.05,1,1, "blNDC")
-        pt.SetFillStyle(0)
-        pt.SetBorderSize(0)
-        pt.SetTextAlign(22)
-        #pt.SetTextSize(0.2)
-        pt.AddText("Signal region")
-        pt.AddText("blinded")
-        pt.Draw()
-        medianLine = []
+    # MJ pull histograms
+    pullhist    = p.pullHist("data","WZSM")
+    pullhist.SetMaximum(4.9)
+    pullhist.SetMinimum(-5)
+    #pullhist.GetXaxis().SetLabelSize(0.125)
+    pullhist.GetYaxis().SetNdivisions(7)
+    if reg=='sb_lo':
+        pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
+    pullhist.GetYaxis().SetLabelSize(0.125)
+    pullhist.GetYaxis().SetTitleSize(0.2)
+    pullhist.GetYaxis().SetTitleOffset(0.32)
+    pullhist.SetMarkerStyle(20)
+    #pullhist.SetMarkerSize(1.5)
+    pullhist.SetLineColor(kBlack)
+    pullhist.SetMarkerColor(kBlack)
+    pullhist.Draw("AP")
+    medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+    pullhist.Draw("Psame")
 
     canvas.Update()
 
     pads.append(pad)
     pads.append(pad2)
     medianLines.append(medianLine)
-    paveTexts.append(pt)
     legends.append(leg)
 
 def plot_all(w,ch="el",name='test.png'):
@@ -252,13 +241,12 @@ def plot_all(w,ch="el",name='test.png'):
     # These things just have to be kept in memory so that ROOT does not make them disappear in the next loop
     pads = []
     medianLines = []
-    paveTexts = []
     legends = []
 
     # MJ main and pull plots
-    make_pull(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
-    make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
-    make_pull(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
+    make_pull(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,legends)
+    make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,legends)
+    make_pull(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,legends)
 
     canvas.cd()
     canvas.Draw()
@@ -302,28 +290,18 @@ def plot_all(w,ch="el",name='test.png'):
         p.Draw()
 
         pad_pull.cd()
-        if regs[i]!='sig':
-            # MWV pull plot
-            pad_pull.SetTopMargin(0)
-            pullhist = p.pullHist("data","WJets")
-            ratio_style.Draw("")
-            pullhist.SetLineColor(kBlack)
-            pullhist.SetMarkerStyle(20)
-            #pullhist.SetMarkerSize(1.5)
-            pullhist.SetMarkerColor(kBlack)
-            pullhist.Draw("SAME PE")
-   	    #for i in range(pullhist.GetN()):
-                #print pullhist.GetY()[i]
-                #raw_input("Printed pull hist")
-        else:
-            pt = TPaveText(0,0.05,1,1, "blNDC")
-            pt.SetFillStyle(0)
-            pt.SetBorderSize(0)
-            pt.SetTextAlign(22)
-            #pt.SetTextSize(0.2)
-            pt.AddText("Signal region")
-            pt.AddText("blinded")
-            pt.Draw()
+        # MWV pull plot
+        pad_pull.SetTopMargin(0)
+        pullhist = p.pullHist("data","WJets")
+        ratio_style.Draw("")
+        pullhist.SetLineColor(kBlack)
+        pullhist.SetMarkerStyle(20)
+        #pullhist.SetMarkerSize(1.5)
+        pullhist.SetMarkerColor(kBlack)
+        pullhist.Draw("SAME PE")
+   	#for i in range(pullhist.GetN()):
+            #print pullhist.GetY()[i]
+            #raw_input("Printed pull hist")
         
         # Lumi text and channel
         pad1.cd()

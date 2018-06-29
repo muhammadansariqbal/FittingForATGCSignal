@@ -291,7 +291,7 @@ class Prepare_workspace_4limit:
                 ratio_style.SetMaximum(3)
                 ratio_style.SetMinimum(-3)
                 ratio_style.GetYaxis().SetNdivisions(7)
-                ratio_style.GetYaxis().SetTitle('#frac{MC-Fit}{error}')
+                ratio_style.GetYaxis().SetTitle('#frac{MC-Fit}{Error}')
                 ratio_style.GetYaxis().SetLabelSize(0.125)
                 ratio_style.GetYaxis().SetTitleSize(0.2)
                 ratio_style.GetYaxis().SetTitleOffset(0.2)
