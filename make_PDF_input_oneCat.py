@@ -652,7 +652,7 @@ class Prepare_workspace_4limit:
 
             if options.atgc:
                 #go from EFT parametrization to Lagrangian approach, taken from SI-HEP-2011-17
-                Transform2Lagrangian(N_list,Pdf_list,scale_list)
+                self.Transform2Lagrangian(N_list,Pdf_list,scale_list,channel)
             else:
                 model.Print()
                 self.Import_to_ws(self.wtmp,[normfactor_3d,model])
@@ -755,7 +755,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             cardfile.close()
 
 
-        def Transform2lagrangian(N_list,Pdf_list,scale_list):
+        def Transform2Lagrangian(self,N_list,Pdf_list,scale_list,channel):
             #go from EFT parametrization to Lagrangian approach, taken from SI-HEP-2011-17
             Z_mass          = 0.0911876
             W_mass          = 0.080385
@@ -770,9 +770,9 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             coeff_ccw       = RooRealVar('coeff_ccw','coeff_ccw',2/(Z_mass*Z_mass))
             coeff_cwww      = RooRealVar('coeff_cwww','coeff_cwww',2/(3*g_weak*g_weak*W_mass*W_mass))
 
-            dg1z            = RooRealVar('dg1z','dg1z',0,-1,1)
-            lZ              = RooRealVar('lZ','lZ',0,-1,1)
-            dkz             = RooRealVar('dkz','dkz',0,-1,1)
+            lZ              = RooRealVar('lZ','lZ',0,-10*self.PAR_MAX['cwww']*(3*g_weak*g_weak*W_mass*W_mass/2), 10*self.PAR_MAX['cwww']*(3*g_weak*g_weak*W_mass*W_mass/2))
+            dg1z            = RooRealVar('dg1z','dg1z',0,-10*self.PAR_MAX['ccw']*(Z_mass*Z_mass/2), 10*self.PAR_MAX['ccw']*(Z_mass*Z_mass/2))
+            dkz             = RooRealVar('dkz','dkz',0,(-10*self.PAR_MAX['ccw']-(10*self.PAR_MAX['cb']*tan_theta_W*tan_theta_W))*(W_mass*W_mass/2),(10*self.PAR_MAX['ccw']-(-10*self.PAR_MAX['cb']*tan_theta_W*tan_theta_W))*(W_mass*W_mass/2))
             dg1z.setConstant(kTRUE)
             lZ.setConstant(kTRUE)
             dkz.setConstant(kTRUE)
@@ -799,8 +799,8 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                     
             normfactor_3d        = RooFormulaVar('normfactor_3d_%s'%channel,'normfactor_3d_%s'%channel,'1+@0+@1+@2',scale_list_atgc)
     
-            getattr(self.wtmp,'import')(model_atgc)
-            getattr(self.WS,'import')(model_atgc)
+            getattr(self.wtmp,'import')(model_atgc,RooFit.RecycleConflictNodes())
+            getattr(self.WS,'import')(model_atgc,RooFit.RecycleConflictNodes())
             getattr(self.wtmp,'import')(normfactor_3d,RooFit.RecycleConflictNodes())
             getattr(self.WS,'import')(normfactor_3d,RooFit.RecycleConflictNodes())
             self.WS.Print()

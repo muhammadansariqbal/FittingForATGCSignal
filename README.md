@@ -48,6 +48,8 @@ text2workspace.py aC_WWWZ_simfit.txt -o workspace_simfit.root -P CombinedEWKAnal
 # --PO channels= Names of the channels
 # --PO poi= Names of the paramters of interest
 # --PO range_= Set paramter range (does't work atm but has to be added to avoid error message)
+# For vertex parametrization
+text2workspace.py aC_WWWZ_simfit.txt -o workspace_simfit.root -P CombinedEWKAnalysis.CommonTools.ACModel:par1par2par3_TF3_shape_Model --PO channels=WWWZ_sig_el,WWWZ_sig_mu,WWWZ_sb_lo_el,WWWZ_sb_lo_mu,WWWZ_sb_hi_el,WWWZ_sb_hi_mu --PO poi=lZ,dg1z,dkz --PO range_lZ=-0.1,0.1 --PO range_dg1z=-0.1,0.1 --PO range_dkz=-0.1,0.1
 
 # This creates the final workspace called workspace_simfit.root. To inspect this workspace in ROOT you have to load the combined limit .so 
 .L ../../lib/slc6_amd64_gcc481/libHiggsAnalysisCombinedLimit.so.
@@ -92,6 +94,10 @@ python check_combine_result.py -n BkgOnly -c mu -P cwww:3.6
 1-D Limits
 ----------
 combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww -P cwww --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-3.6,3.6 --minimizerStrategy=2 -n _cwww_3.6
+
+# For vertex parametrization
+combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs lZ -P lZ --freezeNuisances dg1z,dkz --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange lZ=-0.014,0.014 --minimizerStrategy=2 -n _lZ_0.014
+# For 2016 data we can use can range from positive to negative 0.014, 0.018, 0.02 for example
 
 2-D Limits
 ----------
