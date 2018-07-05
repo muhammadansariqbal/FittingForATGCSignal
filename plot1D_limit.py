@@ -223,7 +223,7 @@ def plots():
 	leg.Draw("SAME")
 
 	c1.Update()
-	c1.SaveAs("limit1D_%s.eps"%POI)
+	c1.SaveAs("limit1D_%s.pdf"%POI)
 
 	error = float(xExp[1]) - float(xExp[0])
 
