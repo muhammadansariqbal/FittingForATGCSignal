@@ -63,8 +63,13 @@ def plots():
 	bestFitYBin	= ROOT.Long(0)
 	minDNLL		= ROOT.Long(0)
 	graphExp.GetHistogram().GetMinimumBin(bestFitXBin,bestFitYBin,minDNLL)
-	bestFitX	= graphExp.GetHistogram().GetXaxis().GetBinCenter(bestFitXBin)
-	bestFitY	= graphExp.GetHistogram().GetYaxis().GetBinCenter(bestFitYBin)
+	#bestFitX	= graphExp.GetHistogram().GetXaxis().GetBinCenter(bestFitXBin)
+	#bestFitY	= graphExp.GetHistogram().GetYaxis().GetBinCenter(bestFitYBin)
+
+	# Get best fit directly from tree instead of Delaunay histogram
+	treeExp.GetEntry(0)
+	bestFitX	= treeExp.GetLeaf(par1).GetValue()
+	bestFitY        = treeExp.GetLeaf(par2).GetValue()
 
 	c1              = TCanvas('c1','c1',800,750)
 	contourLevels	= np.array([2.3, 5.99, 9.21])
