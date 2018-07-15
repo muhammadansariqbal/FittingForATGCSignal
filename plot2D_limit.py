@@ -22,14 +22,18 @@ parser	= OptionParser()
 parser.add_option('--POI',dest='POI',help='parameter of interest')
 parser.add_option('--pval',dest='pval',help='value of parameter')
 parser.add_option('-c',action='store_true',dest='close',default=False)
+parser.add_option('--binWidths',dest='binWidths',default='0',help='plot best fit points with different bin widths for bias testing')
 (options,args) = parser.parse_args()
 
 POI		= []
 pval		= []
+binWidths	= []
 for i in options.POI.split(','):
 	POI.append(i)
 for j in options.pval.split(','):
 	pval.append(j)
+for k in options.binWidths.split(','):
+	binWidths.append(k)
 par_latex	= {'cwww' : 'c_{WWW} / #Lambda^{2} (TeV^{-2})', 'ccw' : 'c_{W} / #Lambda^{2} (TeV^{-2})', 'cb' : 'c_{B} / #Lambda^{2} (TeV^{-2})', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 par_noUnits	= {'cwww' : 'c_{WWW} / #Lambda^{2}', 'ccw' : 'c_{W} / #Lambda^{2}', 'cb' : 'c_{B} / #Lambda^{2}', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 
@@ -127,10 +131,30 @@ def plots():
 	SMPoint.SetMarkerStyle(21)
 	SMPoint.Draw('P SAME')
 
-	bestFitPoint = TGraph(1)
-        bestFitPoint.SetPoint(1,bestFitX,bestFitY)
-        bestFitPoint.SetMarkerStyle(3)
-        bestFitPoint.Draw('P SAME')
+	if float(binWidths[0])==0:
+		bestFitPoint = TGraph(1)
+        	bestFitPoint.SetPoint(0,bestFitX,bestFitY)
+        	bestFitPoint.SetMarkerStyle(3)
+        	bestFitPoint.Draw('P SAME')
+	else:
+		bestFitPoints	= []
+		colors	= []
+		for binWid in binWidths:
+			wsNameExp	= 'higgsCombine_%s_%s_%s_%s_binWidth%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1],binWid)
+			print 'Reading '+wsNameExp
+			fileInBias	= TFile.Open(path+wsNameExp)
+			treeInBias	= fileInBias.Get('limit')
+			treeInBias.GetEntry(0)
+			bestFitPoint = TGraph(1)
+                	bestFitPoint.SetPoint(0,treeInBias.GetLeaf(par1).GetValue(),treeInBias.GetLeaf(par2).GetValue())
+                	bestFitPoint.SetMarkerStyle(3)
+			colorGray=(100-float(binWid))/150.0
+			grayRGB=TColor(2000+int(binWid),colorGray,colorGray,colorGray)
+			bestFitPoint.SetMarkerColor(2000+int(binWid))
+                	bestFitPoint.Draw('P SAME')
+			bestFitPoints.append(bestFitPoint)
+			colors.append(grayRGB)
+			fileInBias.Close()
 
 	# ======================================================================================================
 

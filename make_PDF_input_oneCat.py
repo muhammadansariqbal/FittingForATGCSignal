@@ -20,7 +20,7 @@ parser.add_option('-c', '--ch', dest='chan', default='elmu', help='channel, el, 
 parser.add_option('--noatgcint', action='store_true', dest='noatgcint', default=False, help='set atgc-interference coefficients to zero')
 parser.add_option('--printatgc', action='store_true', default=False, help='print atgc-interference contribution')
 parser.add_option('--atgc', action='store_true', dest='atgc', default=False, help='use anomalous coupling parametrization instead of EFT')
-
+parser.add_option('--binWidth', dest='binWidth', default='100.', help='Use different MWV binnings, required for Asimov datasets')
 
 (options,args) = parser.parse_args()
 
@@ -36,7 +36,7 @@ if not os.path.isdir('Output'):
 
 class Prepare_workspace_4limit:
     
-        def __init__(self,ch,mlvj_lo,mlvj_hi):
+        def __init__(self,ch,mlvj_lo,mlvj_hi,mlvj_binWid):
             
             self.POI                    = ['cwww','ccw','cb']
             self.PAR_TITLES             = {'cwww' : '#frac{c_{WWW}}{#Lambda^{2}}', 'ccw' : '#frac{c_{W}}{#Lambda^{2}}', 'cb' : '#frac{c_{B}}{#Lambda^{2}}'}#latex titles 
@@ -47,7 +47,7 @@ class Prepare_workspace_4limit:
             self.binhi                  = mlvj_hi                #upper bound
 
             self.channel                = "WV_"+self.ch
-            self.nbins                  = (self.binhi-self.binlo)/100
+            self.nbins                  = int((self.binhi-self.binlo)/mlvj_binWid)
             
             self.WS                     = RooWorkspace("w")        #final workspace
             self.wtmp                   = RooWorkspace('wtmp')
@@ -823,6 +823,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             #read, rename and write bkg pdfs and bkg rates
             fileInWs    = TFile.Open('Input/wwlvj_%s_HPV_workspace.root'%self.ch)
             w_bkg       = fileInWs.Get('workspace4limit_') 
+            w_bkg.var('rrv_mass_j').setBins(self.nbins)
 
             path        ='%s/src/CombinedEWKAnalysis/CommonTools/data/anomalousCoupling'%os.environ["CMSSW_BASE"]
 
@@ -949,12 +950,12 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
 if __name__ == '__main__':
     if options.chan=='elmu':
-        makeWS_el        = Prepare_workspace_4limit('el',900,4500)
+        makeWS_el        = Prepare_workspace_4limit('el',900,4500,float(options.binWidth))
         makeWS_el.Make_input()
-        makeWS_mu        = Prepare_workspace_4limit('mu',900,4500)
+        makeWS_mu        = Prepare_workspace_4limit('mu',900,4500,float(options.binWidth))
         makeWS_mu.Make_input()
     else:
-        makeWS        = Prepare_workspace_4limit(options.chan,900,4500)
+        makeWS        = Prepare_workspace_4limit(options.chan,900,4500,float(options.binWidth))
         makeWS.Make_input()
     #combine the created datacards
     output_card_name = 'aC_WWWZ_simfit'

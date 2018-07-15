@@ -40,6 +40,7 @@ python make_PDF_input_oneCat.py -n -c mu -p --savep
 # --noatgcint: Set aTGC-interference terms to zero
 # --printatgc: Print the coefficients of the signal model
 # --atgc: Using different parametrization (Lagrangian approach instead of EFT)
+# --binWidth: Use a different bin width than the standard, useful for Asimov data generation
 
 # The workspaces for the different channels can now be combined with
 text2workspace.py aC_WWWZ_simfit.txt -o workspace_simfit.root -P CombinedEWKAnalysis.CommonTools.ACModel:par1par2par3_TF3_shape_Model --PO channels=WWWZ_sig_el,WWWZ_sig_mu,WWWZ_sb_lo_el,WWWZ_sb_lo_mu,WWWZ_sb_hi_el,WWWZ_sb_hi_mu --PO poi=cwww,ccw,cb --PO range_cwww=-20,20 --PO range_ccw=-30,30 --PO range_cb=-75,75
@@ -67,22 +68,23 @@ Limit Calculation
 # --freezeNuisances ccw,cb: Fixes the other paramters
 # --setPhysicsModelParameters cwww=0,ccw=0,cb=0: Sets the initial parameter values
 # --setPhysicsModelParameterRange cwww=-3.6,3.6: Sets the parameter range to be scanned
+# --cminPreScan so that combine locates the correct global minimum
 
 Fits for Single Point
 ---------------------
 # To get the exact fit results for any point (e.g. cwww=3.6) we need to run
-combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=3.6,ccw=0,cb=0 --minimizerStrategy 2 --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n _cwww_3.6
+combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=3.6,ccw=0,cb=0 --minimizerStrategy 2 --cminPreScan --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n _cwww_3.6
 # The output is saved in mlfit_cwww_3.6.root containing a RooFitResult fit_s with all final parameter values as well as a RooArgSet norm_fit_s with the final normalizations.
 
 # To get the results for all parameters zero
-combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n AllZero
+combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --cminPreScan --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n AllZero
 
 # We can also freeze all aTGC parameters and set a different POI
-combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances cwww,ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --redefineSignalPOIs normvar_WJets_el --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n BkgOnly
+combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisances cwww,ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --cminPreScan --redefineSignalPOIs normvar_WJets_el --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n BkgOnly
 
 Asimov Data Set Generation
 --------------------------
-combine workspace_simfit.root -M MaxLikelihoodFit -t -1 --saveToys --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n Asimov
+combine workspace_simfit.root -M MaxLikelihoodFit -t -1 --saveToys --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --cminPreScan --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n Asimov
 
 Postfit Plots
 -------------
@@ -93,15 +95,15 @@ python check_combine_result.py -n BkgOnly -c mu -P cwww:3.6
 
 1-D Limits
 ----------
-combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww -P cwww --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-3.6,3.6 --minimizerStrategy=2 -n _cwww_3.6
+combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww -P cwww --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-3.6,3.6 --minimizerStrategy=2 --cminPreScan -n _cwww_3.6
 
 # For vertex parametrization
-combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs lZ -P lZ --freezeNuisances dg1z,dkz --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange lZ=-0.014,0.014 --minimizerStrategy=2 -n _lZ_0.014
+combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs lZ -P lZ --freezeNuisances dg1z,dkz --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange lZ=-0.014,0.014 --minimizerStrategy=2 --cminPreScan -n _lZ_0.014
 # For 2016 data we can use can range from positive to negative 0.014, 0.018, 0.02 for example
 
 2-D Limits
 ----------
-combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww,ccw -P cwww -P ccw --freezeNuisances cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-3.6,3.6:ccw=-4.5,4.5 --minimizerStrategy=2 -n _cwww_3.6_ccw_4.5
+combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=1000 --redefineSignalPOIs cwww,ccw -P cwww -P ccw --freezeNuisances cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --setPhysicsModelParameterRange cwww=-3.6,3.6:ccw=-4.5,4.5 --minimizerStrategy=2 --cminPreScan -n _cwww_3.6_ccw_4.5
 
 Get 68% and 95% Confidence Intervals
 ------------------------------------
