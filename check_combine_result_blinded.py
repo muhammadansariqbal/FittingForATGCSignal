@@ -77,51 +77,49 @@ def plot(w,fitres,normset,spectrum,ch,region):
 
     w.var(options.poi.split(':')[0]).setVal(float(options.poi.split(':')[1]))
 
-    cwwwtmp=w.var('cwww').getVal();ccwtmp=w.var('ccw').getVal();cbtmp=w.var('cb').getVal()
+    #cwwwtmp=w.var('cwww').getVal();ccwtmp=w.var('ccw').getVal();cbtmp=w.var('cb').getVal();
+    cwwwtmp=3.6; ccwtmp=0; cbtmp=0;
 
     model   = RooAddPdf("model","model",RooArgList(bkg_pdfs["WW"],bkg_pdfs["WZ"],bkg_pdfs["TTbar"],bkg_pdfs["STop"],bkg_pdfs["WJets"]))
     model_norm  = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
     rrv_model_norm = RooRealVar("rrv_model_norm","rrv_model_norm",model_norm)
 
     if spectrum == "mj":
-        #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.DrawOption("F"))
-        #model.plotOn(p,RooFit.Name("WW_atgc"),RooFit.Components("STop,WJets,TTbar,WW"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.DrawOption("F"))
-
-        #w.var('cwww').setVal(0);w.var('ccw').setVal(0);w.var('cb').setVal(0);
+        w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
         model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
-        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WJets,TTbar,STop,WW"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WZ_line"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
-        model.plotOn(p,RooFit.Name("WW_line"),RooFit.Components("WJets,TTbar,STop,WW"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
-        w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
-
-
-        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("WJets,STop,TTbar"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["TTbar"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("WJets,STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("WJets"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
-
-        model.plotOn(p,RooFit.Name("TTbar_line"),RooFit.Components("WJets,STop,TTbar"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
-        model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("WJets,STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(2))
-        model.plotOn(p,RooFit.Name("WJets_line"),RooFit.Components("WJets"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(2))
-
-    elif spectrum == "mlvj":
-        #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.DrawOption("F"))
-        #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.DrawOption("F"))
-
-        #w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
-        model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
-        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kOrange),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kOrange),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("TTbar_line"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         model.plotOn(p,RooFit.Name("WJets_line"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
-        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WW,WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.DrawOption("F"))
-        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WW,WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("WW_line"),RooFit.Components("WW,WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         model.plotOn(p,RooFit.Name("WZ_line"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
-        w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
-
-        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+
+        w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
+        #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm*0.0001,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
+        #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.DrawOption("F"))
+
+    elif spectrum == "mlvj":
+        w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
+        model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
+        model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kOrange),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("TTbar_line"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+        model.plotOn(p,RooFit.Name("WJets_line"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+        model.plotOn(p,RooFit.Name("WWSM"),RooFit.Components("WW,WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WZSM"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WZ"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("WW_line"),RooFit.Components("WW,WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+        model.plotOn(p,RooFit.Name("WZ_line"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+        model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
+        model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+
+        w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
+        if region=='sig':
+            model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
+        #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.LineStyle(9),RooFit.LineWidth(2))
 
     data_histo   = data.binnedClone("data","data").createHistogram("data",rrv_x,RooFit.Cut("CMS_channel==CMS_channel::%s"%ch_num))
     data_histo.Print()
@@ -183,31 +181,51 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         p.GetYaxis().SetTitle('')
     p.Draw()
 
+    # Lumi text and channel
+    if reg=='sb_lo':
+       CMS_lumi.lumiTextSize=0.0
+       CMS_lumi.writeExtraText=True
+       CMS_lumi.cmsTextSize=0.75
+       CMS_lumi.relPosY    = -0.09
+       CMS_lumi.relExtraDX = 0.2
+       CMS_lumi.relExtraDY = 0.24
+       CMS_lumi.CMS_lumi(pad,4,11)
+    elif reg=='sb_hi':
+       CMS_lumi.cmsTextSize=0.0
+       CMS_lumi.writeExtraText=False
+       CMS_lumi.lumiTextSize=0.65
+       CMS_lumi.lumiTextOffset=0.2
+       CMS_lumi.CMS_lumi(pad,4,11)
+
     # Legend
     if reg=='sb_hi':
-        leg=TLegend(0.6,0.5,0.9,0.85)
-        leg.SetFillColor(0)
-        leg.SetFillStyle(0)
-        leg.SetBorderSize(0)
-        leg.SetLineColor(0)
-        leg.SetLineWidth(0)
-        leg.SetLineStyle(0)
-        leg.SetTextFont(42)
-        leg.AddEntry(p.getObject(10),"CMS data","P")
-        leg.AddEntry(p.getObject(0),"WZ","F")
-        leg.AddEntry(p.getObject(1),"WW","F")
-        leg.AddEntry(p.getObject(4),"t#bar{t}","F")
-        leg.AddEntry(p.getObject(5),"Single top","F")
-        leg.AddEntry(p.getObject(6),"W+jets","F")
-        leg.Draw()
+        legMJ=TLegend(0.55,0.5,0.85,0.85)
+        legMJ.SetFillColor(0)
+        legMJ.SetFillStyle(0)
+        legMJ.SetBorderSize(0)
+        legMJ.SetLineColor(0)
+        legMJ.SetLineWidth(0)
+        legMJ.SetLineStyle(0)
+        legMJ.SetTextFont(42)
+        if ch=='el':
+            legMJ.AddEntry(p.getObject(10),"CMS data, WV#rightarrow e#nuqq","P")
+        else:
+            legMJ.AddEntry(p.getObject(10),"CMS data, WV#rightarrow #mu#nuqq","P")
+        #legMJ.AddEntry(p.getObject(10),"Signal","L")
+        legMJ.AddEntry(p.getObject(0),"W+jets","F")
+        legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
+        legMJ.AddEntry(p.getObject(4),"WW","F")
+        legMJ.AddEntry(p.getObject(5),"WZ","F")
+        legMJ.AddEntry(p.getObject(8),"Single top","F")
+        legMJ.Draw()
     else:
-        leg=[]
+        legMJ=[]
 
     pad2.cd()
 
     if reg!='sig':
         # MJ pull histograms
-        pullhist    = p.pullHist("data","WZSM")
+        pullhist    = p.pullHist("data","WJets")
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
         #pullhist.GetXaxis().SetLabelSize(0.125)
@@ -242,7 +260,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     pads.append(pad2)
     medianLines.append(medianLine)
     paveTexts.append(pt)
-    legends.append(leg)
+    legends.append(legMJ)
 
 def plot_all(w,ch="el",name='test.png'):
    
@@ -253,12 +271,13 @@ def plot_all(w,ch="el",name='test.png'):
     pads = []
     medianLines = []
     paveTexts = []
-    legends = []
+    legendsMJ = []
+    legendsMWV = []
 
     # MJ main and pull plots
-    make_pull(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
-    make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
-    make_pull(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,paveTexts,legends)
+    make_pull(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
+    make_pull(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
+    make_pull(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
 
     canvas.cd()
     canvas.Draw()
@@ -278,6 +297,7 @@ def plot_all(w,ch="el",name='test.png'):
     ratio_style.SetMarkerStyle(20)
     #ratio_style.SetMarkerSize(1.5)
 
+    legends=[]
     for i in range(3):
         pad1        = TPad('pad%s'%i,'pad%s'%i,i*0.33,0.645,(i+1)*0.33,1.)
         pad_pull    = TPad('pad_pull%s'%i,'pad_pull%s'%i,i*0.33,0.52,(i+1)*0.33,0.645)
@@ -327,30 +347,59 @@ def plot_all(w,ch="el",name='test.png'):
         
         # Lumi text and channel
         pad1.cd()
-        if regs[i]=='sb_lo':
-            CMS_lumi.lumiTextSize=0.0
-            CMS_lumi.cmsTextSize=0.75
-            CMS_lumi.relPosY    = -0.09
-            CMS_lumi.relExtraDX = 0.2
-            CMS_lumi.relExtraDY = 0.24
-            CMS_lumi.CMS_lumi(pad1,4,11)
-        elif regs[i]=='sb_hi':
-            CMS_lumi.cmsTextSize=0.0
-            CMS_lumi.writeExtraText=False
-            CMS_lumi.lumiTextSize=0.65
-            CMS_lumi.lumiTextOffset=0.2
-            CMS_lumi.CMS_lumi(pad1,4,11)
-        else:
-            pt2 = TPaveText(0.75,0.75,0.85,0.92, "blNDC")
-            pt2.SetFillStyle(0)
-            pt2.SetBorderSize(0)
-            pt2.SetTextAlign(33)
-            pt2.SetTextSize(0.07)
-            if ch=="el":
-                pt2.AddText("Electron channel")
+        #if regs[i]=='sb_lo':
+        CMS_lumi.lumiTextSize=0.0
+        CMS_lumi.writeExtraText=True
+        CMS_lumi.cmsTextSize=0.75
+        CMS_lumi.relPosY    = -0.09
+        CMS_lumi.relExtraDX = 0.2
+        CMS_lumi.relExtraDY = 0.24
+        CMS_lumi.CMS_lumi(pad1,4,11)
+        #elif regs[i]=='sb_hi':
+        CMS_lumi.cmsTextSize=0.0
+        CMS_lumi.writeExtraText=False
+        CMS_lumi.lumiTextSize=0.65
+        CMS_lumi.lumiTextOffset=0.2
+        CMS_lumi.CMS_lumi(pad1,4,11)
+        #else:
+        #pt2 = TPaveText(0.75,0.75,0.85,0.92, "blNDC")
+        #pt2.SetFillStyle(0)
+        #pt2.SetBorderSize(0)
+        #pt2.SetTextAlign(33)
+        #pt2.SetTextSize(0.07)
+        #if ch=="el":
+        #    pt2.AddText("Electron channel")
+        #else:
+        #    pt2.AddText("Muon channel")
+        #pt2.Draw()
+
+        # Legend
+        legMWV=TLegend(0.60,0.5,0.90,0.85)
+        legMWV.SetFillColor(0)
+        legMWV.SetFillStyle(0)
+        legMWV.SetBorderSize(0)
+        legMWV.SetLineColor(0)
+        legMWV.SetLineWidth(0)
+        legMWV.SetLineStyle(0)
+        legMWV.SetTextFont(42)
+        if regs[i]=='sig':
+            if ch=='el':
+                legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
             else:
-                pt2.AddText("Muon channel")
-            pt2.Draw()
+                legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMWV.AddEntry(p.getObject(10),"Signal c_{WWW}/#Lambda^{2}=3.6 TeV^{-2}","L")
+        else:
+            if ch=='el':
+                legMWV.AddEntry(p.getObject(10),"CMS data, WV#rightarrow e#nuqq","P")
+            else:
+                legMWV.AddEntry(p.getObject(10),"CMS data, WV#rightarrow #mu#nuqq","P")
+        legMWV.AddEntry(p.getObject(0),"W+jets","F")
+        legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
+        legMWV.AddEntry(p.getObject(4),"WW","F")
+        legMWV.AddEntry(p.getObject(5),"WZ","F")
+        legMWV.AddEntry(p.getObject(8),"Single top","F")
+        legMWV.Draw()
+        legendsMWV.append(legMWV)
 
         canvas.Update()
     canvas.SaveAs(name)
