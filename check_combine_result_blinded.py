@@ -150,26 +150,29 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
 
     canvas.cd()
     pad     = TPad(reg,reg,xlo,0.125,xhi,0.5)
-    pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.,xhi,0.125)
+    pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.155)
     if reg=='sb_lo':
         pad.SetMargin(0.25,0,0.1,0.1)
-        pad2.SetMargin(0.25,0.01,0.1,0)
+        pad2.SetMargin(0.25,0.0,0.4,0)
     elif reg=='sb_hi':
         pad.SetMargin(0,0.1,0.1,0.1)
-        pad2.SetMargin(0,0.1,0.1,0)
+        pad2.SetMargin(0,0.1,0.4,0)
     else:
         pad.SetMargin(0,0,0.1,0.1)
-        pad2.SetMargin(0,0,0.1,0)
+        pad2.SetMargin(0,0,0.4,0)
     pad.Draw()
     pad2.Draw()
 
     pad.cd()
     # Main MJ plot
     p       = plot(w,fitres,normset,'mj',ch,reg)
-    p.GetXaxis().SetTitleSize(0.0575)
-    p.GetXaxis().SetTitleOffset(0.7)
+    #p.GetXaxis().SetTitleSize(0.0575)
+    #p.GetXaxis().SetTitleOffset(0.7)
+    p.GetXaxis().SetTitleSize(0)
+    p.GetXaxis().SetLabelSize(0)
     p.GetYaxis().SetRangeUser(0,1450)
-    p.GetYaxis().SetTitleSize(0.06)
+    p.GetYaxis().SetLabelSize(0.05)
+    p.GetYaxis().SetTitleSize(0.065)
     p.GetYaxis().SetTitleOffset(1.25)
     if reg=='sb_lo':
         p.GetYaxis().SetRangeUser(0,1535)
@@ -223,18 +226,19 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
 
     pad2.cd()
 
-    if reg!='sig':
-        # MJ pull histograms
+    # MJ pull histograms
+    if reg=='sb_lo':
         pullhist    = p.pullHist("data","WJets")
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
-        #pullhist.GetXaxis().SetLabelSize(0.125)
+        pullhist.GetXaxis().SetRangeUser(40,65)
+        pullhist.GetXaxis().SetNdivisions(5)
+        pullhist.GetXaxis().SetLabelSize(0.14)
         pullhist.GetYaxis().SetNdivisions(7)
-        if reg=='sb_lo':
-            pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
+        pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
         pullhist.GetYaxis().SetLabelSize(0.125)
         pullhist.GetYaxis().SetTitleSize(0.2)
-        pullhist.GetYaxis().SetTitleOffset(0.32)
+        pullhist.GetYaxis().SetTitleOffset(0.35)
         pullhist.SetMarkerStyle(20)
         #pullhist.SetMarkerSize(1.5)
         pullhist.SetLineColor(kBlack)
@@ -243,8 +247,9 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
         pullhist.Draw("Psame")
         pt=[]
-    else:
-        pt = TPaveText(0,0.05,1,1, "blNDC")
+
+    elif reg=='sig':
+        pt = TPaveText(0,0.4,1,1, "blNDC")
         pt.SetFillStyle(0)
         pt.SetBorderSize(0)
         pt.SetTextAlign(22)
@@ -253,6 +258,27 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         pt.AddText("blinded")
         pt.Draw()
         medianLine = []
+    else:
+        pullhist    = p.pullHist("data","WJets")
+        pullhist.SetMaximum(4.9)
+        pullhist.SetMinimum(-5)
+        pullhist.GetXaxis().SetRangeUser(105,150)
+        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetXaxis().SetTitle('M_{PUPPI SD} (GeV)')
+        pullhist.GetXaxis().SetTitleSize(0.2)
+        pullhist.GetXaxis().SetTitleOffset(0.85)
+        pullhist.GetYaxis().SetNdivisions(7)
+        pullhist.GetYaxis().SetLabelSize(0.125)
+        pullhist.GetYaxis().SetTitleSize(0.2)
+        pullhist.GetYaxis().SetTitleOffset(0.32)
+        pullhist.SetMarkerStyle(20)
+        #pullhist.SetMarkerSize(1.5)
+        pullhist.SetLineColor(kBlack)
+        pullhist.SetMarkerColor(kBlack)
+        pullhist.Draw("AP")
+        medianLine = TLine(105.,0.,150.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        pullhist.Draw("Psame")
+        pt=[]
 
     canvas.Update()
 
@@ -289,27 +315,32 @@ def plot_all(w,ch="el",name='test.png'):
     ratio_style     = TH1D('ratio_style','ratio_style',36,900,4500)
     ratio_style.SetMaximum(2.9)
     ratio_style.SetMinimum(-3)
+    ratio_style.GetXaxis().SetTitle('M_{WV} (GeV)')
+    ratio_style.GetXaxis().SetTitleSize(0.2)
+    ratio_style.GetXaxis().SetTitleOffset(0.75)
+    ratio_style.GetXaxis().SetLabelSize(0.125)
     ratio_style.GetYaxis().SetNdivisions(7)
     ratio_style.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
     ratio_style.GetYaxis().SetLabelSize(0.125)
-    ratio_style.GetYaxis().SetTitleSize(0.2)
-    ratio_style.GetYaxis().SetTitleOffset(0.18)
+    ratio_style.GetYaxis().SetTitleSize(0.16)
+    ratio_style.GetYaxis().SetTitleOffset(0.25)
     ratio_style.SetMarkerStyle(20)
     #ratio_style.SetMarkerSize(1.5)
 
     legends=[]
     for i in range(3):
         pad1        = TPad('pad%s'%i,'pad%s'%i,i*0.33,0.645,(i+1)*0.33,1.)
-        pad_pull    = TPad('pad_pull%s'%i,'pad_pull%s'%i,i*0.33,0.52,(i+1)*0.33,0.645)
+        pad_pull    = TPad('pad_pull%s'%i,'pad_pull%s'%i,i*0.33,0.52,(i+1)*0.33,0.675)
         pads.append(pad1)
         pads.append(pad_pull)
         # Main MWV plot
         p=plot(w,fitres,normset,'mlvj',ch,regs[i])
-        p.GetXaxis().SetTitleSize(0.055)
-        p.GetXaxis().SetTitleOffset(0.75)
+        p.GetXaxis().SetTitleSize(0)
+        p.GetXaxis().SetLabelSize(0)
         p.GetYaxis().SetRangeUser(7e-2,5e3)
-        p.GetYaxis().SetTitleSize(0.0575)
-        p.GetYaxis().SetTitleOffset(0.75)
+        p.GetYaxis().SetTitleSize(0.065)
+        p.GetYaxis().SetTitleOffset(0.725)
+        p.GetYaxis().SetLabelSize(0.06)
 
         canvas.cd()
         pad1.Draw()
@@ -325,6 +356,7 @@ def plot_all(w,ch="el",name='test.png'):
         if regs[i]!='sig':
             # MWV pull plot
             pad_pull.SetTopMargin(0)
+            pad_pull.SetBottomMargin(0.35)
             pullhist = p.pullHist("data","WJets")
             ratio_style.Draw("")
             pullhist.SetLineColor(kBlack)
@@ -336,7 +368,7 @@ def plot_all(w,ch="el",name='test.png'):
                 #print pullhist.GetY()[i]
                 #raw_input("Printed pull hist")
         else:
-            pt = TPaveText(0,0.05,1,1, "blNDC")
+            pt = TPaveText(0,0.35,1,1, "blNDC")
             pt.SetFillStyle(0)
             pt.SetBorderSize(0)
             pt.SetTextAlign(22)
@@ -374,7 +406,7 @@ def plot_all(w,ch="el",name='test.png'):
         #pt2.Draw()
 
         # Legend
-        legMWV=TLegend(0.60,0.5,0.90,0.85)
+        legMWV=TLegend(0.55,0.5,0.85,0.85)
         legMWV.SetFillColor(0)
         legMWV.SetFillStyle(0)
         legMWV.SetBorderSize(0)
