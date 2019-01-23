@@ -54,19 +54,32 @@ def plot(w,fitres,normset,spectrum,ch,region):
 
     bkg_pdfs    = {}
     bkg_norms    = {}
+    bkg_uncs    = {}
     for bkg in bkgs:
         bkg_pdfs[bkg]       = RooExtendPdf(bkg,bkg,w.pdf("shapeBkg_%s_%s"%(bkg,ch_num)),w.function("shapeBkg_%s_%s__norm"%(bkg,ch_num)))
         #bkg_norms[bkg]      = w.function("shapeBkg_%s_%s__norm"%(bkg,ch_num))
         bkg_norms[bkg]      = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],bkg)))
 	#bkg_pdfs[bkg]       = RooExtendPdf(bkg,bkg,w.pdf("shapeBkg_%s_%s"%(bkg,ch_num)),bkg_norms[bkg])
+	bkg_uncs[bkg]       = RooRealVar(normset.find("%s/%s"%(ch_nums[region+"_"+ch],bkg))).getError()
+
     bkg_pdfs["WW"]    = RooExtendPdf("WW","WW",w.pdf("shapeSig_aTGC_WW_%s_%s_%s"%(region,ch,ch_num)),w.function("shapeSig_aTGC_WW_%s_%s_%s__norm"%(region,ch,ch_num)))
     #bkg_norms["WW"]   = w.function("shapeSig_aTGC_WW_%s_%s_%s__norm"%(region,ch,ch_num))
     bkg_norms["WW"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/aTGC_WW_%s_%s"%(ch_nums[region+"_"+ch],region,ch)))
     #bkg_pdfs["WW"]    = RooExtendPdf("WW","WW",w.pdf("shapeSig_aTGC_WW_%s_%s_%s"%(region,ch,ch_num)),bkg_norms["WW"])
+    bkg_uncs["WW"]       = RooRealVar(normset.find("%s/aTGC_WW_%s_%s"%(ch_nums[region+"_"+ch],region,ch))).getError()
+
     bkg_pdfs["WZ"]    = RooExtendPdf("WZ","WZ",w.pdf("shapeSig_aTGC_WZ_%s_%s_%s"%(region,ch,ch_num)),w.function("shapeSig_aTGC_WZ_%s_%s_%s__norm"%(region,ch,ch_num)))
     #bkg_norms["WZ"]   = w.function("shapeSig_aTGC_WZ_%s_%s_%s__norm"%(region,ch,ch_num))
     bkg_norms["WZ"]   = RooRealVar("norm_%s"%bkg,"norm_%s"%bkg,normset.getRealValue("%s/aTGC_WZ_%s_%s"%(ch_nums[region+"_"+ch],region,ch)))
     #bkg_pdfs["WZ"]    = RooExtendPdf("WZ","WZ",w.pdf("shapeSig_aTGC_WZ_%s_%s_%s"%(region,ch,ch_num)),bkg_norms["WZ"])
+    bkg_uncs["WZ"]       = RooRealVar(normset.find("%s/aTGC_WZ_%s_%s"%(ch_nums[region+"_"+ch],region,ch))).getError()
+
+    # Print post-fit uncertainties
+    total_bkg_unc   = TMath.Sqrt((bkg_uncs['WJets']*bkg_uncs['WJets']) + (bkg_uncs['TTbar']*bkg_uncs['TTbar']) + (bkg_uncs['STop']*bkg_uncs['STop']) + (bkg_uncs['WW']*bkg_uncs['WW']) + (bkg_uncs['WZ']*bkg_uncs['WZ']))
+    for unc in bkg_uncs:
+        print str(unc) + 'unc: ' + str(bkg_uncs[unc])
+    print 'Total post-fit uncertainty in region: ' + str(total_bkg_unc)
+    #raw_input("====================")
 
     #print("WJets norm from pdf: ", bkg_norms["WJets"].getVal(), "WJets norm from norm_fit_s: ", normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"WJets")))
     #print("TTbar norm from pdf: ", bkg_norms["TTbar"].getVal(), "TTbar norm from norm_fit_s: ", normset.getRealValue("%s/%s"%(ch_nums[region+"_"+ch],"TTbar")))
@@ -98,6 +111,16 @@ def plot(w,fitres,normset,spectrum,ch,region):
         model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
 
+        #draw_error_band(model, rrv_x.GetName(), rrv_model_norm_tmp, fitres.floatParsFinal(), w, p, kBlack, "F", 3013)
+        pdfCurve=p.getCurve("WJets")
+        uncBand=TGraphErrors(int((rrv_x.getMax()-rrv_x.getMin())/0.25))
+        for bin in range(int((rrv_x.getMax()-rrv_x.getMin())/0.25)+1):
+            x = rrv_x.getMin() + (bin*0.25)
+            uncBand.SetPoint(bin, x, pdfCurve.interpolate(x))
+            uncBand.SetPointError(bin, 0, pdfCurve.interpolate(x) * 1 * total_bkg_unc / model_norm_tmp)
+        uncBand.SetFillStyle(3001)
+        p.addObject(uncBand,"E4")
+
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
         #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm*0.0001,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
         #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.DrawOption("F"))
@@ -115,6 +138,8 @@ def plot(w,fitres,normset,spectrum,ch,region):
         model.plotOn(p,RooFit.Name("WZ_line"),RooFit.Components("WZ,STop"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
         model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
+
+        model.plotOn(p,RooFit.Name("uncBand"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kBlack),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"),RooFit.FillStyle(3001),RooFit.VisualizeError(fitres))
 
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
         if region=='sig':
@@ -211,15 +236,16 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         legMJ.SetLineStyle(0)
         legMJ.SetTextFont(42)
         if ch=='el':
-            legMJ.AddEntry(p.getObject(10),"CMS data, WV#rightarrow e#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
         else:
-            legMJ.AddEntry(p.getObject(10),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
         #legMJ.AddEntry(p.getObject(10),"Signal","L")
         legMJ.AddEntry(p.getObject(0),"W+jets","F")
         legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMJ.AddEntry(p.getObject(4),"WW","F")
         legMJ.AddEntry(p.getObject(5),"WZ","F")
         legMJ.AddEntry(p.getObject(8),"Single top","F")
+        legMJ.AddEntry(p.getObject(10),"Uncertainty","F")
         legMJ.Draw()
     else:
         legMJ=[]
@@ -416,20 +442,21 @@ def plot_all(w,ch="el",name='test.png'):
         legMWV.SetTextFont(42)
         if regs[i]=='sig':
             if ch=='el':
+                legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
+            else:
+                legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=3.6 TeV^{-2}","L")
+        else:
+            if ch=='el':
                 legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
             else:
                 legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
-            legMWV.AddEntry(p.getObject(10),"Signal c_{WWW}/#Lambda^{2}=3.6 TeV^{-2}","L")
-        else:
-            if ch=='el':
-                legMWV.AddEntry(p.getObject(10),"CMS data, WV#rightarrow e#nuqq","P")
-            else:
-                legMWV.AddEntry(p.getObject(10),"CMS data, WV#rightarrow #mu#nuqq","P")
         legMWV.AddEntry(p.getObject(0),"W+jets","F")
         legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMWV.AddEntry(p.getObject(4),"WW","F")
         legMWV.AddEntry(p.getObject(5),"WZ","F")
         legMWV.AddEntry(p.getObject(8),"Single top","F")
+        legMWV.AddEntry(p.getObject(10),"Uncertainty","F")
         legMWV.Draw()
         legendsMWV.append(legMWV)
 
@@ -470,9 +497,13 @@ plot_all(w,options.ch,'postfit_%s.eps'%options.ch)
 
 
 print string
+
+print 'Be careful, these are pre-fit values!!'
 print 'expected events el: ' + str(w.var("normvar_WJets_el").getVal()+w.var("normvar_TTbar_el").getVal()+w.var("normvar_STop_el").getVal()+w.var("normvar_WW_el").getVal()+w.var("normvar_WZ_el").getVal())
 print 'observed events el: ' + str(w.data("data_obs").sumEntries("CMS_channel==CMS_channel::ch1||CMS_channel==CMS_channel::ch3||CMS_channel==CMS_channel::ch5"))
 print 'expected events mu: ' + str(w.var("normvar_WJets_mu").getVal()+w.var("normvar_TTbar_mu").getVal()+w.var("normvar_STop_mu").getVal()+w.var("normvar_WW_mu").getVal()+w.var("normvar_WZ_mu").getVal())
 print 'observed events mu: ' + str(w.data("data_obs").sumEntries("CMS_channel==CMS_channel::ch2||CMS_channel==CMS_channel::ch4||CMS_channel==CMS_channel::ch6"))
 
+print '\nThis is post-fit'
+print 'Post-fit uncertainty example (TTbar ch1): ' + str(RooRealVar(normset.find("ch1/TTbar")).getError())
 
