@@ -204,9 +204,11 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         p.GetXaxis().SetTitle('')
     elif reg=='sb_hi':
         p.GetYaxis().SetTitle('')
+        p.GetYaxis().SetLabelSize(0)
     else:
         p.GetXaxis().SetTitle('')
         p.GetYaxis().SetTitle('')
+        p.GetYaxis().SetLabelSize(0)
     p.Draw()
 
     # Lumi text and channel
