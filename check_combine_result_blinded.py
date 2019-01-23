@@ -118,7 +118,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
             x = rrv_x.getMin() + (bin*0.25)
             uncBand.SetPoint(bin, x, pdfCurve.interpolate(x))
             uncBand.SetPointError(bin, 0, pdfCurve.interpolate(x) * 1 * total_bkg_unc / model_norm_tmp)
-        uncBand.SetFillStyle(3001)
+        uncBand.SetFillStyle(3013)
         p.addObject(uncBand,"E4")
 
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
@@ -139,7 +139,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
         model.plotOn(p,RooFit.Name("STop"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["STop"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
         model.plotOn(p,RooFit.Name("STop_line"),RooFit.Components("STop"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
 
-        model.plotOn(p,RooFit.Name("uncBand"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kBlack),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"),RooFit.FillStyle(3001),RooFit.VisualizeError(fitres))
+        model.plotOn(p,RooFit.Name("uncBand"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kBlack),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"),RooFit.FillStyle(3013),RooFit.VisualizeError(fitres))
 
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
         if region=='sig':
