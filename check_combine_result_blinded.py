@@ -141,6 +141,27 @@ def plot(w,fitres,normset,spectrum,ch,region):
 
         model.plotOn(p,RooFit.Name("uncBand"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kBlack),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"),RooFit.FillStyle(3013),RooFit.VisualizeError(fitres))
 
+        ## Getting number of events in different bins for different backgrounds
+        #string = '{:^20}   {:^20}   {:^20}   {:^30}   {:^30}\n'.format('Bin','W+jets integral','ttbar integral', 'W+jets cumulative integral','ttbar cumulative integral')
+        #string += '{:^20}   {:^20}   {:^20}   {:^30}   {:^30}\n'.format('===','===============','==============', '==========================','=========================')
+        ## First bin print 'Range: 900-1000'
+        #rrv_x.setRange("ReducedRange",900,1000)
+        #argSet=RooArgSet(rrv_x)
+        #cumulIntWJets = bkg_pdfs["WJets"].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("ReducedRange")).getVal() * bkg_norms["WJets"].getVal()
+        #cumulIntTTbar = bkg_pdfs["TTbar"].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("ReducedRange")).getVal() * bkg_norms["TTbar"].getVal()
+        #string += '{:^20}   {:^20}   {:^20}   {:^30}   {:^30}\n'.format('900-1000',str(round(cumulIntWJets,2)),str(round(cumulIntTTbar,2)),str(round(cumulIntWJets,2)),str(round(cumulIntTTbar,2)))
+        ## Others bin-width 500
+        #for rangeStart in range(1000,4500,500):
+        #    rrv_x.setRange("ReducedRange",rangeStart,rangeStart+500)
+        #    argSet=RooArgSet(rrv_x)
+        #    intWJets = bkg_pdfs["WJets"].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("ReducedRange")).getVal() * bkg_norms["WJets"].getVal()
+        #    intTTbar = bkg_pdfs["TTbar"].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("ReducedRange")).getVal() * bkg_norms["TTbar"].getVal()
+        #    cumulIntWJets += intWJets
+        #    cumulIntTTbar += intTTbar
+        #    string += '{:^20}   {:^20}   {:^20}   {:^30}   {:^30}\n'.format(str(rangeStart)+'-'+str(rangeStart+500),str(round(intWJets,2)),str(round(intTTbar,2)),str(round(cumulIntWJets,2)),str(round(cumulIntTTbar,2)))
+        #print string
+        #raw_input("Comparison of background events.")
+
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
         if region=='sig':
             model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
