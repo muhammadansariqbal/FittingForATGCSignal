@@ -731,6 +731,14 @@ class Prepare_workspace_4limit:
 # rrv_b1_Poly3_WJets0_{ch}  flatParam
 # rrv_b2_Poly3_WJets0_{ch}  flatParam
 # rrv_b3_Poly3_WJets0_{ch}  flatParam
+# Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 1.4
+# Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 1.4
+# Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig2 param 0.0 1.4
+# Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig3 param 0.0 1.4
+# Deco_TTbar_sb_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 2.0
+# Deco_TTbar_sb_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 2.0
+# Deco_TTbar_sig_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 2.0
+# Deco_TTbar_sig_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 2.0
 
 # Write in the data card            
             card += '''
@@ -739,14 +747,10 @@ rrv_c_ChiSq_WJets0_{ch}  flatParam
 rrv_shift_ChiSq_WJets0_{ch}  flatParam
 rrv_n_ExpN_WJets0_sb_{ch}  flatParam
 rrv_c_ExpN_WJets0_sb_{ch}  flatParam
-Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 1.4
-Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 1.4
-Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig2 param 0.0 1.4
-Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig3 param 0.0 1.4
-Deco_TTbar_sb_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 2.0
-Deco_TTbar_sb_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 2.0
-Deco_TTbar_sig_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 2.0
-Deco_TTbar_sig_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 2.0
+Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig0 param 0.0 1.6
+Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig1 param 0.0 1.6
+Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig2 param 0.0 1.6
+Deco_WJets0_sim_{ch}_HPV_mlvj_13TeV_eig3 param 0.0 1.6
 slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
             print card
@@ -895,6 +899,12 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
                     self.WS2.var("Deco_WJets0_sim_%s_HPV_mlvj_13TeV_eig1"%self.ch).setConstant(kTRUE)
                     self.WS2.var("Deco_WJets0_sim_%s_HPV_mlvj_13TeV_eig2"%self.ch).setConstant(kTRUE)
                     self.WS2.var("Deco_WJets0_sim_%s_HPV_mlvj_13TeV_eig3"%self.ch).setConstant(kTRUE)
+                if region == 'sig':
+                   self.WS2.var("Deco_TTbar_sig_%s_HPV_mlvj_13TeV_eig0"%self.ch).setConstant(kTRUE)
+                   self.WS2.var("Deco_TTbar_sig_%s_HPV_mlvj_13TeV_eig1"%self.ch).setConstant(kTRUE)
+                else:
+                   self.WS2.var("Deco_TTbar_sb_%s_HPV_mlvj_13TeV_eig0"%self.ch).setConstant(kTRUE)
+                   self.WS2.var("Deco_TTbar_sb_%s_HPV_mlvj_13TeV_eig1"%self.ch).setConstant(kTRUE)
 
                 output        = TFile('WWWZ_%s_%s_ws.root'%(region,self.ch),'recreate')
                 self.WS2.SetName('proc_WWWZ_%s_%s'%(region,self.ch))
