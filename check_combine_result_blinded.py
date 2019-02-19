@@ -91,7 +91,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
     w.var(options.poi.split(':')[0]).setVal(float(options.poi.split(':')[1]))
 
     #cwwwtmp=w.var('cwww').getVal();ccwtmp=w.var('ccw').getVal();cbtmp=w.var('cb').getVal();
-    cwwwtmp=3.6; ccwtmp=0; cbtmp=0;
+    cwwwtmp=1.47; ccwtmp=0; cbtmp=0;
 
     model   = RooAddPdf("model","model",RooArgList(bkg_pdfs["WW"],bkg_pdfs["WZ"],bkg_pdfs["TTbar"],bkg_pdfs["STop"],bkg_pdfs["WJets"]))
     model_norm  = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
@@ -163,8 +163,8 @@ def plot(w,fitres,normset,spectrum,ch,region):
         #raw_input("Comparison of background events.")
 
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
-        if region=='sig':
-            model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
+        #if region=='sig':
+        model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
         #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.LineStyle(9),RooFit.LineWidth(2))
 
     data_histo   = data.binnedClone("data","data").createHistogram("data",rrv_x,RooFit.Cut("CMS_channel==CMS_channel::%s"%ch_num))
@@ -463,17 +463,11 @@ def plot_all(w,ch="el",name='test.png'):
         legMWV.SetLineWidth(0)
         legMWV.SetLineStyle(0)
         legMWV.SetTextFont(42)
-        if regs[i]=='sig':
-            if ch=='el':
-                legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
-            else:
-                legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
-            legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=3.6 TeV^{-2}","L")
+        if ch=='el':
+            legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
         else:
-            if ch=='el':
-                legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
-            else:
-                legMWV.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
+        legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=1.47 TeV^{-2}","L")
         legMWV.AddEntry(p.getObject(0),"W+jets","F")
         legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMWV.AddEntry(p.getObject(4),"WW","F")
