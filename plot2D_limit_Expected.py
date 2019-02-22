@@ -39,11 +39,10 @@ par_noUnits	= {'cwww' : 'c_{WWW} / #Lambda^{2}', 'ccw' : 'c_{W} / #Lambda^{2}', 
 
 def plots():
 	path		= './'
-
-	# Make the expected TGraph	
+	
 	wsNameExp	= 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
-	print 'Reading expected '+wsNameExp
-	fileInATGCExp	= TFile.Open(path+'ResultsExpected/'+wsNameExp)
+	print 'Reading '+wsNameExp
+	fileInATGCExp	= TFile.Open(path+wsNameExp)
 	treeExp		= fileInATGCExp.Get('limit')
 	NEntriesExp	= treeExp.GetEntries()
 
@@ -64,66 +63,28 @@ def plots():
 			zExp.append(2*treeExp.deltaNLL)
 
 	graphExp	= TGraph2D(len(xExp),array('d',xExp),array('d',yExp),array('d',zExp))
-
-	# Make the observed TGraph      
-        wsNameObs       = 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
-        print 'Reading observed '+wsNameObs
-        fileInATGCObs   = TFile.Open(path+'ResultsObserved/'+wsNameObs)
-        treeObs         = fileInATGCObs.Get('limit')
-        NEntriesObs     = treeObs.GetEntries()
-
-        treeObs.GetEntry(1)
-        xObs    = []
-        yObs    = []
-        zObs    = []
-
-        for i in range(NEntriesObs-1):
-                if i%1000==0:
-                        print i
-                treeObs.GetEntry(i+1)
-                if 2*treeObs.deltaNLL < 599:
-                        xObs.append(treeObs.GetLeaf(par1).GetValue())
-                        yObs.append(treeObs.GetLeaf(par2).GetValue())
-                        zObs.append(2*treeObs.deltaNLL)
-
-        graphObs        = TGraph2D(len(xObs),array('d',xObs),array('d',yObs),array('d',zObs))
-
-	#Best fit point
 	bestFitXBin	= ROOT.Long(0)
 	bestFitYBin	= ROOT.Long(0)
 	minDNLL		= ROOT.Long(0)
-	graphObs.GetHistogram().GetMinimumBin(bestFitXBin,bestFitYBin,minDNLL)
+	graphExp.GetHistogram().GetMinimumBin(bestFitXBin,bestFitYBin,minDNLL)
 	#bestFitX	= graphExp.GetHistogram().GetXaxis().GetBinCenter(bestFitXBin)
 	#bestFitY	= graphExp.GetHistogram().GetYaxis().GetBinCenter(bestFitYBin)
 
 	# Get best fit directly from tree instead of Delaunay histogram
-	treeObs.GetEntry(0)
-	bestFitX	= treeObs.GetLeaf(par1).GetValue()
-	bestFitY        = treeObs.GetLeaf(par2).GetValue()
+	treeExp.GetEntry(0)
+	bestFitX	= treeExp.GetLeaf(par1).GetValue()
+	bestFitY        = treeExp.GetLeaf(par2).GetValue()
 
 	c1              = TCanvas('c1','c1',800,750)
-
-	# Draw temporary contours and extract the TGraphs from them
 	contourLevels	= np.array([2.3, 5.99, 9.21])
 	graphExp.GetHistogram().SetContour(3,contourLevels)
 	graphExp.Draw("CONT LIST")
 	c1.Update()
-        c1.SetGrid()
-
-	contourExp99    = TGraph(TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[2].First())
-	contourExp95    = TGraph(TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[1].First())
-	contourExp68    = TGraph(TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[0].First())
-
-	# Do the same for observed
-	contourLevels   = np.array([5.99])
-        graphObs.GetHistogram().SetContour(1,contourLevels)
-        graphObs.Draw("CONT SAME LIST")
-	c1.Update()
-        c1.SetGrid()
-	
-	contourObs95    = TGraph(TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[0].First())
+	c1.SetGrid()
 
 	# 99% Expected =========================================================================================
+
+	contourExp99    = TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[2].First()
 
 	contourExp99.SetLineStyle(9)
 	contourExp99.SetLineColor(kRed)
@@ -145,6 +106,8 @@ def plots():
 
 	# 95% Expected =========================================================================================
 
+        contourExp95    = TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[1].First()
+
         contourExp95.SetLineStyle(9)
         contourExp95.SetLineColor(kGreen+2)
         contourExp95.SetLineWidth(1)
@@ -153,20 +116,14 @@ def plots():
 
 	# 68% Expected =========================================================================================
 
+        contourExp68    = TObjArray(ROOT.gROOT.GetListOfSpecials().FindObject("contours"))[0].First()
+
         contourExp68.SetLineStyle(9)
         contourExp68.SetLineColor(kBlue)
         contourExp68.SetLineWidth(1)
 
         contourExp68.Draw('C SAME')
 	
-	# 95% Observed =========================================================================================
-
-        contourObs95.SetLineStyle(1)
-        contourObs95.SetLineColor(kBlack)
-        contourObs95.SetLineWidth(2)
-
-        contourObs95.Draw('C SAME')
-
 	# Points ===============================================================================================
 
 	SMPoint	= TGraph(1)
@@ -217,9 +174,8 @@ def plots():
 	leg.AddEntry(contourExp68,"Expected 68% C.L.","L")
 	leg.AddEntry(contourExp95,"Expected 95% C.L.","L")
 	leg.AddEntry(contourExp99,"Expected 99% C.L.","L")
-	leg.AddEntry(contourObs95,"Observed 95% C.L.","L")
 	leg.AddEntry(SMPoint,"SM point","P")
-	leg.AddEntry(bestFitPoint,"Best fit","P")
+	leg.AddEntry(bestFitPoint,"Asimov best fit","P")
 	leg.Draw("SAME")
 
 	c1.Update()

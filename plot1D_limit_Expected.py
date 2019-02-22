@@ -30,10 +30,9 @@ par_noUnits	= {'cwww' : 'c_{WWW} / #Lambda^{2}', 'ccw' : 'c_{W} / #Lambda^{2}', 
 def plots():
 	path		= './'
 	
-	# Make the expected TGraph
 	wsNameExp	= 'higgsCombine_%s_%s.MultiDimFit.mH120.root'%(POI,pval)
-	print 'Reading expected '+wsNameExp
-	fileInATGCExp	= TFile.Open(path+'ResultsExpected/'+wsNameExp)
+	print 'Reading '+wsNameExp
+	fileInATGCExp	= TFile.Open(path+wsNameExp)
 	treeExp		= fileInATGCExp.Get('limit')
 	NEntriesExp	= treeExp.GetEntries()
 
@@ -68,30 +67,6 @@ def plots():
         graphExp.SetLineWidth(2)
         graphExp.SetLineColor(kGreen+2)
 
-	# Make the observed TGraph
-	wsNameObs       = 'higgsCombine_%s_%s.MultiDimFit.mH120.root'%(POI,pval)
-        print 'Reading observed '+wsNameExp
-        fileInATGCObs   = TFile.Open(path+'ResultsObserved/'+wsNameExp)
-        treeObs         = fileInATGCObs.Get('limit')
-        NEntriesObs     = treeObs.GetEntries()
-
-        treeObs.GetEntry(1)
-        xObs    = []
-        yObs    = []
-
-        for i in range(NEntriesObs-1):
-                if i%1000==0:
-                        print i
-                treeObs.GetEntry(i+1)
-                if 2*treeObs.deltaNLL < 8:
-                        xObs.append(treeObs.GetLeaf(par).GetValue())
-                        yObs.append(2*treeObs.deltaNLL)
-
-        graphObs        = TGraph(len(xObs),array('d',xObs),array('d',yObs))
-	graphObs.SetLineStyle(1)
-        graphObs.SetLineWidth(2)
-        graphObs.SetLineColor(kBlack)
-
 	# 95% Expected =========================================================================================
 
         for i in range((NEntriesExp-1)/2):
@@ -113,7 +88,7 @@ def plots():
 
         line4           = TF1('line4','3.84', graphExp.GetXaxis().GetXmin(),graphExp.GetXaxis().GetXmax())
         line4.SetLineStyle(7)
-        line4.SetLineColor(kBlack)
+        line4.SetLineColor(kGreen+2)
         line4.SetLineWidth(1)
 
         lineLoExp95 = TLine(limLoExp95,0,limLoExp95,yMax)
@@ -125,35 +100,6 @@ def plots():
         lineHiExp95.SetLineStyle(7)
         #lineHiExp95.SetLineWidth
         lineHiExp95.SetLineColor(kGreen+2)
-
-	# 95% Observed =========================================================================================
-
-        for i in range((NEntriesObs-1)/2):
-                j=i+1
-                treeObs.GetEntry(j)
-                if 2*treeObs.deltaNLL>3.84 and i<NEntriesObs/2-1:
-                        continue
-                else:
-                        limLoObs95 = treeObs.GetLeaf(par).GetValue()
-                        break
-        for i in range((NEntriesObs-1)/2):
-                j=i+ (NEntriesObs-1)/2 +1
-                treeObs.GetEntry(j)
-                if 2*treeObs.deltaNLL<3.84 and i<NEntriesObs/2-1:
-                        continue
-                else:
-                        limHiObs95 = treeObs.GetLeaf(par).GetValue()
-                        break
-
-        lineLoObs95 = TLine(limLoObs95,0,limLoObs95,yMax)
-        lineLoObs95.SetLineStyle(7)
-        #lineLoObs95.SetLineWidth(4)
-        lineLoObs95.SetLineColor(kBlack)
-
-        lineHiObs95 = TLine(limHiObs95,0,limHiObs95,yMax)
-        lineHiObs95.SetLineStyle(7)
-        #lineHiObs95.SetLineWidth
-        lineHiObs95.SetLineColor(kBlack)
 
 	# 68% Expected =========================================================================================
 
@@ -243,14 +189,10 @@ def plots():
 	boxHigh.Draw('SAME')
 
 	graphExp.Draw('C SAME')
-	graphObs.Draw('C SAME')
 
 	line4.Draw('SAME')
         lineLoExp95.Draw('SAME')
         lineHiExp95.Draw('SAME')
-
-	lineLoObs95.Draw('SAME')
-        lineHiObs95.Draw('SAME')
 
 	#line1.Draw('SAME')
         lineLoExp68.Draw('SAME')
@@ -267,7 +209,7 @@ def plots():
 	CMS_lumi.relExtraDY = 0.24
 	CMS_lumi.CMS_lumi(c1,4,11)
 
-	leg=TLegend(0.35,0.625,0.65,0.85)
+	leg=TLegend(0.35,0.65,0.65,0.85)
 	leg.SetFillColor(0)
         leg.SetFillStyle(0)
         leg.SetBorderSize(0)
@@ -277,18 +219,15 @@ def plots():
 	leg.SetTextFont(42)
 	leg.SetHeader(par_noUnits[par])
 	leg.AddEntry(graphExp,"Expected 95% C.L.","L")
-	leg.AddEntry(graphObs,"Observed 95% C.L.","L")
 	leg.AddEntry(boxHigh,"Expected #pm 1#sigma","F")
 	leg.Draw("SAME")
 
 	c1.Update()
 	c1.SaveAs("limit1D_%s.pdf"%POI)
 
-	errorExp = float(xExp[1]) - float(xExp[0])
-	errorObs = float(xObs[1]) - float(xObs[0])
+	error = float(xExp[1]) - float(xExp[0])
 
-	print '95%% expected C.L. limit on %s: [%s,%s] +- %s'%(par,round(limLoExp95,2),round(limHiExp95,2),round(errorExp,2))
-	print '95%% observed C.L. limit on %s: [%s,%s] +- %s'%(par,round(limLoObs95,2),round(limHiObs95,2),round(errorObs,2))
+	print '95%% C.L. limit on %s: [%s,%s] +- %s'%(par,round(limLoExp95,2),round(limHiExp95,2),round(error,2))
 
 	raw_input('<>')
 
