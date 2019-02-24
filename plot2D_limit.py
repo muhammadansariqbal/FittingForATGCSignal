@@ -140,7 +140,7 @@ def plots():
 	contourExp99.Draw('AC')
 	c1.Update()
 
-	contourExp99.GetYaxis().SetRangeUser(c1.GetFrame().GetY1(),1.4*c1.GetFrame().GetY2())
+	contourExp99.GetYaxis().SetRangeUser(c1.GetFrame().GetY1(),1.5*c1.GetFrame().GetY2())
 	contourExp99.Draw('AC')
 
 	# 95% Expected =========================================================================================
@@ -172,12 +172,14 @@ def plots():
 	SMPoint	= TGraph(1)
 	SMPoint.SetPoint(1,0,0)
 	SMPoint.SetMarkerStyle(21)
+	SMPoint.SetMarkerSize(2)
 	SMPoint.Draw('P SAME')
 
 	if float(binWidths[0])==0:
 		bestFitPoint = TGraph(1)
         	bestFitPoint.SetPoint(0,bestFitX,bestFitY)
-        	bestFitPoint.SetMarkerStyle(3)
+        	bestFitPoint.SetMarkerStyle(34)
+		bestFitPoint.SetMarkerSize(3)
         	bestFitPoint.Draw('P SAME')
 	else:
 		bestFitPoints	= []

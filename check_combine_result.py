@@ -205,9 +205,9 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         pad.SetMargin(0,0.1,0.1,0.1)
         pad2.SetMargin(0,0.1,0.4,0)
     else:
-        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.0035,0.0,xhi+0.001,0.155)
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.00445,0.0,xhi+0.001,0.155)
         pad.SetMargin(0,0,0.1,0.1)
-        pad2.SetMargin(0.015,0,0.4,0)
+        pad2.SetMargin(0.022,0,0.4,0)
     pad.Draw()
     pad2.Draw()
 
