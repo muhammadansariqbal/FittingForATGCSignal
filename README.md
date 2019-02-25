@@ -85,6 +85,7 @@ combine workspace_simfit.root -M MaxLikelihoodFit --expectSignal=1 --freezeNuisa
 Asimov Data Set Generation
 --------------------------
 combine workspace_simfit.root -M MaxLikelihoodFit -t -1 --saveToys --freezeNuisances ccw,cb --setPhysicsModelParameters cwww=0,ccw=0,cb=0 --minimizerStrategy 2 --cminPreScan --redefineSignalPOIs cwww --saveNormalizations --saveWithUncertainties --skipBOnlyFit -n Asimov
+# Add --toysFrequentist to generate Asimov data after getting optimal nuisance parameters values from a fit to data. Useful to get projected signal values.
 
 Postfit Plots
 -------------

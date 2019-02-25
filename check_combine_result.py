@@ -121,8 +121,45 @@ def plot(w,fitres,normset,spectrum,ch,region):
         uncBand.SetFillStyle(3013)
         p.addObject(uncBand,"E4")
 
+        ## Getting background final yields plus uncertainties
+        #rrv_x.setRange("RangeSigLo",65,85)
+        #rrv_x.setRange("RangeSigHi",85,105)
+        #argSet=RooArgSet(rrv_x)
+
+        #print "\nWW and WZ Region Yields"
+        #print "=========================\n"
+        #valueDibosonLo  = 0.0
+        #uncDibosonLo    = 0.0
+        #valueDibosonHi  = 0.0
+        #uncDibosonHi    = 0.0
+        #for process in ["WJets","TTbar","STop","WW","WZ"]:
+        #    intSigLo  = bkg_pdfs[process].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("RangeSigLo"))
+        #    value     = intSigLo.getVal() * bkg_norms[process].getVal()
+        #    shapeUnc  = intSigLo.getPropagatedError(fitres) * value
+        #    normUnc   = bkg_uncs[process] * intSigLo.getVal()
+        #    unc       = TMath.Sqrt((shapeUnc*shapeUnc) + (normUnc*normUnc))
+        #    print process + " in WW region: " + str(value) + " +- quad(" + str(shapeUnc) + ", " + str(normUnc) + ") = " + str(unc)
+        #    if process == "WW" or process == "WZ":
+        #        valueDibosonLo += value
+        #        uncDibosonLo = TMath.Sqrt((uncDibosonLo*uncDibosonLo) + (unc*unc))
+    
+        #    intSigHi  = bkg_pdfs[process].createIntegral(argSet,RooFit.NormSet(argSet),RooFit.Range("RangeSigHi"))
+        #    value     = intSigHi.getVal() * bkg_norms[process].getVal()
+        #    shapeUnc  = intSigHi.getPropagatedError(fitres) * value
+        #    normUnc   = bkg_uncs[process] * intSigHi.getVal()
+        #    unc       = TMath.Sqrt((shapeUnc*shapeUnc) + (normUnc*normUnc))
+        #    print process + " in WZ region: " + str(value) + " +- quad(" + str(shapeUnc) + ", " + str(normUnc) + ") = " + str(unc)
+        #    if process == "WW" or process == "WZ":
+        #        valueDibosonHi += value
+        #        uncDibosonHi = TMath.Sqrt((uncDibosonHi*uncDibosonHi) + (unc*unc))
+
+        #print "Diboson in WW region: " + str(valueDibosonLo) + " +- " + str(uncDibosonLo)
+        #print "Diboson in WZ region: " + str(valueDibosonHi) + " +- " + str(uncDibosonHi)
+
+        #raw_input("\nFinal yields.\n")
+
         w.var('cwww').setVal(cwwwtmp);w.var('ccw').setVal(ccwtmp);w.var('cb').setVal(cbtmp);
-        #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm*0.0001,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
+        #model.plotOn(p,RooFit.Name("WWWZ_atgc"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-6),RooFit.LineStyle(9),RooFit.LineWidth(2))
         #model.plotOn(p,RooFit.Name("WZ_atgc"),RooFit.Components("STop,WJets,TTbar,WZ"),RooFit.Normalization(model_norm,RooAbsReal.NumEvent),RooFit.FillColor(colors["WW"]-8),RooFit.DrawOption("F"))
 
     elif spectrum == "mlvj":
@@ -176,6 +213,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
     # This is data in main plots
     for iPoint in range(data_plot.GetN()):
         N = data_plot.GetY()[iPoint]
+        #print "x: " + str(data_plot.GetX()[iPoint]) + "   N: " + str(N)
         if N==0 :
             L = 0
         else:
@@ -186,6 +224,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
         data_plot.SetPointEXlow(iPoint,0)
         data_plot.SetPointEXhigh(iPoint,0)
     data_plot.SetName('data')
+    #raw_input("Data histogram")
 
     p.addPlotable(data_plot,"PE")
 
