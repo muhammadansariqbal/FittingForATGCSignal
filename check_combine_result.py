@@ -91,7 +91,7 @@ def plot(w,fitres,normset,spectrum,ch,region):
     w.var(options.poi.split(':')[0]).setVal(float(options.poi.split(':')[1]))
 
     #cwwwtmp=w.var('cwww').getVal();ccwtmp=w.var('ccw').getVal();cbtmp=w.var('cb').getVal();
-    cwwwtmp=1.47; ccwtmp=0; cbtmp=0;
+    cwwwtmp=1.59; ccwtmp=0; cbtmp=0;
 
     model   = RooAddPdf("model","model",RooArgList(bkg_pdfs["WW"],bkg_pdfs["WZ"],bkg_pdfs["TTbar"],bkg_pdfs["STop"],bkg_pdfs["WJets"]))
     model_norm  = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
@@ -523,7 +523,7 @@ def plot_all(w,ch="el",name='test.png'):
         else:
             #legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
             legMWV.AddEntry(p.getObject(12),"Data","PE")
-        legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=1.47 TeV^{-2}","L")
+        legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=1.59 TeV^{-2}","L")
         legMWV.AddEntry(p.getObject(0),"W+jets","F")
         legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMWV.AddEntry(p.getObject(4),"WW","F")
