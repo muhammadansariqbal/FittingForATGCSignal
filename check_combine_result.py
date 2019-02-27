@@ -259,8 +259,9 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     p.GetXaxis().SetLabelSize(0)
     p.GetYaxis().SetRangeUser(0,1450)
     p.GetYaxis().SetLabelSize(0.05)
-    p.GetYaxis().SetTitleSize(0.065)
-    p.GetYaxis().SetTitleOffset(1.25)
+    p.GetYaxis().SetTitle('Events / 5 GeV')
+    p.GetYaxis().SetTitleSize(0.08)
+    p.GetYaxis().SetTitleOffset(1.1)
     if reg=='sb_lo':
         p.GetYaxis().SetRangeUser(0,1535)
         p.GetXaxis().SetTitle('')
@@ -276,7 +277,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
     # Lumi text and channel
     if reg=='sb_lo':
        CMS_lumi.lumiTextSize=0.0
-       CMS_lumi.writeExtraText=True
+       #CMS_lumi.writeExtraText=True
        CMS_lumi.cmsTextSize=0.75
        CMS_lumi.relPosY    = -0.09
        CMS_lumi.relExtraDX = 0.2
@@ -284,14 +285,28 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
        CMS_lumi.CMS_lumi(pad,4,11)
     elif reg=='sb_hi':
        CMS_lumi.cmsTextSize=0.0
-       CMS_lumi.writeExtraText=False
+       #CMS_lumi.writeExtraText=False
        CMS_lumi.lumiTextSize=0.65
        CMS_lumi.lumiTextOffset=0.2
        CMS_lumi.CMS_lumi(pad,4,11)
 
+    # Channel text
+    if reg=='sig':
+        pt = TPaveText(0.375,0.8,0.625,0.97, "blNDC")
+        pt.SetFillStyle(0)
+        pt.SetBorderSize(0)
+        pt.SetTextAlign(23)
+        pt.SetTextSize(0.09)
+        if ch=="el":
+            pt.AddText("Electron channel")
+        else:
+            pt.AddText("Muon channel")
+        pt.Draw()
+        paveTexts.append(pt)
+
     # Legend
     if reg=='sb_hi':
-        legMJ=TLegend(0.55,0.5,0.85,0.85)
+        legMJ=TLegend(0.625,0.39,0.875,0.875)
         legMJ.SetFillColor(0)
         legMJ.SetFillStyle(0)
         legMJ.SetBorderSize(0)
@@ -300,16 +315,18 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         legMJ.SetLineStyle(0)
         legMJ.SetTextFont(42)
         if ch=='el':
-            legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
+            #legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"Data","PE")
         else:
-            legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
+            #legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"Data","PE")
         #legMJ.AddEntry(p.getObject(10),"Signal","L")
         legMJ.AddEntry(p.getObject(0),"W+jets","F")
         legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMJ.AddEntry(p.getObject(4),"WW","F")
         legMJ.AddEntry(p.getObject(5),"WZ","F")
         legMJ.AddEntry(p.getObject(8),"Single top","F")
-        legMJ.AddEntry(p.getObject(10),"Uncertainty","F")
+        legMJ.AddEntry(p.getObject(10),"Post-fit unc.","F")
         legMJ.Draw()
     else:
         legMJ=[]
@@ -360,7 +377,7 @@ def make_pull(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(105,150)
         pullhist.GetXaxis().SetLabelSize(0.14)
-        pullhist.GetXaxis().SetTitle('M_{PUPPI SD} (GeV)')
+        pullhist.GetXaxis().SetTitle('m_{PUPPI SD} (GeV)')
         pullhist.GetXaxis().SetTitleSize(0.2)
         pullhist.GetXaxis().SetTitleOffset(0.85)
         pullhist.GetYaxis().SetNdivisions(7)
@@ -409,7 +426,7 @@ def plot_all(w,ch="el",name='test.png'):
     ratio_style     = TH1D('ratio_style','ratio_style',36,900,4500)
     ratio_style.SetMaximum(2.9)
     ratio_style.SetMinimum(-3)
-    ratio_style.GetXaxis().SetTitle('M_{WV} (GeV)')
+    ratio_style.GetXaxis().SetTitle('m_{WV} (GeV)')
     ratio_style.GetXaxis().SetTitleSize(0.2)
     ratio_style.GetXaxis().SetTitleOffset(0.75)
     ratio_style.GetXaxis().SetLabelSize(0.125)
@@ -432,8 +449,9 @@ def plot_all(w,ch="el",name='test.png'):
         p.GetXaxis().SetTitleSize(0)
         p.GetXaxis().SetLabelSize(0)
         p.GetYaxis().SetRangeUser(7e-2,5e3)
-        p.GetYaxis().SetTitleSize(0.065)
-        p.GetYaxis().SetTitleOffset(0.725)
+        p.GetYaxis().SetTitle('Events / 100 GeV')
+        p.GetYaxis().SetTitleSize(0.08)
+        p.GetYaxis().SetTitleOffset(0.59)
         p.GetYaxis().SetLabelSize(0.06)
 
         canvas.cd()
@@ -465,7 +483,7 @@ def plot_all(w,ch="el",name='test.png'):
         pad1.cd()
         #if regs[i]=='sb_lo':
         CMS_lumi.lumiTextSize=0.0
-        CMS_lumi.writeExtraText=True
+        #CMS_lumi.writeExtraText=True
         CMS_lumi.cmsTextSize=0.75
         CMS_lumi.relPosY    = -0.09
         CMS_lumi.relExtraDX = 0.2
@@ -478,19 +496,20 @@ def plot_all(w,ch="el",name='test.png'):
         CMS_lumi.lumiTextOffset=0.2
         CMS_lumi.CMS_lumi(pad1,4,11)
         #else:
-        #pt2 = TPaveText(0.75,0.75,0.85,0.92, "blNDC")
-        #pt2.SetFillStyle(0)
-        #pt2.SetBorderSize(0)
-        #pt2.SetTextAlign(33)
-        #pt2.SetTextSize(0.07)
-        #if ch=="el":
-        #    pt2.AddText("Electron channel")
-        #else:
-        #    pt2.AddText("Muon channel")
-        #pt2.Draw()
+        pt2 = TPaveText(0.125,0.8,0.325,0.975, "blNDC")
+        pt2.SetFillStyle(0)
+        pt2.SetBorderSize(0)
+        pt2.SetTextAlign(13)
+        pt2.SetTextSize(0.08)
+        if ch=="el":
+            pt2.AddText("Electron channel")
+        else:
+            pt2.AddText("Muon channel")
+        pt2.Draw()
+        paveTexts.append(pt2)
 
         # Legend
-        legMWV=TLegend(0.55,0.5,0.85,0.85)
+        legMWV=TLegend(0.525,0.4,0.88,0.875)
         legMWV.SetFillColor(0)
         legMWV.SetFillStyle(0)
         legMWV.SetBorderSize(0)
@@ -499,16 +518,18 @@ def plot_all(w,ch="el",name='test.png'):
         legMWV.SetLineStyle(0)
         legMWV.SetTextFont(42)
         if ch=='el':
-            legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
+            #legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
+            legMWV.AddEntry(p.getObject(12),"Data","PE")
         else:
-            legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
+            #legMWV.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMWV.AddEntry(p.getObject(12),"Data","PE")
         legMWV.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=1.47 TeV^{-2}","L")
         legMWV.AddEntry(p.getObject(0),"W+jets","F")
         legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
         legMWV.AddEntry(p.getObject(4),"WW","F")
         legMWV.AddEntry(p.getObject(5),"WZ","F")
         legMWV.AddEntry(p.getObject(8),"Single top","F")
-        legMWV.AddEntry(p.getObject(10),"Uncertainty","F")
+        legMWV.AddEntry(p.getObject(10),"Post-fit unc.","F")
         legMWV.Draw()
         legendsMWV.append(legMWV)
 
