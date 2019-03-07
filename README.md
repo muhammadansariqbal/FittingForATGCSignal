@@ -93,6 +93,12 @@ python check_combine_result.py -n BkgOnly -c mu -P cwww:3.6
 # -n: Addendum to the file name which contains the fit results
 # -P: Set parameter value (default is -P cwww:0)
 # -a: If we want to plot the Asimov data -a is the full file name which was saved from --saveToys (e.g. higgsCombineAsimov.MaxLikelihoodFit.mH120.123456.root)
+# -r: Region
+
+# For the new split plots, use the following for example
+python check_combine_result_mJ.py -n AllZero -c el -P cwww:0
+python check_combine_result_mWV.py -n AllZero -c el -P cwww:0 -r sig
+
 
 1-D Limits
 ----------
