@@ -234,7 +234,7 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
        #CMS_lumi.writeExtraText=True
        CMS_lumi.cmsTextSize=0.75
        CMS_lumi.relPosY    = -0.09
-       CMS_lumi.relExtraDX = 0.2
+       CMS_lumi.relExtraDX = 0.3
        CMS_lumi.relExtraDY = 0.24
        CMS_lumi.CMS_lumi(pad,4,11)
     elif reg=='sb_hi':
