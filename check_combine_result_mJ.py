@@ -222,8 +222,12 @@ def plot_all(w,ch="el",reg='sig'):
     p.GetXaxis().SetTitleSize(0)
     p.GetXaxis().SetLabelSize(0)
     p.GetYaxis().SetRangeUser(0,1700)
+    if reg=='sb_lo':
+        p.GetYaxis().SetRangeUser(0,1775)
     if ch=='el':
         p.GetYaxis().SetRangeUser(0,1250)
+        if reg=='sb_lo':
+            p.GetYaxis().SetRangeUser(0,1320)
     p.GetYaxis().SetTitle('Events / 5 GeV')
     p.GetYaxis().SetTitleSize(0.07)
     p.GetYaxis().SetTitleOffset(0.7)
