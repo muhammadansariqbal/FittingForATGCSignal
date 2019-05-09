@@ -20,7 +20,6 @@ mj_bins = {"sb_lo":5,"sig":8,"sb_hi":9}
 
 parser        = OptionParser()
 parser.add_option('-c', '--ch', dest='ch', default='el', help='channel, el or mu')
-parser.add_option('-r', '--reg', dest='reg', default='sig')
 parser.add_option('-P','--POI', dest='poi', default='cwww:0')
 parser.add_option('-n', dest='name', default='')
 parser.add_option('-a', '--asimov', dest='asimovDataFile', default='none')
@@ -185,145 +184,197 @@ def plot(w,fitres,normset,ch,region):
 
     return p
 
-def plot_all(w,ch="el",reg='sig'):
+def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,legends):
+
+
+    canvas.cd()
+    pad     = TPad(reg,reg,xlo,0.25,xhi,1.0)
+    if reg=='sb_lo':
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.31)
+        pad.SetMargin(0.25,0,0.1,0.1)
+        pad2.SetMargin(0.25,0.0,0.4,0)
+    elif reg=='sb_hi':
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.31)
+        pad.SetMargin(0,0.1,0.1,0.1)
+        pad2.SetMargin(0,0.1,0.4,0)
+    else:
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.00445,0.0,xhi+0.001,0.31)
+        pad.SetMargin(0,0,0.1,0.1)
+        pad2.SetMargin(0.022,0,0.4,0)
+    pad.Draw()
+    pad2.Draw()
+
+    pad.cd()
+    # Main MJ plot
+    p       = plot(w,fitres,normset,ch,reg)
+    #p.GetXaxis().SetTitleSize(0.0575)
+    #p.GetXaxis().SetTitleOffset(0.7)
+    p.GetXaxis().SetTitleSize(0)
+    p.GetXaxis().SetLabelSize(0)
+    p.GetYaxis().SetRangeUser(0,1450)
+    p.GetYaxis().SetLabelSize(0.05)
+    p.GetYaxis().SetTitle('Events / 5 GeV')
+    p.GetYaxis().SetTitleSize(0.08)
+    p.GetYaxis().SetTitleOffset(1.1)
+    if reg=='sb_lo':
+        p.GetYaxis().SetRangeUser(0,1535)
+        p.GetXaxis().SetTitle('')
+    elif reg=='sb_hi':
+        p.GetYaxis().SetTitle('')
+        p.GetYaxis().SetLabelSize(0)
+    else:
+        p.GetXaxis().SetTitle('')
+        p.GetYaxis().SetTitle('')
+        p.GetYaxis().SetLabelSize(0)
+    p.Draw()
+
+    # Lumi text and channel
+    if reg=='sb_lo':
+       CMS_lumi.lumiTextSize=0.0
+       #CMS_lumi.writeExtraText=True
+       CMS_lumi.cmsTextSize=0.75
+       CMS_lumi.relPosY    = -0.09
+       CMS_lumi.relExtraDX = 0.3
+       CMS_lumi.relExtraDY = 0.24
+       CMS_lumi.CMS_lumi(pad,4,11)
+    elif reg=='sb_hi':
+       CMS_lumi.cmsTextSize=0.0
+       #CMS_lumi.writeExtraText=False
+       CMS_lumi.lumiTextSize=0.65
+       CMS_lumi.lumiTextOffset=0.2
+       CMS_lumi.CMS_lumi(pad,4,11)
+
+    # Channel text
+    if reg=='sig':
+        pt = TPaveText(0.375,0.8,0.625,0.97, "blNDC")
+        pt.SetFillStyle(0)
+        pt.SetBorderSize(0)
+        pt.SetTextAlign(23)
+        pt.SetTextSize(0.09)
+        if ch=="el":
+            pt.AddText("Electron channel")
+        else:
+            pt.AddText("Muon channel")
+        pt.Draw()
+        paveTexts.append(pt)
+
+    # Legend
+    if reg=='sb_hi':
+        legMJ=TLegend(0.625,0.39,0.875,0.875)
+        legMJ.SetFillColor(0)
+        legMJ.SetFillStyle(0)
+        legMJ.SetBorderSize(0)
+        legMJ.SetLineColor(0)
+        legMJ.SetLineWidth(0)
+        legMJ.SetLineStyle(0)
+        legMJ.SetTextFont(42)
+        if ch=='el':
+            #legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow e#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"Data","PE")
+        else:
+            #legMJ.AddEntry(p.getObject(11),"CMS data, WV#rightarrow #mu#nuqq","P")
+            legMJ.AddEntry(p.getObject(11),"Data","PE")
+        #legMJ.AddEntry(p.getObject(10),"Signal","L")
+        legMJ.AddEntry(p.getObject(0),"W+jets","F")
+        legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
+        legMJ.AddEntry(p.getObject(4),"WW","F")
+        legMJ.AddEntry(p.getObject(5),"WZ","F")
+        legMJ.AddEntry(p.getObject(8),"Single top","F")
+        legMJ.AddEntry(p.getObject(10),"Post-fit unc.","F")
+        legMJ.Draw()
+    else:
+        legMJ=[]
+
+    pad2.cd()
+
+    # MJ pull histograms
+    if reg=='sb_lo':
+        pullhist    = p.pullHist("data","WJets")
+        pullhist.SetMaximum(4.9)
+        pullhist.SetMinimum(-5)
+        pullhist.GetXaxis().SetRangeUser(40,65)
+        pullhist.GetXaxis().SetNdivisions(505)
+        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetYaxis().SetNdivisions(7)
+        pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
+        pullhist.GetYaxis().SetLabelSize(0.125)
+        pullhist.GetYaxis().SetTitleSize(0.2)
+        pullhist.GetYaxis().SetTitleOffset(0.35)
+        pullhist.SetMarkerStyle(20)
+        #pullhist.SetMarkerSize(1.5)
+        pullhist.SetLineColor(kBlack)
+        pullhist.SetMarkerColor(kBlack)
+        pullhist.Draw("AP")
+        medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        pullhist.Draw("Psame")
+
+    elif reg=='sig':
+        pullhist    = p.pullHist("data","WJets")
+        pullhist.SetMaximum(4.9)
+        pullhist.SetMinimum(-5)
+        pullhist.GetXaxis().SetRangeUser(65,105)
+        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetYaxis().SetNdivisions(7)
+        pullhist.GetYaxis().SetLabelSize(0)
+        pullhist.GetYaxis().SetTitleSize(0.2)
+        pullhist.GetYaxis().SetTitleOffset(0.32)
+        pullhist.SetMarkerStyle(20)
+        #pullhist.SetMarkerSize(1.5)
+        pullhist.SetLineColor(kBlack)
+        pullhist.SetMarkerColor(kBlack)
+        pullhist.Draw("AP")
+        medianLine = TLine(65.,0.,105.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        pullhist.Draw("Psame")
+    else:
+        pullhist    = p.pullHist("data","WJets")
+        pullhist.SetMaximum(4.9)
+        pullhist.SetMinimum(-5)
+        pullhist.GetXaxis().SetRangeUser(105,150)
+        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetXaxis().SetTitle('m_{SD} (GeV)')
+        pullhist.GetXaxis().SetTitleSize(0.2)
+        pullhist.GetXaxis().SetTitleOffset(0.85)
+        pullhist.GetYaxis().SetNdivisions(7)
+        pullhist.GetYaxis().SetLabelSize(0)
+        pullhist.GetYaxis().SetTitleSize(0.2)
+        pullhist.GetYaxis().SetTitleOffset(0.32)
+        pullhist.SetMarkerStyle(20)
+        #pullhist.SetMarkerSize(1.5)
+        pullhist.SetLineColor(kBlack)
+        pullhist.SetMarkerColor(kBlack)
+        pullhist.Draw("AP")
+        medianLine = TLine(105.,0.,150.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        pullhist.Draw("Psame")
+
+    canvas.Update()
+
+    pads.append(pad)
+    pads.append(pad2)
+    medianLines.append(medianLine)
+    legends.append(legMJ)
+
+def plot_all(w,ch="el"):
    
+    canvas = TCanvas(ch,ch,2500,500)
+
+    offset = 0.15
     # These things just have to be kept in memory so that ROOT does not make them disappear in the next loop
     pads = []
     medianLines = []
     paveTexts = []
     legendsMJ = []
+    legendsMWV = []
 
-    # Get binning
-    rrv_x = w.var("mj_%s"%reg)
-
-    # This is for median line in MJ pull plot
-    ratio_style     = TH1D('ratio_style','ratio_style',rrv_x.getBins(),rrv_x.getMin(),rrv_x.getMax())
-    ratio_style.SetMaximum(4.9)
-    ratio_style.SetMinimum(-5)
-    ratio_style.GetXaxis().SetTitle('m_{SD} (GeV)')
-    ratio_style.GetXaxis().SetTitleSize(0.2)
-    ratio_style.GetXaxis().SetTitleOffset(0.75)
-    ratio_style.GetXaxis().SetLabelSize(0.125)
-    ratio_style.GetYaxis().SetNdivisions(7)
-    ratio_style.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}  ')
-    ratio_style.GetYaxis().SetLabelSize(0.125)
-    ratio_style.GetYaxis().SetTitleSize(0.16)
-    ratio_style.GetYaxis().SetTitleOffset(0.25)
-    ratio_style.SetMarkerStyle(20)
-    #ratio_style.SetMarkerSize(1.5)
-
-    canvas = TCanvas(ch,ch,800,640)
-    pad1        = TPad('pad','pad',0.,0.175,1.,1.)
-    pad_pull    = TPad('pad_pull','pad_pull',0.,0.,1.,0.25)
-    pads.append(pad1)
-    pads.append(pad_pull)
-    # Main MJ plot
-    p=plot(w,fitres,normset,ch,reg)
-    p.GetXaxis().SetTitleSize(0)
-    p.GetXaxis().SetLabelSize(0)
-    p.GetYaxis().SetRangeUser(0,1700)
-    if ch=='el':
-        p.GetYaxis().SetRangeUser(0,1250)
-    p.GetYaxis().SetTitle('Events / 5 GeV')
-    p.GetYaxis().SetTitleSize(0.07)
-    p.GetYaxis().SetTitleOffset(0.7)
-    p.GetYaxis().SetLabelSize(0.04)
+    # MJ main and pull plots
+    plot_mJ(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
+    plot_mJ(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
+    plot_mJ(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
 
     canvas.cd()
-    pad1.Draw()
-    pad_pull.Draw()
-
-    pad1.cd()
-    pad1.SetTicky()
-    pad1.SetBottomMargin(0.1)
-    p.Draw()
-
-    pad_pull.cd()
-    # MJ pull plot
-    pad_pull.SetTopMargin(0)
-    pad_pull.SetBottomMargin(0.35)
-    pullhist = p.pullHist("data","WJets")
-    ratio_style.Draw("")
-    pullhist.SetLineColor(kBlack)
-    pullhist.SetMarkerStyle(20)
-    #pullhist.SetMarkerSize(1.5)
-    pullhist.SetMarkerColor(kBlack)
-    pullhist.Draw("SAME PE")
-    #for i in range(pullhist.GetN()):
-        #print pullhist.GetY()[i]
-        #raw_input("Printed pull hist")
-    
-    # Lumi text and channel
-    pad1.cd()
-    #if reg=='sb_lo':
-    CMS_lumi.lumiTextSize=0.0
-    #CMS_lumi.writeExtraText=True
-    CMS_lumi.cmsTextSize=0.75
-    CMS_lumi.relPosY    = -0.09
-    CMS_lumi.relExtraDX = 0.2
-    CMS_lumi.relExtraDY = 0.24
-    CMS_lumi.CMS_lumi(pad1,4,11)
-    #elif reg=='sb_hi':
-    CMS_lumi.cmsTextSize=0.0
-    CMS_lumi.writeExtraText=False
-    CMS_lumi.lumiTextSize=0.65
-    CMS_lumi.lumiTextOffset=0.2
-    CMS_lumi.CMS_lumi(pad1,4,11)
-    #else:
-    pt2 = TPaveText(0.125,0.8,0.325,0.975, "blNDC")
-    pt2.SetFillStyle(0)
-    pt2.SetBorderSize(0)
-    pt2.SetTextAlign(13)
-    pt2.SetTextSize(0.07)
-    if ch=="el":
-        pt2.AddText("Electron channel")
-    else:
-        pt2.AddText("Muon channel")
-    pt2.Draw()
-    paveTexts.append(pt2)
-    # mSD range text
-    #pt3 = TPaveText(0.125,0.725,0.325,0.9, "blNDC")
-    #pt3.SetFillStyle(0)
-    #pt3.SetBorderSize(0)
-    #pt3.SetTextAlign(13)
-    #pt3.SetTextSize(0.06)
-    #if reg=='sb_lo':
-    #    pt3.AddText("40 < m_{SD} < 65 GeV")
-    #elif reg=='sig':
-    #    pt3.AddText("65 < m_{SD} < 105 GeV")
-    #else:
-    #    pt3.AddText("105 < m_{SD} < 150 GeV")
-    #pt3.Draw()
-    #paveTexts.append(pt3)
-
-    # Legend
-    legMJ=TLegend(0.125,0.675,0.87,0.8)
-    legMJ.SetNColumns(4)
-    legMJ.SetFillColor(0)
-    legMJ.SetFillStyle(0)
-    legMJ.SetBorderSize(0)
-    legMJ.SetLineColor(0)
-    legMJ.SetLineWidth(0)
-    legMJ.SetLineStyle(0)
-    legMJ.SetTextFont(42)
-    if ch=='el':
-        #legMJ.AddEntry(p.getObject(12),"CMS data, WV#rightarrow e#nuqq","P")
-        legMJ.AddEntry(p.getObject(11),"Data","PE")
-    else:
-        #legMJ.AddEntry(p.getObject(12),"CMS data, WV#rightarrow #mu#nuqq","P")
-        legMJ.AddEntry(p.getObject(11),"Data","PE")
-    #legMJ.AddEntry(p.getObject(11),"Signal c_{WWW}/#Lambda^{2}=1.59 TeV^{-2}","L")
-    legMJ.AddEntry(p.getObject(0),"W+jets","F")
-    legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
-    legMJ.AddEntry(p.getObject(4),"WW","F")
-    legMJ.AddEntry(p.getObject(5),"WZ","F")
-    legMJ.AddEntry(p.getObject(8),"Single top","F")
-    legMJ.AddEntry(p.getObject(10),"Post-fit unc.","F")
-    legMJ.Draw()
-    legendsMJ.append(legMJ)
-
+    canvas.Draw()
     canvas.Update()
-    canvas.SaveAs('postfit_%s_mJ_%s.pdf'%(ch,reg))
+    canvas.SaveAs('postfit_%s_mJ.eps'%ch)
+    os.system('epstopdf postfit_%s_mJ.eps'%ch)
     raw_input(ch)
 
     for i in pads:
@@ -341,10 +392,10 @@ fileIn.Close()
 
 fitparas    = fitres.floatParsFinal()
 
-#ROOT.gStyle.SetPaperSize(40,52)
+ROOT.gStyle.SetPaperSize(40,52)
 #ROOT.gROOT.ProcessLine("Float_t* wid=new Float_t(0); Float_t* hei=new Float_t(0); gStyle->GetPaperSize(wid, hei); std::cout<<*wid<<"   "<<*hei<<std::endl;")
 #ROOT.gROOT.SetBatch(kTRUE)
-#plot_all(w,options.ch,options.reg)
+#plot_all(w,options.ch)
 
 string = '{:>40} : {:>30} / {:>30}\n'.format('>>name<<','>>pre-fit<<','>>post-fit<<')
 for i in range(fitparas.getSize()):
@@ -355,7 +406,7 @@ for i in range(fitparas.getSize()):
     w.var(fitparas.at(i).GetName()).setVal(fitparas.at(i).getVal())
 
 
-plot_all(w,options.ch,options.reg)
+plot_all(w,options.ch)
 
 
 print string

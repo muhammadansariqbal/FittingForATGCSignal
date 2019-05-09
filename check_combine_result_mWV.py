@@ -187,19 +187,19 @@ def plot_all(w,ch="el",reg='sig'):
     #ratio_style.SetMarkerSize(1.5)
 
     canvas = TCanvas(ch,ch,800,640)
-    pad1        = TPad('pad','pad',0.,0.26,1.,1.)
-    pad_pull    = TPad('pad_pull','pad_pull',0.,0.,1.,0.323)
+    pad1        = TPad('pad','pad',0.,0.175,1.,1.)
+    pad_pull    = TPad('pad_pull','pad_pull',0.,0.,1.,0.25)
     pads.append(pad1)
     pads.append(pad_pull)
     # Main MWV plot
     p=plot(w,fitres,normset,ch,reg)
     p.GetXaxis().SetTitleSize(0)
     p.GetXaxis().SetLabelSize(0)
-    p.GetYaxis().SetRangeUser(7e-2,5e3)
+    p.GetYaxis().SetRangeUser(7e-2,2e4)
     p.GetYaxis().SetTitle('Events / 100 GeV')
-    p.GetYaxis().SetTitleSize(0.08)
-    p.GetYaxis().SetTitleOffset(0.59)
-    p.GetYaxis().SetLabelSize(0.06)
+    p.GetYaxis().SetTitleSize(0.07)
+    p.GetYaxis().SetTitleOffset(0.7)
+    p.GetYaxis().SetLabelSize(0.05)
 
     canvas.cd()
     pad1.Draw()
@@ -247,16 +247,30 @@ def plot_all(w,ch="el",reg='sig'):
     pt2.SetFillStyle(0)
     pt2.SetBorderSize(0)
     pt2.SetTextAlign(13)
-    pt2.SetTextSize(0.08)
+    pt2.SetTextSize(0.07)
     if ch=="el":
         pt2.AddText("Electron channel")
     else:
         pt2.AddText("Muon channel")
     pt2.Draw()
     paveTexts.append(pt2)
+    # mSD range text
+    pt3 = TPaveText(0.125,0.725,0.325,0.9, "blNDC")
+    pt3.SetFillStyle(0)
+    pt3.SetBorderSize(0)
+    pt3.SetTextAlign(13)
+    pt3.SetTextSize(0.06)
+    if reg=='sb_lo':
+        pt3.AddText("40 < m_{SD} < 65 GeV")
+    elif reg=='sig':
+        pt3.AddText("65 < m_{SD} < 105 GeV")
+    else:
+        pt3.AddText("105 < m_{SD} < 150 GeV")
+    pt3.Draw()
+    paveTexts.append(pt3)
 
     # Legend
-    legMWV=TLegend(0.525,0.4,0.88,0.875)
+    legMWV=TLegend(0.5,0.4,0.88,0.9)
     legMWV.SetFillColor(0)
     legMWV.SetFillStyle(0)
     legMWV.SetBorderSize(0)

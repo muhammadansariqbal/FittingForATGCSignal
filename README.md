@@ -96,7 +96,7 @@ python check_combine_result.py -n BkgOnly -c mu -P cwww:3.6
 # -r: Region
 
 # For the new split plots, use the following for example
-python check_combine_result_mJ.py -n AllZero -c el -P cwww:0
+python check_combine_result_mJ.py -n AllZero -c el -P cwww:0 -r sig
 python check_combine_result_mWV.py -n AllZero -c el -P cwww:0 -r sig
 
 
