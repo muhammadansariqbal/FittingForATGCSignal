@@ -170,6 +170,9 @@ def plot(w,fitres,normset,ch,region):
     # This is data in main plots
     for iPoint in range(data_plot.GetN()):
         N = data_plot.GetY()[iPoint]
+        if region=='sb_lo':
+            N = data_plot.GetY()[iPoint]*0.945
+            data_plot.SetPoint(iPoint,data_plot.GetX()[iPoint],N)
         #print "x: " + str(data_plot.GetX()[iPoint]) + "   N: " + str(N)
         if N==0 :
             L = 0
