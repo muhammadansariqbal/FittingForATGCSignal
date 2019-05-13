@@ -289,7 +289,7 @@ def plot_all(w,ch="el",reg='sig'):
     legMWV.AddEntry(p.getObject(1),"t#bar{t}","F")
     legMWV.AddEntry(p.getObject(4),"WW","F")
     legMWV.AddEntry(p.getObject(5),"WZ","F")
-    legMWV.AddEntry(p.getObject(8),"Single top","F")
+    legMWV.AddEntry(p.getObject(8),"Single t","F")
     legMWV.AddEntry(p.getObject(10),"Post-fit unc.","F")
     legMWV.Draw()
     legendsMWV.append(legMWV)

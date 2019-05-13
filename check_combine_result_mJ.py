@@ -319,7 +319,7 @@ def plot_all(w,ch="el",reg='sig'):
     legMJ.AddEntry(p.getObject(1),"t#bar{t}","F")
     legMJ.AddEntry(p.getObject(4),"WW","F")
     legMJ.AddEntry(p.getObject(5),"WZ","F")
-    legMJ.AddEntry(p.getObject(8),"Single top","F")
+    legMJ.AddEntry(p.getObject(8),"Single t","F")
     legMJ.AddEntry(p.getObject(10),"Post-fit unc.","F")
     legMJ.Draw()
     legendsMJ.append(legMJ)
