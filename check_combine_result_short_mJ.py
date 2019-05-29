@@ -189,7 +189,7 @@ def plot(w,fitres,normset,ch,region):
 
     return p
 
-def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,legends):
+def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends):
 
 
     canvas.cd()
@@ -203,9 +203,9 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
         pad.SetMargin(0,0.1,0.1,0.1)
         pad2.SetMargin(0,0.1,0.4,0)
     else:
-        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.00445,0.0,xhi+0.001,0.31)
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.0075,0.0,xhi+0.002,0.31)
         pad.SetMargin(0,0,0.1,0.1)
-        pad2.SetMargin(0.022,0,0.4,0)
+        pad2.SetMargin(0.03,0,0.4,0)
     pad.Draw()
     pad2.Draw()
 
@@ -219,10 +219,10 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
     p.GetYaxis().SetRangeUser(0,1050)
     if ch=='mu':
         p.GetYaxis().SetRangeUser(0,1450)
-    p.GetYaxis().SetLabelSize(0.05)
+    p.GetYaxis().SetLabelSize(0.075)
     p.GetYaxis().SetTitle('Events / 5 GeV')
-    p.GetYaxis().SetTitleSize(0.08)
-    p.GetYaxis().SetTitleOffset(1.1)
+    p.GetYaxis().SetTitleSize(0.14)
+    p.GetYaxis().SetTitleOffset(0.9)
     if reg=='sb_lo':
         p.GetXaxis().SetTitle('')
         p.GetYaxis().SetTickLength(0.06)
@@ -306,18 +306,20 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(40,65)
         pullhist.GetXaxis().SetNdivisions(505)
-        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetXaxis().SetLabelSize(0.0775)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
-        pullhist.GetYaxis().SetLabelSize(0.125)
-        pullhist.GetYaxis().SetTitleSize(0.2)
-        pullhist.GetYaxis().SetTitleOffset(0.35)
+        pullhist.GetYaxis().SetLabelSize(0.1)
+        pullhist.GetYaxis().SetTitleSize(0.1)
+        pullhist.GetYaxis().SetTitleOffset(0.9)
+        pullhist.GetYaxis().CenterTitle(true);
         pullhist.SetMarkerStyle(20)
         #pullhist.SetMarkerSize(1.5)
         pullhist.SetLineColor(kBlack)
         pullhist.SetMarkerColor(kBlack)
         pullhist.Draw("AP")
         medianLine = TLine(pullhist.GetXaxis().GetXmin(),0.,pullhist.GetXaxis().GetXmax(),0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        topAxisLine = []; botAxisLine = [];
         pullhist.Draw("Psame")
 
     elif reg=='sig':
@@ -325,7 +327,8 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(65,105)
-        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetXaxis().SetLabelSize(0.07)
+        pullhist.GetXaxis().SetLabelOffset(0.008)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetLabelSize(0)
         pullhist.GetYaxis().SetTitleSize(0.2)
@@ -337,17 +340,20 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
         pullhist.SetLineColor(kBlack)
         pullhist.SetMarkerColor(kBlack)
         pullhist.Draw("AP")
-        medianLine = TLine(65.,0.,105.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        medianLine = TLine(62.,0.,105.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        topAxisLine = TLine(62.,4.9,65.,4.9); topAxisLine.SetLineWidth(1); topAxisLine.SetLineColor(kBlack); topAxisLine.Draw();
+        botAxisLine = TLine(62.,-5.,65.,-5.); botAxisLine.SetLineWidth(1); botAxisLine.SetLineColor(kBlack); botAxisLine.Draw();
         pullhist.Draw("Psame")
     else:
         pullhist    = p.pullHist("data","WJets")
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(105,150)
-        pullhist.GetXaxis().SetLabelSize(0.14)
+        pullhist.GetXaxis().SetLabelSize(0.07)
+        pullhist.GetXaxis().SetLabelOffset(0.008)
         pullhist.GetXaxis().SetTitle('m_{SD} (GeV)')
         pullhist.GetXaxis().SetTitleSize(0.15)
-        pullhist.GetXaxis().SetTitleOffset(0.85)
+        pullhist.GetXaxis().SetTitleOffset(0.7)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetLabelSize(0)
         pullhist.GetYaxis().SetTitleSize(0.2)
@@ -360,13 +366,16 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,medianLines,paveTexts,le
         pullhist.SetMarkerColor(kBlack)
         pullhist.Draw("AP")
         medianLine = TLine(105.,0.,150.,0.); medianLine.SetLineWidth(1); medianLine.SetLineColor(kBlue); medianLine.Draw();
+        topAxisLine = []; botAxisLine = [];
         pullhist.Draw("Psame")
 
     canvas.Update()
 
     pads.append(pad)
     pads.append(pad2)
-    medianLines.append(medianLine)
+    lines.append(medianLine)
+    lines.append(topAxisLine)
+    lines.append(botAxisLine)
     legends.append(legMJ)
 
 def plot_all(w,ch="el"):
@@ -376,15 +385,15 @@ def plot_all(w,ch="el"):
     offset = 0.15
     # These things just have to be kept in memory so that ROOT does not make them disappear in the next loop
     pads = []
-    medianLines = []
+    lines = []
     paveTexts = []
     legendsMJ = []
     legendsMWV = []
 
     # MJ main and pull plots
-    plot_mJ(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
-    plot_mJ(canvas,5/22.+offset/2,13/22.-offset/2,'sig',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
-    plot_mJ(canvas,13/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,medianLines,paveTexts,legendsMJ)
+    plot_mJ(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
+    plot_mJ(canvas,5/22.+offset/2,13.5/22.-offset/2,'sig',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
+    plot_mJ(canvas,13.5/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
 
     canvas.cd()
     canvas.Draw()
