@@ -193,19 +193,19 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
 
 
     canvas.cd()
-    pad     = TPad(reg,reg,xlo,0.25,xhi,1.0)
+    pad     = TPad(reg,reg,xlo,0.18,xhi,1.0)
     if reg=='sb_lo':
-        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.31)
-        pad.SetMargin(0.25,0,0.1,0.1)
-        pad2.SetMargin(0.25,0.0,0.4,0)
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.25)
+        pad.SetMargin(0.47,0,0.1,0.1)
+        pad2.SetMargin(0.47,0.0,0.35,0)
     elif reg=='sb_hi':
-        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.31)
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo,0.0,xhi,0.25)
         pad.SetMargin(0,0.1,0.1,0.1)
-        pad2.SetMargin(0,0.1,0.4,0)
+        pad2.SetMargin(0,0.1,0.35,0)
     else:
-        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.0075,0.0,xhi+0.002,0.31)
+        pad2    = TPad(reg+"_pull",reg+"_pull",xlo-0.0075,0.0,xhi+0.002,0.25)
         pad.SetMargin(0,0,0.1,0.1)
-        pad2.SetMargin(0.03,0,0.4,0)
+        pad2.SetMargin(0.03,0,0.35,0)
     pad.Draw()
     pad2.Draw()
 
@@ -219,10 +219,11 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
     p.GetYaxis().SetRangeUser(0,1050)
     if ch=='mu':
         p.GetYaxis().SetRangeUser(0,1450)
-    p.GetYaxis().SetLabelSize(0.075)
+    p.GetYaxis().SetLabelSize(0.1)
+    p.GetYaxis().SetLabelOffset(0.025)
     p.GetYaxis().SetTitle('Events / 5 GeV')
-    p.GetYaxis().SetTitleSize(0.14)
-    p.GetYaxis().SetTitleOffset(0.9)
+    p.GetYaxis().SetTitleSize(0.17)
+    p.GetYaxis().SetTitleOffset(1.25)
     if reg=='sb_lo':
         p.GetXaxis().SetTitle('')
         p.GetYaxis().SetTickLength(0.06)
@@ -243,15 +244,15 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
     if reg=='sb_lo':
        CMS_lumi.lumiTextSize=0.0
        #CMS_lumi.writeExtraText=True
-       CMS_lumi.cmsTextSize=1.75
-       CMS_lumi.relPosY    = -0.09
+       CMS_lumi.cmsTextSize=1.72
+       CMS_lumi.relPosY    = -0.095
        CMS_lumi.relExtraDX = 0.3
        CMS_lumi.relExtraDY = 0.24
        CMS_lumi.CMS_lumi(pad,4,11)
     elif reg=='sb_hi':
        CMS_lumi.cmsTextSize=0.0
        #CMS_lumi.writeExtraText=False
-       CMS_lumi.lumiTextSize=0.85
+       CMS_lumi.lumiTextSize=1.0
        CMS_lumi.lumiTextOffset=0.2
        CMS_lumi.CMS_lumi(pad,4,11)
 
@@ -306,12 +307,13 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(40,65)
         pullhist.GetXaxis().SetNdivisions(505)
-        pullhist.GetXaxis().SetLabelSize(0.0775)
+        pullhist.GetXaxis().SetLabelSize(0.111)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}')
-        pullhist.GetYaxis().SetLabelSize(0.1)
-        pullhist.GetYaxis().SetTitleSize(0.1)
-        pullhist.GetYaxis().SetTitleOffset(0.9)
+        pullhist.GetYaxis().SetLabelSize(0.145)
+        pullhist.GetYaxis().SetLabelOffset(0.015)
+        pullhist.GetYaxis().SetTitleSize(0.15)
+        pullhist.GetYaxis().SetTitleOffset(1.2)
         pullhist.GetYaxis().CenterTitle(true);
         pullhist.SetMarkerStyle(20)
         #pullhist.SetMarkerSize(1.5)
@@ -327,7 +329,7 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(65,105)
-        pullhist.GetXaxis().SetLabelSize(0.07)
+        pullhist.GetXaxis().SetLabelSize(0.112)
         pullhist.GetXaxis().SetLabelOffset(0.008)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetLabelSize(0)
@@ -349,11 +351,11 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
         pullhist.SetMaximum(4.9)
         pullhist.SetMinimum(-5)
         pullhist.GetXaxis().SetRangeUser(105,150)
-        pullhist.GetXaxis().SetLabelSize(0.07)
+        pullhist.GetXaxis().SetLabelSize(0.11)
         pullhist.GetXaxis().SetLabelOffset(0.008)
         pullhist.GetXaxis().SetTitle('m_{SD} (GeV)')
-        pullhist.GetXaxis().SetTitleSize(0.15)
-        pullhist.GetXaxis().SetTitleOffset(0.7)
+        pullhist.GetXaxis().SetTitleSize(0.182)
+        pullhist.GetXaxis().SetTitleOffset(0.72)
         pullhist.GetYaxis().SetNdivisions(7)
         pullhist.GetYaxis().SetLabelSize(0)
         pullhist.GetYaxis().SetTitleSize(0.2)
@@ -380,9 +382,8 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
 
 def plot_all(w,ch="el"):
    
-    canvas = TCanvas(ch,ch,800,600)
+    canvas = TCanvas(ch,ch,800,640)
 
-    offset = 0.15
     # These things just have to be kept in memory so that ROOT does not make them disappear in the next loop
     pads = []
     lines = []
@@ -391,9 +392,9 @@ def plot_all(w,ch="el"):
     legendsMWV = []
 
     # MJ main and pull plots
-    plot_mJ(canvas,0+offset-0.05,5/22.+offset/2,'sb_lo',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
-    plot_mJ(canvas,5/22.+offset/2,13.5/22.-offset/2,'sig',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
-    plot_mJ(canvas,13.5/22.-offset/2,1-offset,'sb_hi',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
+    plot_mJ(canvas,0,0.3,'sb_lo',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
+    plot_mJ(canvas,0.3,0.6136,'sig',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
+    plot_mJ(canvas,0.6136,1.0,'sb_hi',w,fitres,normset,ch,pads,lines,paveTexts,legendsMJ)
 
     canvas.cd()
     canvas.Draw()
