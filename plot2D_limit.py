@@ -125,7 +125,7 @@ def plots():
 
 	# 99% Expected =========================================================================================
 
-	contourExp99.SetLineStyle(9)
+	contourExp99.SetLineStyle(10)
 	contourExp99.SetLineColor(kRed)
         contourExp99.SetLineWidth(1)
 
@@ -153,7 +153,7 @@ def plots():
 
 	# 68% Expected =========================================================================================
 
-        contourExp68.SetLineStyle(9)
+        contourExp68.SetLineStyle(2)
         contourExp68.SetLineColor(kBlue)
         contourExp68.SetLineWidth(1)
 
@@ -216,12 +216,12 @@ def plots():
         leg.SetLineStyle(0)
 	leg.SetTextFont(42)
 	leg.SetNColumns(2)
-	leg.AddEntry(contourExp68,"Expected 68% C.L.","L")
-	leg.AddEntry(contourExp95,"Expected 95% C.L.","L")
-	leg.AddEntry(contourExp99,"Expected 99% C.L.","L")
-	leg.AddEntry(contourObs95,"Observed 95% C.L.","L")
+	leg.AddEntry(contourExp68,"Expected 68% CL","L")
+	leg.AddEntry(contourExp95,"Expected 95% CL","L")
+	leg.AddEntry(contourExp99,"Expected 99% CL","L")
+	leg.AddEntry(contourObs95,"Observed 95% CL","L")
 	leg.AddEntry(SMPoint,"SM point","P")
-	leg.AddEntry(bestFitPoint,"Best fit","P")
+	leg.AddEntry(bestFitPoint,"Best-fit","P")
 	leg.Draw("SAME")
 
 	c1.Update()
