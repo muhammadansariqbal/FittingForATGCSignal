@@ -131,10 +131,10 @@ def plots():
 
 	contourExp99.GetXaxis().SetTitle(par_latex[par1])
         contourExp99.GetYaxis().SetTitle(par_latex[par2])
-	contourExp99.GetXaxis().SetTitleSize(0.05)
-	contourExp99.GetYaxis().SetTitleSize(0.05)
-	contourExp99.GetXaxis().SetTitleOffset(0.75)
-	contourExp99.GetYaxis().SetTitleOffset(0.9)
+	contourExp99.GetXaxis().SetTitleSize(0.06)
+	contourExp99.GetYaxis().SetTitleSize(0.06)
+	contourExp99.GetXaxis().SetTitleOffset(0.65)
+	contourExp99.GetYaxis().SetTitleOffset(0.7)
 	contourExp99.GetXaxis().SetNdivisions(505)
         contourExp99.GetYaxis().SetNdivisions(505)
 	contourExp99.Draw('AC')
@@ -203,18 +203,20 @@ def plots():
 
 	# ======================================================================================================
 
+	CMS_lumi.cmsTextSize	= 0.7
+        CMS_lumi.relPosY        = -0.08
+	CMS_lumi.lumiTextSize	= 0.525
 	CMS_lumi.lumiTextOffset	= 0.1
-	CMS_lumi.relPosY	= -0.05
-	CMS_lumi.relExtraDY	= 0.24
 	CMS_lumi.CMS_lumi(c1,4,11)
 
-	leg=TLegend(0.125,0.73,0.875,0.89)
+	leg=TLegend(0.105,0.73,0.895,0.89)
 	leg.SetFillColor(kWhite)
         leg.SetBorderSize(0)
         leg.SetLineColor(0)
         leg.SetLineWidth(0)
         leg.SetLineStyle(0)
 	leg.SetTextFont(42)
+	leg.SetTextSize(0.043)
 	leg.SetNColumns(2)
 	leg.AddEntry(contourExp68,"Expected 68% CL","L")
 	leg.AddEntry(contourExp95,"Expected 95% CL","L")
