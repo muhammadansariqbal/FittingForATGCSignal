@@ -221,6 +221,12 @@ def plot_all(w,ch="el",reg='sig'):
     pullhist.SetMarkerStyle(20)
     #pullhist.SetMarkerSize(1.5)
     pullhist.SetMarkerColor(kBlack)
+    # Exclude zero bins
+    data_plot = p.getHist("data")
+    for iPoint in range(data_plot.GetN()):
+        N = data_plot.GetY()[iPoint]
+        if N==0:
+            pullhist.SetPoint(iPoint,data_plot.GetX()[iPoint],999999.)
     pullhist.Draw("SAME PE")
     #for i in range(pullhist.GetN()):
         #print pullhist.GetY()[i]
