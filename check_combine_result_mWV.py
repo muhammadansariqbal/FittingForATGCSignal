@@ -148,9 +148,10 @@ def plot(w,fitres,normset,ch,region):
         #print "x: " + str(data_plot.GetX()[iPoint]) + "   N: " + str(N)
         if N==0 :
             L = 0
+            U = 0
         else:
             L = Math.gamma_quantile(alpha/2.,N,1.)
-        U = Math.gamma_quantile_c(alpha/2,N+1,1.)
+            U = Math.gamma_quantile_c(alpha/2,N+1,1.)
         data_plot.SetPointEYlow(iPoint, N-L)
         data_plot.SetPointEYhigh(iPoint, U-N)
         data_plot.SetPointEXlow(iPoint,0)
@@ -177,10 +178,11 @@ def plot_all(w,ch="el",reg='sig'):
     ratio_style.GetXaxis().SetTitle('m_{WV} (GeV)')
     ratio_style.GetXaxis().SetTitleSize(0.2)
     ratio_style.GetXaxis().SetTitleOffset(0.75)
-    ratio_style.GetXaxis().SetLabelSize(0.125)
+    ratio_style.GetXaxis().SetLabelSize(0.15)
+    ratio_style.GetXaxis().SetLabelOffset(0.012)
     ratio_style.GetYaxis().SetNdivisions(7)
     ratio_style.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}  ')
-    ratio_style.GetYaxis().SetLabelSize(0.125)
+    ratio_style.GetYaxis().SetLabelSize(0.14)
     ratio_style.GetYaxis().SetTitleSize(0.16)
     ratio_style.GetYaxis().SetTitleOffset(0.25)
     ratio_style.SetMarkerStyle(20)
