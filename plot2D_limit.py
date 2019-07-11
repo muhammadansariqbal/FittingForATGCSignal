@@ -102,6 +102,10 @@ def plots():
 	bestFitY        = treeObs.GetLeaf(par2).GetValue()
 
 	c1              = TCanvas('c1','c1',800,750)
+	c1.SetLeftMargin(0.13)
+	c1.SetRightMargin(0.04)
+	c1.SetBottomMargin(0.13)
+	c1.SetTopMargin(0.1)
 
 	# Draw temporary contours and extract the TGraphs from them
 	contourLevels	= np.array([2.3, 5.99, 9.21])
@@ -131,10 +135,13 @@ def plots():
 
 	contourExp99.GetXaxis().SetTitle(par_latex[par1])
         contourExp99.GetYaxis().SetTitle(par_latex[par2])
-	contourExp99.GetXaxis().SetTitleSize(0.06)
-	contourExp99.GetYaxis().SetTitleSize(0.06)
-	contourExp99.GetXaxis().SetTitleOffset(0.65)
-	contourExp99.GetYaxis().SetTitleOffset(0.7)
+	contourExp99.GetXaxis().SetTitleSize(0.068)
+	contourExp99.GetYaxis().SetTitleSize(0.068)
+	contourExp99.GetXaxis().SetTitleOffset(0.8)
+	contourExp99.GetYaxis().SetTitleOffset(0.85)
+	contourExp99.GetXaxis().SetLabelSize(0.06)
+	contourExp99.GetYaxis().SetLabelSize(0.06)
+	contourExp99.GetYaxis().SetLabelOffset(0.015)
 	contourExp99.GetXaxis().SetNdivisions(505)
         contourExp99.GetYaxis().SetNdivisions(505)
 	contourExp99.Draw('AC')
@@ -209,7 +216,7 @@ def plots():
 	CMS_lumi.lumiTextOffset	= 0.1
 	CMS_lumi.CMS_lumi(c1,4,11)
 
-	leg=TLegend(0.105,0.73,0.895,0.89)
+	leg=TLegend(0.14,0.73,0.95,0.89)
 	leg.SetFillColor(kWhite)
         leg.SetBorderSize(0)
         leg.SetLineColor(0)
