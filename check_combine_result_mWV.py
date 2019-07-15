@@ -180,6 +180,7 @@ def plot_all(w,ch="el",reg='sig'):
     ratio_style.GetXaxis().SetTitleOffset(0.75)
     ratio_style.GetXaxis().SetLabelSize(0.15)
     ratio_style.GetXaxis().SetLabelOffset(0.012)
+    ratio_style.GetXaxis().SetTickLength(0.09)
     ratio_style.GetYaxis().SetNdivisions(7)
     ratio_style.GetYaxis().SetTitle('#frac{Data-Fit}{#sigma_{Data}}  ')
     ratio_style.GetYaxis().SetLabelSize(0.14)
