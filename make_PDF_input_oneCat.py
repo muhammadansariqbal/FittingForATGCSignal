@@ -21,6 +21,7 @@ parser.add_option('--noatgcint', action='store_true', dest='noatgcint', default=
 parser.add_option('--printatgc', action='store_true', default=False, help='print atgc-interference contribution')
 parser.add_option('--atgc', action='store_true', dest='atgc', default=False, help='use anomalous coupling parametrization instead of EFT')
 parser.add_option('--binWidth', dest='binWidth', default='100.', help='Use different MWV binnings, required for Asimov datasets')
+parser.add_option('--cutoff', dest='mWVCutoff', default='4500.', help='mWV range upper limit in GeV')
 
 (options,args) = parser.parse_args()
 
@@ -268,7 +269,7 @@ class Prepare_workspace_4limit:
                 pads[i][0].SetLogy()
                 plots[i].SetTitle('')
                 plots[i].GetYaxis().SetTitle('arbitrary units')
-                #plots[i].GetXaxis().SetRangeUser(900,4500)
+                #plots[i].GetXaxis().SetRangeUser(900,options.mWVCutoff)
 
                 plots[i].Draw()
                 ndof        = (self.binhi-self.binlo)/100 - 4
@@ -840,7 +841,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             self.WS.var('rrv_mass_j').setRange('sb_lo',40,65)
             self.WS.var('rrv_mass_j').setRange('sig',65,105)
             self.WS.var('rrv_mass_j').setRange('sb_hi',105,150)
-            self.WS.var('rrv_mass_lvj').setRange(900,4500)
+            self.WS.var('rrv_mass_lvj').setRange(900,float(options.mWVCutoff))
 
             #bkg-pdfs have the format '[bkg-name]_mlvj_[region]_[ch]' or '[bkg-name]_mj_[region]_[ch]'
 
@@ -960,12 +961,12 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
 if __name__ == '__main__':
     if options.chan=='elmu':
-        makeWS_el        = Prepare_workspace_4limit('el',900,4500,float(options.binWidth))
+        makeWS_el        = Prepare_workspace_4limit('el',900,float(options.mWVCutoff),float(options.binWidth))
         makeWS_el.Make_input()
-        makeWS_mu        = Prepare_workspace_4limit('mu',900,4500,float(options.binWidth))
+        makeWS_mu        = Prepare_workspace_4limit('mu',900,float(options.mWVCutoff),float(options.binWidth))
         makeWS_mu.Make_input()
     else:
-        makeWS        = Prepare_workspace_4limit(options.chan,900,4500,float(options.binWidth))
+        makeWS        = Prepare_workspace_4limit(options.chan,900,float(options.mWVCutoff),float(options.binWidth))
         makeWS.Make_input()
     #combine the created datacards
     output_card_name = 'aC_WWWZ_simfit'

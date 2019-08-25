@@ -41,6 +41,7 @@ python make_PDF_input_oneCat.py -n -c mu -p --savep
 # --printatgc: Print the coefficients of the signal model
 # --atgc: Using different parametrization (Lagrangian approach instead of EFT)
 # --binWidth: Use a different bin width than the standard, useful for Asimov data generation
+# --cutoff: Specify mWV upper limit in GeV
 
 # The workspaces for the different channels can now be combined with
 text2workspace.py aC_WWWZ_simfit.txt -o workspace_simfit.root -P CombinedEWKAnalysis.CommonTools.ACModel:par1par2par3_TF3_shape_Model --PO channels=WWWZ_sig_el,WWWZ_sig_mu,WWWZ_sb_lo_el,WWWZ_sb_lo_mu,WWWZ_sb_hi_el,WWWZ_sb_hi_mu --PO poi=cwww,ccw,cb --PO range_cwww=-20,20 --PO range_ccw=-30,30 --PO range_cb=-75,75
