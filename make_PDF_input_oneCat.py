@@ -287,7 +287,7 @@ class Prepare_workspace_4limit:
                 leg.Print()
                 
                 pads[i][1].cd()
-                ratio_style = TH1D('ratio_style','ratio_style',(self.binhi-self.binlo)/100,self.binlo,self.binhi)
+                ratio_style = TH1D('ratio_style','ratio_style',int(self.binhi-self.binlo)/100,self.binlo,self.binhi)
                 ratio_style.SetMarkerStyle(21)
                 ratio_style.SetMaximum(3)
                 ratio_style.SetMinimum(-3)
