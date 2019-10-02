@@ -301,7 +301,7 @@ class Prepare_workspace_4limit:
             self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cTest"),RooFit.LineColor(kRed),RooFit.Normalization(normvalpos, RooAbsReal.NumEvent))
         
             # cTest points
-            self.wtmp.data('test_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cTest"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kRed+2),RooFit.LineColor(kRed+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'))
+            self.wtmp.data('test_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cTest"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kRed+2),RooFit.LineColor(kRed+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
 #            data_cTest_histo	= self.wtmp.data('test_datahist_%s_%s'%(cat,poi)).createHistogram("data_cTest",rrv_x)
 #            data_cTest	= RooHist(data_cTest_histo,rrv_x.getBinWidth(0))
 #            data_cTest.SetMarkerStyle(20)
