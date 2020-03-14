@@ -19,7 +19,7 @@ minBin = histo.GetMinimumBin()
 minBinCenter = histo.GetBinCenter(minBin)
 minVal = histo.GetBinContent(minBin)#should be 0
 
-print 'Found profile-likelihood minimum value %.3f at %.3f'%(minVal,
+print 'Found profile-likelihood minimum value %.4f at %.4f'%(minVal,
                                                              minBinCenter)
 #skip best fit value which is entry 0
 bounds68 = []

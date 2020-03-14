@@ -126,4 +126,18 @@ combine workspace_simfit.root -M MultiDimFit --floatOtherPOIs=0 --algo=grid --ex
 Get 68% and 95% Confidence Intervals
 ------------------------------------
 python build1DInterval.py -3.6 3.6 higgsCombine_cwww_3.6.MultiDimFit.mH120.root cwww
+python build1DInterval.py -4.5 4.5 higgsCombine_ccw_4.5.MultiDimFit.mH120.root ccw
+python build1DInterval.py -20 20 higgsCombine_cb_20.MultiDimFit.mH120.root cb
+
+python build1DInterval.py -0.014 0.014 higgsCombine_lZ_0.014.MultiDimFit.mH120.root lZ
+python build1DInterval.py -0.018 0.018 higgsCombine_dg1z_0.018.MultiDimFit.mH120.root dg1z
+python build1DInterval.py -0.02 0.02 higgsCombine_dkz_0.02.MultiDimFit.mH120.root dkz
+
+Using screen sessions for long limit calculations
+-------------------------------------------------
+
+hostname
+pagsh.krb -c 'kinit && screen'
+screen -ls
+screen -r
 
