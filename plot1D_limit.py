@@ -20,20 +20,23 @@ parser	= OptionParser()
 parser.add_option('--POI',dest='POI',help='parameter of interest')
 parser.add_option('--pval',dest='pval',help='value of parameter')
 parser.add_option('-c',action='store_true',dest='close',default=False)
+parser.add_option('--year',dest='year',default='16')
 (options,args) = parser.parse_args()
 
 POI		= options.POI
 pval		= options.pval
+year		= options.year
 par_latex	= {'cwww' : 'c_{WWW} / #Lambda^{2} (TeV^{-2})', 'ccw' : 'c_{W} / #Lambda^{2} (TeV^{-2})', 'cb' : 'c_{B} / #Lambda^{2} (TeV^{-2})', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 par_noUnits	= {'cwww' : 'c_{WWW} / #Lambda^{2}', 'ccw' : 'c_{W} / #Lambda^{2}', 'cb' : 'c_{B} / #Lambda^{2}', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 
 def plots():
-	path		= './'
+	pathExpected	= './ResultsExpected'+year+'/'
+	pathObserved	= './ResultsObserved'+year+'/'
 	
 	# Make the expected TGraph
 	wsNameExp	= 'higgsCombine_%s_%s.MultiDimFit.mH120.root'%(POI,pval)
 	print 'Reading expected '+wsNameExp
-	fileInATGCExp	= TFile.Open(path+'ResultsExpected/'+wsNameExp)
+	fileInATGCExp	= TFile.Open(pathExpected+wsNameExp)
 	treeExp		= fileInATGCExp.Get('limit')
 	NEntriesExp	= treeExp.GetEntries()
 
@@ -71,7 +74,7 @@ def plots():
 	# Make the observed TGraph
 	wsNameObs       = 'higgsCombine_%s_%s.MultiDimFit.mH120.root'%(POI,pval)
         print 'Reading observed '+wsNameExp
-        fileInATGCObs   = TFile.Open(path+'ResultsObserved/'+wsNameExp)
+        fileInATGCObs   = TFile.Open(pathObserved+wsNameExp)
         treeObs         = fileInATGCObs.Get('limit')
         NEntriesObs     = treeObs.GetEntries()
 
@@ -262,6 +265,12 @@ def plots():
 
 	# ======================================================================================================
 
+	if year=='17':
+		CMS_lumi.lumi_13TeV = "41.5 fb^{-1}"
+	elif year=='18':
+		CMS_lumi.lumi_13TeV = "59.9 fb^{-1}"
+	elif year=='Run2':
+		CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 	CMS_lumi.lumiTextOffset=0.1
 	CMS_lumi.relPosY    = -0.05
 	CMS_lumi.relExtraDY = 0.24
@@ -282,14 +291,12 @@ def plots():
 	leg.Draw("SAME")
 
 	c1.Update()
-	c1.SaveAs("limit1D_%s.pdf"%POI)
+	c1.SaveAs("limit1D_%s_%s.pdf"%(year,POI))
 
 	errorExp = float(xExp[1]) - float(xExp[0])
 	errorObs = float(xObs[1]) - float(xObs[0])
 
 	print '95%% expected C.L. limit on %s: [%s,%s] +- %s'%(par,round(limLoExp95,2),round(limHiExp95,2),round(errorExp,2))
 	print '95%% observed C.L. limit on %s: [%s,%s] +- %s'%(par,round(limLoObs95,2),round(limHiObs95,2),round(errorObs,2))
-
-	raw_input('<>')
 
 plots()

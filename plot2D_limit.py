@@ -23,6 +23,7 @@ parser.add_option('--POI',dest='POI',help='parameter of interest')
 parser.add_option('--pval',dest='pval',help='value of parameter')
 parser.add_option('-c',action='store_true',dest='close',default=False)
 parser.add_option('--binWidths',dest='binWidths',default='0',help='plot best fit points with different bin widths for bias testing')
+parser.add_option('--year',dest='year',default='16')
 (options,args) = parser.parse_args()
 
 POI		= []
@@ -34,16 +35,18 @@ for j in options.pval.split(','):
 	pval.append(j)
 for k in options.binWidths.split(','):
 	binWidths.append(k)
+year		= options.year
 par_latex	= {'cwww' : 'c_{WWW} / #Lambda^{2} (TeV^{-2})', 'ccw' : 'c_{W} / #Lambda^{2} (TeV^{-2})', 'cb' : 'c_{B} / #Lambda^{2} (TeV^{-2})', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 par_noUnits	= {'cwww' : 'c_{WWW} / #Lambda^{2}', 'ccw' : 'c_{W} / #Lambda^{2}', 'cb' : 'c_{B} / #Lambda^{2}', 'lZ' : '#lambda_{Z}', 'dg1z' : '#Deltag_{1}^{Z}', 'dkz' : '#Delta#kappa_{Z}'}
 
 def plots():
-	path		= './'
+	pathExpected    = './ResultsExpected'+year+'/'
+	pathObserved    = './ResultsObserved'+year+'/'
 
 	# Make the expected TGraph	
 	wsNameExp	= 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
 	print 'Reading expected '+wsNameExp
-	fileInATGCExp	= TFile.Open(path+'ResultsExpected/'+wsNameExp)
+	fileInATGCExp	= TFile.Open(pathExpected+wsNameExp)
 	treeExp		= fileInATGCExp.Get('limit')
 	NEntriesExp	= treeExp.GetEntries()
 
@@ -68,7 +71,7 @@ def plots():
 	# Make the observed TGraph      
         wsNameObs       = 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
         print 'Reading observed '+wsNameObs
-        fileInATGCObs   = TFile.Open(path+'ResultsObserved/'+wsNameObs)
+        fileInATGCObs   = TFile.Open(pathObserved+wsNameObs)
         treeObs         = fileInATGCObs.Get('limit')
         NEntriesObs     = treeObs.GetEntries()
 
@@ -223,6 +226,12 @@ def plots():
 		axisTitle.SetTextSize(0.068)
 		axisTitle.Draw("SAME")
 
+	if year=='17':
+		CMS_lumi.lumi_13TeV = "41.5 fb^{-1}"
+	elif year=='18':
+		CMS_lumi.lumi_13TeV = "59.9 fb^{-1}"
+	elif year=='Run2':
+		CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 	CMS_lumi.cmsTextSize	= 0.7
         CMS_lumi.relPosY        = -0.08
 	CMS_lumi.lumiTextSize	= 0.525
@@ -247,7 +256,6 @@ def plots():
 	leg.Draw("SAME")
 
 	c1.Update()
-	c1.SaveAs("limit2D_%s_%s.pdf"%(par1,par2))
-	raw_input('<>')
+	c1.SaveAs("limit2D_%s_%s_%s.pdf"%(year,par1,par2))
 
 plots()
