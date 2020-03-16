@@ -47,7 +47,7 @@ def plots():
 	# Make the expected TGraph	
 	wsNameExp	= 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
 	print 'Reading expected '+wsNameExp
-	fileInATGCExp	= TFile.Open(path+'ResultsExpected18/'+wsNameExp)
+	fileInATGCExp	= TFile.Open(path+'ResultsExpectedRun2/'+wsNameExp)
 	treeExp		= fileInATGCExp.Get('limit')
 	NEntriesExp	= treeExp.GetEntries()
 
@@ -72,7 +72,7 @@ def plots():
 	# Make the observed TGraph      
         wsNameObs       = 'higgsCombine_%s_%s_%s_%s.MultiDimFit.mH120.root'%(POI[0],pval[0],POI[1],pval[1])
         print 'Reading observed '+wsNameObs
-        fileInATGCObs   = TFile.Open(path+'ResultsObserved18/'+wsNameObs)
+        fileInATGCObs   = TFile.Open(path+'ResultsObservedRun2/'+wsNameObs)
         treeObs         = fileInATGCObs.Get('limit')
         NEntriesObs     = treeObs.GetEntries()
 
@@ -135,7 +135,7 @@ def plots():
 
 	contourExp99.SetLineStyle(1)
 	contourExp99.SetLineColor(kRed)
-        contourExp99.SetLineWidth(2)
+        contourExp99.SetLineWidth(4)
 
 	contourExp99.GetXaxis().SetTitle(par_latex[par1])
         contourExp99.GetYaxis().SetTitle(par_latex[par2])
@@ -148,6 +148,8 @@ def plots():
 	contourExp99.GetYaxis().SetLabelOffset(0.015)
 	contourExp99.GetXaxis().SetNdivisions(505)
         contourExp99.GetYaxis().SetNdivisions(505)
+	if (par2=='dg1z' or par2=='dkz'):
+		contourExp99.GetYaxis().SetTitle("")
 	contourExp99.Draw('AC')
 	c1.Update()
 
@@ -164,7 +166,7 @@ def plots():
 
         contourExp95.SetLineStyle(9)
         contourExp95.SetLineColor(kGreen+2)
-        contourExp95.SetLineWidth(1)
+        contourExp95.SetLineWidth(2)
 
         contourExp95.Draw('C SAME')
 
@@ -172,7 +174,7 @@ def plots():
 
         contourExp68.SetLineStyle(2)
         contourExp68.SetLineColor(kBlue)
-        contourExp68.SetLineWidth(1)
+        contourExp68.SetLineWidth(2)
 
         contourExp68.Draw('C SAME')
 	
@@ -180,7 +182,7 @@ def plots():
 
         contourObs95.SetLineStyle(1)
         contourObs95.SetLineColor(kBlack)
-        contourObs95.SetLineWidth(2)
+        contourObs95.SetLineWidth(4)
 
         contourObs95.Draw('C SAME')
 
@@ -220,6 +222,17 @@ def plots():
 
 	# ======================================================================================================
 
+	if (par2=='dg1z' or par2=='dkz'):
+		cover = TPaveText(0.005,0.78,0.12,0.92,"b1NDC")
+		cover.SetFillColor(kWhite)
+		cover.Draw("SAME")
+		axisTitle = TLatex(0.01,0.85, par_latex[par2])
+		axisTitle.SetNDC()
+		axisTitle.SetTextAlign(23)
+		axisTitle.SetTextAngle(90)
+		axisTitle.SetTextSize(0.068)
+		axisTitle.Draw("SAME")
+
 	CMS_lumi.cmsTextSize	= 0.7
         CMS_lumi.relPosY        = -0.08
 	CMS_lumi.lumiTextSize	= 0.525
@@ -244,7 +257,7 @@ def plots():
 	leg.Draw("SAME")
 
 	c1.Update()
-	c1.SaveAs("limit2D_%s_%s.pdf"%(par1,par2))
+	c1.SaveAs("limit2Dcomparison_%s_%s.pdf"%(par1,par2))
 	raw_input('<>')
 
 plots()

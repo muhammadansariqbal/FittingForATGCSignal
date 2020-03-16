@@ -131,7 +131,7 @@ def plots():
 
 	contourExp99.SetLineStyle(10)
 	contourExp99.SetLineColor(kRed)
-        contourExp99.SetLineWidth(1)
+        contourExp99.SetLineWidth(2)
 
 	contourExp99.GetXaxis().SetTitle(par_latex[par1])
         contourExp99.GetYaxis().SetTitle(par_latex[par2])
@@ -144,6 +144,8 @@ def plots():
 	contourExp99.GetYaxis().SetLabelOffset(0.015)
 	contourExp99.GetXaxis().SetNdivisions(505)
         contourExp99.GetYaxis().SetNdivisions(505)
+	if (par2=='dg1z' or par2=='dkz'):
+		contourExp99.GetYaxis().SetTitle("")
 	contourExp99.Draw('AC')
 	c1.Update()
 
@@ -154,7 +156,7 @@ def plots():
 
         contourExp95.SetLineStyle(9)
         contourExp95.SetLineColor(kGreen+2)
-        contourExp95.SetLineWidth(1)
+        contourExp95.SetLineWidth(2)
 
         contourExp95.Draw('C SAME')
 
@@ -162,7 +164,7 @@ def plots():
 
         contourExp68.SetLineStyle(2)
         contourExp68.SetLineColor(kBlue)
-        contourExp68.SetLineWidth(1)
+        contourExp68.SetLineWidth(2)
 
         contourExp68.Draw('C SAME')
 	
@@ -170,7 +172,7 @@ def plots():
 
         contourObs95.SetLineStyle(1)
         contourObs95.SetLineColor(kBlack)
-        contourObs95.SetLineWidth(2)
+        contourObs95.SetLineWidth(4)
 
         contourObs95.Draw('C SAME')
 
@@ -209,6 +211,17 @@ def plots():
 			fileInBias.Close()
 
 	# ======================================================================================================
+
+	if (par2=='dg1z' or par2=='dkz'):
+		cover = TPaveText(0.005,0.78,0.12,0.92,"b1NDC")
+		cover.SetFillColor(kWhite)
+		cover.Draw("SAME")
+		axisTitle = TLatex(0.01,0.85, par_latex[par2])
+		axisTitle.SetNDC()
+		axisTitle.SetTextAlign(23)
+		axisTitle.SetTextAngle(90)
+		axisTitle.SetTextSize(0.068)
+		axisTitle.Draw("SAME")
 
 	CMS_lumi.cmsTextSize	= 0.7
         CMS_lumi.relPosY        = -0.08
