@@ -91,6 +91,24 @@ def plots():
 
         graphObs        = TGraph2D(len(xObs),array('d',xObs),array('d',yObs),array('d',zObs))
 
+	# Generate a 1D profile likelihood, in case it is missing from the usual method
+	#slope	= 3.48125
+	#mZ	= 0.09119
+	#cwtemp	= range(-250,150)
+	#cw	= []
+	#cb	= []
+	#dg1z	= []
+	#f	= []
+	#for i in range(len(cwtemp)):
+	#	cw.append(cwtemp[i]/100.0)
+	#	cb.append(slope*cw[i])
+	#	dg1z.append(cw[i]*(mZ**2)/2.0)
+	#	f.append(graphObs.Interpolate(cw[i],cb[i]))
+	#graphG	= TGraph(len(cw),array('d',dg1z),array('d',f))
+	#tempCan	= TCanvas('tempCan','tempCan',800,750)
+	#graphG.Draw()
+	#tempCan.SaveAs("Computed1Dlimit.pdf")
+
 	#Best fit point
 	bestFitXBin	= ROOT.Long(0)
 	bestFitYBin	= ROOT.Long(0)
