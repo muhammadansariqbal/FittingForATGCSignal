@@ -23,11 +23,3 @@ do
 	python plot2D_limit.py --POI dg1z,dkz --pval 0.018,0.02 --year "$year"
 done
 
-python plot2D_limit_comparison.py cwww,ccw --pval 3.6,4.5
-python plot2D_limit_comparison.py cwww,cb --pval 3.6,20
-python plot2D_limit_comparison.py ccw,cb --pval 4.5,20
-
-python plot2D_limit_comparison.py lZ,dg1z --pval 0.014,0.018
-python plot2D_limit_comparison.py lZ,dkz --pval 0.014,0.02
-python plot2D_limit_comparison.py dg1z,dkz --pval 0.018,0.02
-

@@ -233,6 +233,7 @@ def plots():
 		axisTitle.SetTextSize(0.068)
 		axisTitle.Draw("SAME")
 
+	CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 	CMS_lumi.cmsTextSize	= 0.7
         CMS_lumi.relPosY        = -0.08
 	CMS_lumi.lumiTextSize	= 0.525
