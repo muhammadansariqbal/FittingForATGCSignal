@@ -96,6 +96,7 @@ def plot(w,fitres,normset,ch,region):
 
     w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
     model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
+    # Scale this for checking smooth transition, remove for final plots since data should never be scaled
     if region=='sb_lo':
         model_norm_tmp = model_norm_tmp * 0.955
     model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
@@ -169,6 +170,7 @@ def plot(w,fitres,normset,ch,region):
     # This is data in main plots
     for iPoint in range(data_plot.GetN()):
         N = data_plot.GetY()[iPoint]
+	# Scale this for checking smooth transition, remove for final plots since data should never be scaled
         if region=='sb_lo':
             N = data_plot.GetY()[iPoint]*0.955
             data_plot.SetPoint(iPoint,data_plot.GetX()[iPoint],N)
