@@ -92,11 +92,13 @@ class Prepare_workspace_4limit:
                     hists4scale['c_pos_%s_hist_%s'%(WV,para)] = TH1F('c_pos_%s_hist_%s'%(WV,para),'c_pos_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
                     hists4scale['c_neg_%s_hist_%s'%(WV,para)] = TH1F('c_neg_%s_hist_%s'%(WV,para),'c_neg_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
                     hists4scale['c_dif_%s_hist_%s'%(WV,para)] = TH1F('c_dif_%s_hist_%s'%(WV,para),'c_dif_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
-		    hists4scale['c_test_%s_hist_%s'%(WV,para)] = TH1F('c_test_%s_hist_%s'%(WV,para),'c_test_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
+		    hists4scale['c_posTest_%s_hist_%s'%(WV,para)] = TH1F('c_posTest_%s_hist_%s'%(WV,para),'c_posTest_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
+		    hists4scale['c_negTest_%s_hist_%s'%(WV,para)] = TH1F('c_negTest_%s_hist_%s'%(WV,para),'c_negTest_%s_hist_%s'%(WV,para),self.nbins,self.binlo,self.binhi);
                     hists4scale['c_pos_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
                     hists4scale['c_neg_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
                     hists4scale['c_dif_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
-		    hists4scale['c_test_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
+		    hists4scale['c_posTest_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
+		    hists4scale['c_negTest_%s_hist_%s'%(WV,para)].Sumw2(kTRUE)
                 #add histograms for SM and all aTGC parameters unequal to zero
                 hists4scale['c_SM_%s_hist'%WV]                  = TH1F('c_SM_%s_hist'%WV,'c_SM_%s_hist'%WV,self.nbins,self.binlo,self.binhi);                
                 hists4scale['c_%s_histall3'%WV]                 = TH1F('c_%s_histall3'%WV,'c_%s_histall3'%WV,self.nbins,self.binlo,self.binhi);
@@ -138,15 +140,18 @@ class Prepare_workspace_4limit:
 			#cwww
 			hists4scale['c_pos_%s_hist_cwww'%WV].Fill(MWW,aTGC[11] * weight_part)
 			hists4scale['c_neg_%s_hist_cwww'%WV].Fill(MWW,aTGC[111] * weight_part)
-			hists4scale['c_test_%s_hist_cwww'%WV].Fill(MWW,aTGC[36] * weight_part)
+			hists4scale['c_posTest_%s_hist_cwww'%WV].Fill(MWW,aTGC[36] * weight_part)
+			hists4scale['c_negTest_%s_hist_cwww'%WV].Fill(MWW,aTGC[86] * weight_part)
 			#ccw
 			hists4scale['c_pos_%s_hist_ccw'%WV].Fill(MWW,aTGC[51] * weight_part)
 			hists4scale['c_neg_%s_hist_ccw'%WV].Fill(MWW,aTGC[71] * weight_part)
-			hists4scale['c_test_%s_hist_ccw'%WV].Fill(MWW,aTGC[56] * weight_part)
+			hists4scale['c_posTest_%s_hist_ccw'%WV].Fill(MWW,aTGC[56] * weight_part)
+			hists4scale['c_negTest_%s_hist_ccw'%WV].Fill(MWW,aTGC[66] * weight_part)
 			#cb
 			hists4scale['c_pos_%s_hist_cb'%WV].Fill(MWW,aTGC[59] * weight_part)
 			hists4scale['c_neg_%s_hist_cb'%WV].Fill(MWW,aTGC[63] * weight_part)
-			hists4scale['c_test_%s_hist_cb'%WV].Fill(MWW,aTGC[60] * weight_part)
+			hists4scale['c_posTest_%s_hist_cb'%WV].Fill(MWW,aTGC[60] * weight_part)
+			hists4scale['c_negTest_%s_hist_cb'%WV].Fill(MWW,aTGC[62] * weight_part)
 			#ccw-SM interference
 			hists4scale['c_dif_%s_hist_ccw'%WV].Fill(MWW,(aTGC[51]-aTGC[71]) * weight_part)
 			#cb-SM interference
@@ -194,7 +199,7 @@ class Prepare_workspace_4limit:
             print '--------> Written to file ' + fileOut.GetName()
             fileOut.Close()
 
-        def Make_plots(self,rrv_x,cat,fitres,poi='ccw'):
+        def Make_plots(self,rrv_x,cat,fitres,poi='ccw',posOrneg='pos'):
         
             channel = self.ch+'_'+cat
             # These things just have to be kept in memory so that ROOT does not make them disappear in the next loop
@@ -239,7 +244,7 @@ class Prepare_workspace_4limit:
             for j in range(3):
                 self.wtmp.var(self.POI[j]).setVal(0)
             normvalSM = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
-            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cMax"),RooFit.LineColor(kGreen+1),RooFit.Normalization(normvalSM, RooAbsReal.NumEvent))
+            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("SM"),RooFit.LineColor(kGreen+1),RooFit.Normalization(normvalSM, RooAbsReal.NumEvent))
         
             # SM points
             self.wtmp.data('SMdatahist_%s'%cat).plotOn(p,RooFit.Name("data_SM"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kGreen+3),RooFit.LineColor(kGreen+3),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
@@ -267,12 +272,18 @@ class Prepare_workspace_4limit:
             # cMax model
             for j in range(3):
                 self.wtmp.var(self.POI[j]).setVal(0)
-            self.wtmp.var(poi).setVal(self.PAR_MAX[poi])
-            normvalpos = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
-            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cMax"),RooFit.LineColor(kBlue),RooFit.Normalization(normvalpos, RooAbsReal.NumEvent))
+            if posOrneg == 'pos':
+                self.wtmp.var(poi).setVal(self.PAR_MAX[poi])
+            else:
+                self.wtmp.var(poi).setVal(-1*self.PAR_MAX[poi])
+            normval = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
+            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cMax"),RooFit.LineColor(kBlue),RooFit.Normalization(normval, RooAbsReal.NumEvent))
         
             # cMax points
-            self.wtmp.data('pos_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cMax"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kBlue+2),RooFit.LineColor(kBlue+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
+            if posOrneg == 'pos':
+                self.wtmp.data('pos_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cMax"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kBlue+2),RooFit.LineColor(kBlue+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
+            else:
+                self.wtmp.data('neg_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cMax"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kBlue+2),RooFit.LineColor(kBlue+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
 #            data_cMax_histo	= self.wtmp.data('pos_datahist_%s_%s'%(cat,poi)).createHistogram("data_cMax",rrv_x)
 #            data_cMax	= RooHist(data_cMax_histo,rrv_x.getBinWidth(0))
 #            data_cMax.SetMarkerStyle(20)
@@ -296,12 +307,18 @@ class Prepare_workspace_4limit:
 #            p.addPlotable(data_cMax,"PE")
 
             # cTest model
-            self.wtmp.var(poi).setVal(self.PAR_MAX[poi]/2)
-            normvalpos = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
-            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cTest"),RooFit.LineColor(kRed),RooFit.Normalization(normvalpos, RooAbsReal.NumEvent))
+            if posOrneg == 'pos':
+                self.wtmp.var(poi).setVal(self.PAR_MAX[poi]/2)
+            else:
+                self.wtmp.var(poi).setVal(-1*self.PAR_MAX[poi]/2)
+            normval = norm.getVal() * self.wtmp.data('SMdatahist_%s'%cat).sumEntries()
+            self.wtmp.pdf('aTGC_model_%s'%channel).plotOn(p,RooFit.Name("cTest"),RooFit.LineColor(kRed),RooFit.Normalization(normval, RooAbsReal.NumEvent))
         
             # cTest points
-            self.wtmp.data('test_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cTest"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kRed+2),RooFit.LineColor(kRed+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
+            if posOrneg == 'pos':
+                self.wtmp.data('posTest_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cTest"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kRed+2),RooFit.LineColor(kRed+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
+            else:
+                self.wtmp.data('negTest_datahist_%s_%s'%(cat,poi)).plotOn(p,RooFit.Name("data_cTest"),RooFit.MarkerStyle(20),RooFit.MarkerColor(kRed+2),RooFit.LineColor(kRed+2),RooFit.DataError(RooAbsData.SumW2),RooFit.DrawOption('PE'),RooFit.XErrorSize(0))
 #            data_cTest_histo	= self.wtmp.data('test_datahist_%s_%s'%(cat,poi)).createHistogram("data_cTest",rrv_x)
 #            data_cTest	= RooHist(data_cTest_histo,rrv_x.getBinWidth(0))
 #            data_cTest.SetMarkerStyle(20)
@@ -346,12 +363,12 @@ class Prepare_workspace_4limit:
             # MWV pull plot
             pad_pull.SetTopMargin(0)
             pad_pull.SetBottomMargin(0.35)
-            pullhist = p.pullHist("data_cTest","cTest")
+            pullhist = p.pullHist("data_cMax","cMax")
             ratio_style.Draw("")
-            pullhist.SetLineColor(kRed+2)
+            pullhist.SetLineColor(kBlue+2)
             pullhist.SetMarkerStyle(20)
             #pullhist.SetMarkerSize(1.5)
-            pullhist.SetMarkerColor(kRed+2)
+            pullhist.SetMarkerColor(kBlue+2)
             # Exclude zero bins
             data_plot = p.getHist("data_cMax")
             for iPoint in range(data_plot.GetN()):
@@ -367,10 +384,11 @@ class Prepare_workspace_4limit:
             pad1.cd()
             #if reg=='sb_lo':
             CMS_lumi.lumiTextSize=0.0
-            #CMS_lumi.writeExtraText=True
+            CMS_lumi.writeExtraText=True
+            CMS_lumi.extraText = "Simulation"
             CMS_lumi.cmsTextSize=0.75
             CMS_lumi.relPosY    = -0.09
-            CMS_lumi.relExtraDX = 0.2
+            CMS_lumi.relExtraDX = 0.16
             CMS_lumi.relExtraDY = 0.24
             CMS_lumi.CMS_lumi(pad1,4,11)
             #elif reg=='sb_hi':
@@ -380,7 +398,7 @@ class Prepare_workspace_4limit:
             CMS_lumi.lumiTextOffset=0.2
             CMS_lumi.CMS_lumi(pad1,4,11)
             #else:
-            pt2 = TPaveText(0.125,0.8,0.5,0.975, "blNDC")
+            pt2 = TPaveText(0.122,0.8,0.5,0.975, "blNDC")
             pt2.SetFillStyle(0)
             pt2.SetBorderSize(0)
             pt2.SetTextAlign(13)
@@ -402,9 +420,13 @@ class Prepare_workspace_4limit:
             else:
                 pt3.AddText("WZ category")
             pt3.Draw()
-            paveTexts.append(pt3)
-        
+            paveTexts.append(pt3)        
+
             # Legend
+            legPOI={'cwww':'c_{WWW}', 'ccw':'c_{W}', 'cb':'c_{B}'}
+            legValMax={'cwww':'3.6', 'ccw':'4.5', 'cb':'20'}
+            legValTest={'cwww':'1.8', 'ccw':'2.25', 'cb':'10'}
+            legSign={'pos':'', 'neg':'-'}
             legMWV=TLegend(0.5,0.5,0.88,0.9)
             legMWV.SetFillColor(0)
             legMWV.SetFillStyle(0)
@@ -413,28 +435,28 @@ class Prepare_workspace_4limit:
             legMWV.SetLineWidth(0)
             legMWV.SetLineStyle(0)
             legMWV.SetTextFont(42)
-            legMWV.AddEntry(p.getObject(1),"MC c_{W}/#Lambda^{2}=0 TeV^{-2}","PE")
-            legMWV.AddEntry(p.getObject(0),"Model c_{W}/#Lambda^{2}=0 TeV^{-2}","L")
-            legMWV.AddEntry(p.getObject(3),"MC c_{W}/#Lambda^{2}=4.5 TeV^{-2}","PE")
-            legMWV.AddEntry(p.getObject(2),"Model c_{W}/#Lambda^{2}=4.5 TeV^{-2}","L")
-            legMWV.AddEntry(p.getObject(5),"MC c_{W}/#Lambda^{2}=2.25 TeV^{-2}","PE")
-            legMWV.AddEntry(p.getObject(4),"Model c_{W}/#Lambda^{2}=2.25 TeV^{-2}","L")
+            legMWV.AddEntry(p.getObject(1),"MC %s/#Lambda^{2}=0 TeV^{-2}"%(legPOI[poi]),"PE")
+            legMWV.AddEntry(p.getObject(0),"Model %s/#Lambda^{2}=0 TeV^{-2}"%(legPOI[poi]),"L")
+            legMWV.AddEntry(p.getObject(3),"MC %s/#Lambda^{2}=%s%s TeV^{-2}"%(legPOI[poi],legSign[posOrneg],legValMax[poi]),"PE")
+            legMWV.AddEntry(p.getObject(2),"Model %s/#Lambda^{2}=%s%s TeV^{-2}"%(legPOI[poi],legSign[posOrneg],legValMax[poi]),"L")
+            legMWV.AddEntry(p.getObject(5),"MC %s/#Lambda^{2}=%s%s TeV^{-2}"%(legPOI[poi],legSign[posOrneg],legValTest[poi]),"PE")
+            legMWV.AddEntry(p.getObject(4),"Model %s/#Lambda^{2}=%s%s TeV^{-2}"%(legPOI[poi],legSign[posOrneg],legValTest[poi]),"L")
             legMWV.Draw()
             legendsMWV.append(legMWV)
         
             canvas.Update()
-            canvas.SaveAs('injectionTest_%s.pdf'%(channel))
+            canvas.SaveAs('injectionTest_%s_%s_%s.pdf'%(channel,poi,posOrneg))
 
             # Chi square
             chi2	= p.chiSquare("cTest","data_cTest")
-            chi2ROOT	= RooChi2Var("chi2ROOT", "chi2ROOT",self.wtmp.pdf('aTGC_model_%s'%channel), self.wtmp.data('test_datahist_%s_%s'%(cat,poi)), kFALSE, "", "", 1, RooFit.BulkPartition, kFALSE, kFALSE, RooAbsData.Poisson)
+            chi2ROOT	= RooChi2Var("chi2ROOT", "chi2ROOT",self.wtmp.pdf('aTGC_model_%s'%channel), self.wtmp.data('posTest_datahist_%s_%s'%(cat,poi)), kFALSE, "", "", 1, RooFit.BulkPartition, kFALSE, kFALSE, RooAbsData.Poisson)
         
             for i in pads:
                 i.Delete()
             if not options.batch:
                 print 'Reduced chi square: ' + str(chi2)
                 print 'Chi square from ROOT: ' + str(chi2ROOT.getVal())
-                raw_input('plots plotted')
+                #raw_input('plots plotted')
             
         #function to import multiple items from a list into a workspace
         def Import_to_ws(self,workspace,items,recycle=0):
@@ -521,7 +543,8 @@ class Prepare_workspace_4limit:
                 pos_datahist    = RooDataHist('pos_datahist_%s_%s'%(sample,self.POI[i]),'pos_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_pos_%s_hist_%s'%(sample,self.POI[i])))
                 neg_datahist    = RooDataHist('neg_datahist_%s_%s'%(sample,self.POI[i]),'neg_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_neg_%s_hist_%s'%(sample,self.POI[i])))
                 dif_datahist    = RooDataHist('dif_datahist_%s_%s'%(sample,self.POI[i]),'dif_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_dif_%s_hist_%s'%(sample,self.POI[i])))
-		test_datahist	= RooDataHist('test_datahist_%s_%s'%(sample,self.POI[i]),'test_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_test_%s_hist_%s'%(sample,self.POI[i])))
+		posTest_datahist	= RooDataHist('posTest_datahist_%s_%s'%(sample,self.POI[i]),'posTest_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_posTest_%s_hist_%s'%(sample,self.POI[i])))
+		negTest_datahist        = RooDataHist('negTest_datahist_%s_%s'%(sample,self.POI[i]),'negTest_datahist_%s_%s'%(sample,self.POI[i]),RooArgList(rrv_x),fileInHist.Get('c_negTest_%s_hist_%s'%(sample,self.POI[i])))
 
                 SMWW        = RooDataHist('SMWW_4scale','SMWW_4scale',RooArgList(rrv_x),fileInHist.Get('c_SM_WW_hist'))
                 posWW       = RooDataHist('posWW_4scale_%s'%self.POI[i],'posWW_4scale_%s'%self.POI[i],RooArgList(rrv_x),fileInHist.Get('c_pos_WW_hist_%s'%self.POI[i]))
@@ -532,8 +555,8 @@ class Prepare_workspace_4limit:
                 fileInHist.Close()
                 
                 #import datasets to wtmp and final workspace WS
-                self.Import_to_ws(self.wtmp,[pos_datahist,neg_datahist,dif_datahist,test_datahist])
-                self.Import_to_ws(self.WS,[pos_datahist,neg_datahist,dif_datahist,test_datahist])
+                self.Import_to_ws(self.wtmp,[pos_datahist,neg_datahist,dif_datahist,posTest_datahist,negTest_datahist])
+                self.Import_to_ws(self.WS,[pos_datahist,neg_datahist,dif_datahist,posTest_datahist,negTest_datahist])
                 
                 #get scaling parabel from yields
                 #FIXME scaling to the sum of WW and WZ leads to over-estimating WW and under-estimating WZ
@@ -984,8 +1007,10 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
 
             #make some plots
             if options.Make_plots:
-                self.Make_plots(self.rrv_mass_lvj,'WW',self.fitresults)
-                self.Make_plots(self.rrv_mass_lvj,'WZ',self.fitresults)
+                for cat in ['WW','WZ']:
+                    for par in ['cwww','ccw','cb']:
+                        for posOrneg in ['pos','neg']:
+                            self.Make_plots(self.rrv_mass_lvj,cat,self.fitresults,par,posOrneg)
             
             for i in range(len(self.fitresults)):
                     self.fitresults[i].Print()
