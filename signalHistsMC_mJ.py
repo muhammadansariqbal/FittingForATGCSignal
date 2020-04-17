@@ -69,24 +69,26 @@ def plot(ch="el",par=61,legStr="c_{WWW}/#Lambda^{2}=-3.6 TeV^{-2}"):
 	histSMWZ.SetLineColor(kBlack)
 	histSMWZ.SetFillColor(kRed+2)
 
-	histWW.SetLineColor(kBlue)
+	histWW.SetLineColor(kMagenta)
 	histWW.SetLineWidth(2)
 
-	histWZ.SetLineColor(kBlue+2)
+	histWZ.SetLineColor(kMagenta+2)
 	histWZ.SetLineWidth(2)
 
 	# Lumi text
 	CMS_lumi.lumiTextSize = 0.0
-	#CMS_lumi.writeExtraText = True
-	CMS_lumi.cmsTextSize = 0.65625
-	CMS_lumi.relPosY    = -0.07875
-	CMS_lumi.relExtraDX = 0.175
-	CMS_lumi.relExtraDY = 0.21
+	CMS_lumi.writeExtraText = True
+	CMS_lumi.extraText = "Simulation"
+	CMS_lumi.cmsTextSize = 0.6
+	CMS_lumi.relPosX    = 0.042
+	CMS_lumi.relPosY    = -0.070
+	CMS_lumi.relExtraDX = 0.16
+	CMS_lumi.relExtraDY = 0.25
 	CMS_lumi.CMS_lumi(pad,4,11)
 	CMS_lumi.cmsTextSize=0.0
 	CMS_lumi.writeExtraText = False
-	CMS_lumi.lumiTextSize = 0.56875
-	CMS_lumi.lumiTextOffset = 0.175
+	CMS_lumi.lumiTextSize = 0.52
+	CMS_lumi.lumiTextOffset = 0.16
 	CMS_lumi.CMS_lumi(pad,4,11)
 
 	# Channel text
@@ -94,7 +96,7 @@ def plot(ch="el",par=61,legStr="c_{WWW}/#Lambda^{2}=-3.6 TeV^{-2}"):
 	pt.SetFillStyle(0)
 	pt.SetBorderSize(0)
 	pt.SetTextAlign(13)
-	pt.SetTextSize(0.05775)
+	pt.SetTextSize(0.0575)
 	if ch=="el":
 	    pt.AddText("Electron channel")
 	else:
