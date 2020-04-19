@@ -43,17 +43,17 @@ def plot(ch="el",par=61,legStr="c_{WWW}/#Lambda^{2}=-3.6 TeV^{-2}"):
 			yRange = 60
 
 	# Draw the four histograms
-	treeInWW.Draw("jet_mass_softdrop_PUPPI >> histSMWW(27,65,105)", "(totEventWeight*aTGCWeights[61]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW>900 && MWW<4500)"%(METCut), "HIST")
+	treeInWW.Draw("jet_mass_softdrop_PUPPI >> histSMWW(27,65,105)", "(totEventWeight*aTGCWeights[61]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW_SD>900 && MWW_SD<4500)"%(METCut), "HIST")
 	histSMWW = gDirectory.Get("histSMWW")
 	histSMWW.GetYaxis().SetRangeUser(0,yRange)
 
-	treeInWZ.Draw("jet_mass_softdrop_PUPPI >> histSMWZ(27,65,105)", "(totEventWeight*aTGCWeights[61]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW>900 && MWW<4500)"%(METCut), "SAME HIST")
+	treeInWZ.Draw("jet_mass_softdrop_PUPPI >> histSMWZ(27,65,105)", "(totEventWeight*aTGCWeights[61]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW_SD>900 && MWW_SD<4500)"%(METCut), "SAME HIST")
 	histSMWZ = gDirectory.Get("histSMWZ")
 
-	treeInWW.Draw("jet_mass_softdrop_PUPPI >> histWW(27,65,105)", "(totEventWeight*aTGCWeights[%s]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW>900 && MWW<4500)"%(par,METCut), "SAME HIST")
+	treeInWW.Draw("jet_mass_softdrop_PUPPI >> histWW(27,65,105)", "(totEventWeight*aTGCWeights[%s]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW_SD>900 && MWW_SD<4500)"%(par,METCut), "SAME HIST")
 	histWW = gDirectory.Get("histWW")
 
-	treeInWZ.Draw("jet_mass_softdrop_PUPPI >> histWZ(27,65,105)", "(totEventWeight*aTGCWeights[%s]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW>900 && MWW<4500)"%(par,METCut), "SAME HIST")
+	treeInWZ.Draw("jet_mass_softdrop_PUPPI >> histWZ(27,65,105)", "(totEventWeight*aTGCWeights[%s]) * (jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<105. && jet_mass_softdrop_PUPPI>65. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>%s && MWW_SD>900 && MWW_SD<4500)"%(par,METCut), "SAME HIST")
 	histWZ = gDirectory.Get("histWZ")
 
 	# Set properties
