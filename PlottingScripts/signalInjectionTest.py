@@ -385,17 +385,18 @@ class Prepare_workspace_4limit:
             #if reg=='sb_lo':
             CMS_lumi.lumiTextSize=0.0
             CMS_lumi.writeExtraText=True
-            CMS_lumi.extraText = "Simulation"
+            CMS_lumi.extraText = "Simulation, private work"
             CMS_lumi.cmsTextSize=0.75
+            CMS_lumi.relPosX	= 0.0125
             CMS_lumi.relPosY    = -0.09
-            CMS_lumi.relExtraDX = 0.16
-            CMS_lumi.relExtraDY = 0.24
+            CMS_lumi.relExtraDX = 0.13
+            CMS_lumi.relExtraDY = 0.22
             CMS_lumi.CMS_lumi(pad1,4,11)
             #elif reg=='sb_hi':
             CMS_lumi.cmsTextSize=0.0
             CMS_lumi.writeExtraText=False
             CMS_lumi.lumiTextSize=0.65
-            CMS_lumi.lumiTextOffset=0.2
+            CMS_lumi.lumiTextOffset=0.13
             CMS_lumi.CMS_lumi(pad1,4,11)
             #else:
             pt2 = TPaveText(0.122,0.8,0.5,0.975, "blNDC")

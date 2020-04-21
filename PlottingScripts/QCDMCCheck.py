@@ -70,20 +70,20 @@ def plot(ch="el",var="msd"):
 	histQCD.SetLineWidth(2)
 
 	# Lumi text
-	CMS_lumi.lumiTextSize = 0.0
-	CMS_lumi.writeExtraText = True
-	CMS_lumi.extraText = "Simulation"
-	CMS_lumi.cmsTextSize = 0.6
-	CMS_lumi.relPosX    = 0.042
-	CMS_lumi.relPosY    = -0.070
-	CMS_lumi.relExtraDX = 0.16
-	CMS_lumi.relExtraDY = 0.25
-	CMS_lumi.CMS_lumi(pad,4,11)
-	CMS_lumi.cmsTextSize=0.0
-	CMS_lumi.writeExtraText = False
-	CMS_lumi.lumiTextSize = 0.52
-	CMS_lumi.lumiTextOffset = 0.16
-	CMS_lumi.CMS_lumi(pad,4,11)
+        CMS_lumi.lumiTextSize = 0.0
+        CMS_lumi.writeExtraText = True
+        CMS_lumi.extraText = "Simulation, private work"
+        CMS_lumi.cmsTextSize = 0.6
+        CMS_lumi.relPosX    = 0.01
+        CMS_lumi.relPosY    = -0.070
+        CMS_lumi.relExtraDX = 0.13
+        CMS_lumi.relExtraDY = 0.22
+        CMS_lumi.CMS_lumi(pad,4,11)
+        CMS_lumi.cmsTextSize=0.0
+        CMS_lumi.writeExtraText = False
+        CMS_lumi.lumiTextSize = 0.52
+        CMS_lumi.lumiTextOffset = 0.1
+        CMS_lumi.CMS_lumi(pad,4,11)
 
 	# Channel text
 	pt = TPaveText(0.125,0.8,0.325,0.975, "blNDC")
