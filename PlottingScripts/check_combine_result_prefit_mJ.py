@@ -97,8 +97,8 @@ def plot(w,fitres,normset,ch,region):
     w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
     model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
     # Scale this for checking smooth transition, remove for final plots since data should never be scaled
-    if region=='sb_lo':
-        model_norm_tmp = model_norm_tmp * 0.955
+    #if region=='sb_lo':
+    #    model_norm_tmp = model_norm_tmp * 0.955
     model.plotOn(p,RooFit.Name("WJets"),RooFit.Components("STop,WJets,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(colors["WJets"]),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
     model.plotOn(p,RooFit.Name("TTbar"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.FillColor(kOrange),RooFit.LineColor(kBlack),RooFit.LineWidth(1),RooFit.DrawOption("F"))
     model.plotOn(p,RooFit.Name("TTbar_line"),RooFit.Components("STop,TTbar,WW,WZ"),RooFit.Normalization(model_norm_tmp,RooAbsReal.NumEvent),RooFit.LineColor(kBlack),RooFit.LineWidth(1))
@@ -171,9 +171,9 @@ def plot(w,fitres,normset,ch,region):
     for iPoint in range(data_plot.GetN()):
         N = data_plot.GetY()[iPoint]
 	# Scale this for checking smooth transition, remove for final plots since data should never be scaled
-        if region=='sb_lo':
-            N = data_plot.GetY()[iPoint]*0.955
-            data_plot.SetPoint(iPoint,data_plot.GetX()[iPoint],N)
+        #if region=='sb_lo':
+        #    N = data_plot.GetY()[iPoint]*0.955
+        #    data_plot.SetPoint(iPoint,data_plot.GetX()[iPoint],N)
         #print "x: " + str(data_plot.GetX()[iPoint]) + "   N: " + str(N)
         if N==0 :
             L = 0
@@ -220,7 +220,7 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
     p.GetXaxis().SetLabelSize(0)
     p.GetYaxis().SetRangeUser(0,1050)
     if ch=='mu':
-        p.GetYaxis().SetRangeUser(0,1450)
+        p.GetYaxis().SetRangeUser(0,1600)
     p.GetYaxis().SetLabelSize(0.1)
     p.GetYaxis().SetLabelOffset(0.025)
     p.GetYaxis().SetTitle('Events / 5 GeV')
@@ -245,11 +245,13 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
     # Lumi text and channel
     if reg=='sb_lo':
        CMS_lumi.lumiTextSize=0.0
-       #CMS_lumi.writeExtraText=True
+       CMS_lumi.writeExtraText=True
+       CMS_lumi.extraText = "Private work"
        CMS_lumi.cmsTextSize= 2.0
+       CMS_lumi.extraOverCmsTextSize = 0.57
        CMS_lumi.relPosY    = -0.105
-       CMS_lumi.relExtraDX = 0.3
-       CMS_lumi.relExtraDY = 0.24
+       CMS_lumi.relExtraDX = 0.0
+       CMS_lumi.relExtraDY = 0.5
        CMS_lumi.CMS_lumi(pad,4,11)
     elif reg=='sb_hi':
        CMS_lumi.cmsTextSize=0.0
@@ -260,21 +262,22 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
 
     # Channel text
     if reg=='sig':
-        pt = TPaveText(0.375,0.8,0.625,0.97, "blNDC")
+        pt = TPaveText(0.01,0.79,0.5,0.91, "blNDC")
         pt.SetFillStyle(0)
         pt.SetBorderSize(0)
-        pt.SetTextAlign(23)
+        pt.SetTextAlign(13)
         pt.SetTextSize(0.125)
         if ch=="el":
             pt.AddText("Electron channel")
         else:
             pt.AddText("Muon channel")
+        pt.AddText("Pre-fit")
         pt.Draw()
         paveTexts.append(pt)
 
     # Legend
     if reg=='sb_hi':
-        legMJ=TLegend(0.25,0.5,0.975,0.875)
+        legMJ=TLegend(0.3,0.45,0.975,0.875)
         legMJ.SetFillColor(0)
         legMJ.SetFillStyle(0)
         legMJ.SetBorderSize(0)
@@ -295,7 +298,7 @@ def plot_mJ(canvas,xlo,xhi,reg,w,fitres,normset,ch,pads,lines,paveTexts,legends)
         legMJ.AddEntry(p.getObject(4),"WW","F")
         legMJ.AddEntry(p.getObject(5),"WZ","F")
         legMJ.AddEntry(p.getObject(8),"Single top","F")
-        legMJ.AddEntry(p.getObject(10),"Post-fit unc.","F")
+        legMJ.AddEntry(p.getObject(10),"Uncertainty","F")
         legMJ.Draw()
     else:
         legMJ=[]
@@ -405,8 +408,8 @@ def plot_all(w,ch="el"):
     canvas.cd()
     canvas.Draw()
     canvas.Update()
-    canvas.SaveAs('postfit_%s_mJ.eps'%ch)
-    os.system('epstopdf postfit_%s_mJ.eps'%ch)
+    canvas.SaveAs('prefit_%s_mJ.eps'%ch)
+    os.system('epstopdf prefit_%s_mJ.eps'%ch)
     raw_input(ch)
 
     for i in pads:
@@ -419,7 +422,7 @@ w           = fileIn.Get("w")
 fileIn.Close()
 fileIn      = TFile.Open("mlfit%s.root"%options.name)
 fitres      = fileIn.Get("fit_s")
-normset     = fileIn.Get("norm_fit_s")
+normset     = fileIn.Get("norm_prefit")
 fileIn.Close()
 
 fitparas    = fitres.floatParsFinal()
@@ -434,8 +437,8 @@ for i in range(fitparas.getSize()):
     prefit  = str(round(w.var(fitparas.at(i).GetName()).getVal(),6)) + ' +- ' + str(round(w.var(fitparas.at(i).GetName()).getError(),6))
     postfit = str(round(fitparas.at(i).getVal(),6)) + ' +- ' + str(round(fitparas.at(i).getError(),6))
     string += '{:>40} : {:>30} / {:>30}\n'.format(fitparas.at(i).GetName(),prefit,postfit)
-for i in range(fitparas.getSize()):
-    w.var(fitparas.at(i).GetName()).setVal(fitparas.at(i).getVal())
+#for i in range(fitparas.getSize()):
+#    w.var(fitparas.at(i).GetName()).setVal(fitparas.at(i).getVal())
 
 
 plot_all(w,options.ch)
