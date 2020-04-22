@@ -387,10 +387,11 @@ class Prepare_workspace_4limit:
             CMS_lumi.writeExtraText=True
             CMS_lumi.extraText = "Simulation, private work"
             CMS_lumi.cmsTextSize=0.75
+            CMS_lumi.extraOverCmsTextSize = 0.57
             CMS_lumi.relPosX	= 0.0125
             CMS_lumi.relPosY    = -0.09
             CMS_lumi.relExtraDX = 0.13
-            CMS_lumi.relExtraDY = 0.22
+            CMS_lumi.relExtraDY = 0.4
             CMS_lumi.CMS_lumi(pad1,4,11)
             #elif reg=='sb_hi':
             CMS_lumi.cmsTextSize=0.0

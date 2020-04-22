@@ -67,10 +67,11 @@ def plot(ch="el"):
         CMS_lumi.writeExtraText = True
         CMS_lumi.extraText = "Private work"
         CMS_lumi.cmsTextSize = 0.6
+	CMS_lumi.extraOverCmsTextSize = 0.57
         CMS_lumi.relPosX    = 0.128
         CMS_lumi.relPosY    = -0.070
         CMS_lumi.relExtraDX = 0.13
-        CMS_lumi.relExtraDY = 0.22
+        CMS_lumi.relExtraDY = 0.4
         CMS_lumi.CMS_lumi(pad,4,11)
         CMS_lumi.cmsTextSize=0.0
         CMS_lumi.writeExtraText = False

@@ -80,10 +80,11 @@ def plot(ch="el",par=61,legStr="c_{WWW}/#Lambda^{2}=-3.6 TeV^{-2}"):
 	CMS_lumi.writeExtraText = True
 	CMS_lumi.extraText = "Simulation, private work"
 	CMS_lumi.cmsTextSize = 0.6
+	CMS_lumi.extraOverCmsTextSize = 0.57
 	CMS_lumi.relPosX    = 0.01
 	CMS_lumi.relPosY    = -0.070
 	CMS_lumi.relExtraDX = 0.13
-	CMS_lumi.relExtraDY = 0.22
+	CMS_lumi.relExtraDY = 0.40
 	CMS_lumi.CMS_lumi(pad,4,11)
 	CMS_lumi.cmsTextSize=0.0
 	CMS_lumi.writeExtraText = False
