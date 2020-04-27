@@ -254,6 +254,11 @@ def plots():
         CMS_lumi.relPosY        = -0.08
 	CMS_lumi.lumiTextSize	= 0.525
 	CMS_lumi.lumiTextOffset	= 0.1
+#	CMS_lumi.writeExtraText=True
+#	CMS_lumi.extraText = "Preliminary"
+#	CMS_lumi.extraOverCmsTextSize = 0.57
+#	CMS_lumi.relExtraDX = 0.17
+#	CMS_lumi.relExtraDY = 0.4
 	CMS_lumi.CMS_lumi(c1,4,11)
 
 	leg=TLegend(0.14,0.73,0.95,0.89)

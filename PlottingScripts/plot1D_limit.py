@@ -273,7 +273,10 @@ def plots():
 		CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 	CMS_lumi.lumiTextOffset=0.1
 	CMS_lumi.relPosY    = -0.05
-	CMS_lumi.relExtraDY = 0.24
+	CMS_lumi.writeExtraText=True
+	CMS_lumi.extraText = "Private work"
+	CMS_lumi.relExtraDX = 0.08
+	CMS_lumi.relExtraDY = 0.25
 	CMS_lumi.CMS_lumi(c1,4,11)
 
 	leg=TLegend(0.35,0.625,0.65,0.85)
