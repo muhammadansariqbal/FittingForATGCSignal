@@ -288,8 +288,8 @@ def plots():
         leg.SetLineStyle(0)
 	leg.SetTextFont(42)
 	leg.SetHeader(par_noUnits[par])
-	leg.AddEntry(graphExp,"Expected 95% C.L.","L")
-	leg.AddEntry(graphObs,"Observed 95% C.L.","L")
+	leg.AddEntry(graphExp,"Expected","L")
+	leg.AddEntry(graphObs,"Observed","L")
 	leg.AddEntry(boxHigh,"Expected #pm 1#sigma","F")
 	leg.Draw("SAME")
 
