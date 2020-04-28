@@ -809,7 +809,7 @@ slope_nuis    param  1.0 0.05'''.format(ch=self.ch)
             getattr(self.wtmp,'import')(normfactor_3d,RooFit.RecycleConflictNodes())
             getattr(self.WS,'import')(normfactor_3d,RooFit.RecycleConflictNodes())
             self.WS.Print()
-            raw_input(channel)
+            #raw_input(channel)
 
 
         ########################

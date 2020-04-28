@@ -3,8 +3,7 @@
 
 cd ..
 
-#for cutoff in 2100 2400 2700 3000 3300 3600 3900 4200 4500
-for cutoff in 4200 4500
+for cutoff in 2400 2700 3000 3300 3600 3900 4200
 do
 	echo "====================================================================="
 	echo "CUTOFF mWV: "$cutoff GeV
@@ -17,6 +16,14 @@ do
 	mv "higgsCombine_cwww_3.6_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
 	mv "higgsCombine_ccw_4.5_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
 	mv "higgsCombine_cb_20_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
+
+	combine "cutoffLimits/workspace_simfit_LEP_cutoff""$cutoff"".root" -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=100 --redefineSignalPOIs lZ -P lZ --freezeNuisances dg1z,dkz --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange lZ=-0.014,0.014 --minimizerStrategy=2 --cminPreScan -n "_lZ_0.014_cutoff""$cutoff"
+	combine "cutoffLimits/workspace_simfit_LEP_cutoff""$cutoff"".root" -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=100 --redefineSignalPOIs dg1z -P dg1z --freezeNuisances lZ,dkz --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange dg1z=-0.018,0.018 --minimizerStrategy=2 --cminPreScan -n "_dg1z_0.018_cutoff""$cutoff"
+	combine "cutoffLimits/workspace_simfit_LEP_cutoff""$cutoff"".root" -M MultiDimFit --floatOtherPOIs=0 --algo=grid --expectSignal=1 --points=100 --redefineSignalPOIs dkz -P dkz --freezeNuisances lZ,dg1z --setPhysicsModelParameters lZ=0,dg1z=0,dkz=0 --setPhysicsModelParameterRange dkz=-0.02,0.02 --minimizerStrategy=2 --cminPreScan -n "_dkz_0.02_cutoff""$cutoff"
+	
+	mv "higgsCombine_lZ_0.014_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
+	mv "higgsCombine_dg1z_0.018_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
+	mv "higgsCombine_dkz_0.02_cutoff""$cutoff"".MultiDimFit.mH120.root" cutoffLimits
 
 done
 
