@@ -94,7 +94,7 @@ def plot(w,fitres,normset,ch,region):
     model_norm  = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
     rrv_model_norm = RooRealVar("rrv_model_norm","rrv_model_norm",model_norm)
 
-    w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
+    #w.var("cwww").setVal(0);w.var("ccw").setVal(0);w.var("cb").setVal(0);
     model_norm_tmp = float(bkg_norms["WJets"].getVal()+bkg_norms["STop"].getVal()+bkg_norms["TTbar"].getVal()+bkg_norms["WW"].getVal()+bkg_norms["WZ"].getVal())
     # Scale this for checking smooth transition, remove for final plots since data should never be scaled
     #if region=='sb_lo':
